@@ -1,2 +1,2 @@
 # Bes-Gen V7
- Program to create Plan heads for TinLine 23 or newer
+Ein VBA-Script um Planköpfe in TinLine zu Managen.
