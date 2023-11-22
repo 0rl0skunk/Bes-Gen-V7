@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "Icons.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "Icons.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "Icons.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "Icons.md"
               }
             }
           }
@@ -148,12 +148,27 @@
   },
   "active": "847ae85ce0e89e1c",
   "lastOpenFiles": [
-    "Icons/todo-list.png",
-    "Icons/online-support.png",
-    "Icons/delete-document.png",
-    "Icons/chatbot.png",
-    "Icons/address-book.png",
-    "Icons/add-properties.png",
-    "README.md"
+    "README.md",
+    "Icons.md",
+    "Icons/PNG/windows-update.png",
+    "Icons/PNG/todo-list.png",
+    "Icons/PNG/table-of-content.png",
+    "Icons/PNG/send-file.png",
+    "Icons/PNG/send-email.png",
+    "Icons/PNG/search-property.png",
+    "Icons/PNG/repair.png",
+    "Icons/PNG/project-setup.png",
+    "Icons/PNG/printer-error.png",
+    "Icons/PNG/print.png",
+    "Icons/ICO/windows-update.ico",
+    "Icons/ICO/todo-list.ico",
+    "Icons/ICO/table-of-content.ico",
+    "Icons/ICO/send-file.ico",
+    "Icons/ICO/send-email.ico",
+    "Icons/ICO/search-property.ico",
+    "Icons/ICO/repair.ico",
+    "Icons/ICO/project-setup.ico",
+    "Icons/ICO/printer-error.ico",
+    "Icons/ICO/print.ico"
   ]
 }
