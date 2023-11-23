@@ -129,12 +129,12 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 636.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -143,13 +143,16 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "markdown-importer:Open format converter": false
     }
   },
   "active": "847ae85ce0e89e1c",
   "lastOpenFiles": [
-    "README.md",
+    "CustomUI/MS-CUSTOMUI.md",
+    "~$GuideLinesV7.xlam",
     "Icons.md",
+    "README.md",
     "Icons/PNG/windows-update.png",
     "Icons/PNG/todo-list.png",
     "Icons/PNG/table-of-content.png",
@@ -168,7 +171,6 @@
     "Icons/ICO/search-property.ico",
     "Icons/ICO/repair.ico",
     "Icons/ICO/project-setup.ico",
-    "Icons/ICO/printer-error.ico",
-    "Icons/ICO/print.ico"
+    "Icons/ICO/printer-error.ico"
   ]
 }
