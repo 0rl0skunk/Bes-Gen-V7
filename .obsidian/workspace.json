@@ -69,7 +69,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "6e6e8a3c1bae3c9d",
@@ -134,7 +135,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 636.5
+    "width": 636.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -149,8 +151,18 @@
   },
   "active": "847ae85ce0e89e1c",
   "lastOpenFiles": [
+    "DF7A2000",
+    "2D5A2000",
+    "A9992000",
+    "82662000",
+    "4C202000",
+    "7ACE1000",
+    "6CDC1000",
+    "D42C1000",
+    "474B1000",
+    "A9A11000",
+    "~$Bes-GenV7.xlsm",
     "CustomUI/MS-CUSTOMUI.md",
-    "~$GuideLinesV7.xlam",
     "Icons.md",
     "README.md",
     "Icons/PNG/windows-update.png",
@@ -162,15 +174,6 @@
     "Icons/PNG/repair.png",
     "Icons/PNG/project-setup.png",
     "Icons/PNG/printer-error.png",
-    "Icons/PNG/print.png",
-    "Icons/ICO/windows-update.ico",
-    "Icons/ICO/todo-list.ico",
-    "Icons/ICO/table-of-content.ico",
-    "Icons/ICO/send-file.ico",
-    "Icons/ICO/send-email.ico",
-    "Icons/ICO/search-property.ico",
-    "Icons/ICO/repair.ico",
-    "Icons/ICO/project-setup.ico",
-    "Icons/ICO/printer-error.ico"
+    "Icons/PNG/print.png"
   ]
 }
