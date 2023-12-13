@@ -15,6 +15,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 '@IgnoreModule UseMeaningfulName, IntegerDataType
 Option Explicit
 '@Folder "Plankopf"
@@ -78,10 +80,4 @@ Public Sub LoadXML(ByVal filePath As String, ByVal Plankopfnummer As Long)
 
 End Sub
 
-Private Sub ShowCode_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
 
-    Dim frm                  As New UserFormXMLCode
-    frm.load "C:\Users\orlando.bassi\Desktop\TinPlan_EP.xml", pPlankopfnummer
-    frm.Show 1
-
-End Sub

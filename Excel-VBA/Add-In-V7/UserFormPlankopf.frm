@@ -1,6 +1,5 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopf 
-   Caption         =   "UserFormPlankopf"
    ClientHeight    =   12240
    ClientLeft      =   120
    ClientTop       =   465
@@ -16,12 +15,15 @@ Attribute VB_Exposed = False
 
 
 
+
+
 Option Explicit
 '@IgnoreModule IntegerDataType, EmptyStringLiteral
 '@Folder "Plankopf"
 
 Private icons                As UserFormIconLibrary
 Private pPlankopf            As IPlankopf
+Public PlankopfCopyFrom As IPlankopf
 Private pProjekt             As IProjekt
 Private shPData              As Worksheet
 Private shGebäude            As Worksheet
@@ -64,17 +66,35 @@ End Sub
 
 Private Sub CommandButtonIndexErstellen_Click()
 
-    pPlankopf.AddIndex IndexFactory.Create( _
-                       IDPlan:=pPlankopf.ID, _
-                       GezeichnetPerson:=Me.TextBoxIndexGez.Value, _
-                       GezeichnetDatum:=Me.TextBoxIndexGezDatum.Value, _
-                       Klartext:=Me.TextBoxIndexKlartext.Value _
-                                  )
+    Dim Index As IIndex: Set Index = IndexFactory.Create( _
+        IDPlan:=pPlankopf.ID, _
+        GezeichnetPerson:=Me.TextBoxIndexGez.Value, _
+        GezeichnetDatum:=Me.TextBoxIndexGezDatum.Value, _
+        Klartext:=Me.TextBoxIndexKlartext.Value, _
+        Letter:=Me.TextBoxIndexLetter.Value _
+                   )
+    IndexFactory.AddToDatabase Index
+    pPlankopf.AddIndex Index
+                                  
     LoadIndexes
+    
     Me.TextBoxIndexGez.Value = vbNullString
     Me.TextBoxIndexGezDatum.Value = vbNullString
     Me.TextBoxIndexKlartext.Value = vbNullString
     Me.TextBoxIndexLetter.Value = vbNullString
+
+End Sub
+
+Private Sub CommandButtonIndexLöschen_Click()
+
+    Dim ID As String
+    ID = Me.ListViewIndex.SelectedItem.ListSubItems(1)
+    IndexFactory.DeleteFromDatabase ID
+    
+    pPlankopf.ClearIndex
+    IndexFactory.GetIndexes pPlankopf
+    
+    LoadIndexes
 
 End Sub
 
@@ -205,6 +225,7 @@ Private Sub LoadIndexes()
     Dim Li                   As ListItem
 
     With Me.ListViewIndex
+        .ListItems.Clear
         .View = lvwReport
         .CheckBoxes = True
         .Gridlines = True
@@ -212,6 +233,7 @@ Private Sub LoadIndexes()
         With .ColumnHeaders
             .Clear
             .Add , , "", 20
+            .Add , , "", 0
             .Add , , "Index", 20
             .Add , , "Gezeichnet", 40
             .Add , , "Datum", 60
@@ -220,7 +242,8 @@ Private Sub LoadIndexes()
 
         For Each ind In pPlankopf.indexes
             Set Li = .ListItems.Add()
-            Li.ListSubItems.Add , , ind.index
+            Li.ListSubItems.Add , , ind.IndexID
+            Li.ListSubItems.Add , , ind.Index
             Li.ListSubItems.Add , , Split(ind.Gezeichnet, " ; ")(0)
             Li.ListSubItems.Add , , Split(ind.Gezeichnet, " ; ")(1)
             Li.ListSubItems.Add , , ind.Klartext
@@ -229,7 +252,7 @@ Private Sub LoadIndexes()
 
 End Sub
 
-Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt)
+Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional copy As Boolean = False)
 
     Set pProjekt = Projekt
 
@@ -268,10 +291,9 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt)
     Me.TextBoxPlanüberschrift.Value = pPlankopf.Planüberschrift
     LoadIndexes
     
-    Me.CommandButtonCreate.Caption = "Update"
-    
     Me.ComboBoxStand.Value = pPlankopf.LayoutPlanstand
     
+    If Not copy Then
     ' disable all inputs which should only be set once
     Me.MultiPageTyp.Enabled = False
     Me.ComboBoxEPArt.Enabled = False
@@ -286,8 +308,28 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt)
     Me.ComboBoxPRHGewerk.Enabled = False
     Me.ComboBoxPRUGewerk.Enabled = False
     
+    Me.CommandButtonCreate.Caption = "Update"
     Me.BesID.Caption = pPlankopf.ID
     Me.TinLineID.Caption = pPlankopf.IDTinLine
+    Else
+    Me.BesID.Caption = getNewID(6, Globals.shStoreData, shStoreData.range("A1").CurrentRegion, 1)
+    pPlankopf.ID = Me.BesID.Caption
+    Dim Index As IIndex
+    For Each Index In pPlankopf.indexes
+        Index.PlanID = pPlankopf.ID
+        IndexFactory.AddToDatabase Index
+    Next
+    End If
+
+End Sub
+
+Public Sub CopyPlankopf(Plankopf As IPlankopf, ByVal Projekt As IProjekt, ByVal CopyIndex As Boolean)
+
+    If CopyIndex Then
+        Set Plankopf.indexes = PlankopfCopyFrom.indexes
+        Set PlankopfCopyFrom = Nothing
+    End If
+    LoadClass Plankopf, Projekt, True
 
 End Sub
 

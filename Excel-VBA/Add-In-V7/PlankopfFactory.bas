@@ -49,7 +49,9 @@ Public Function Create( _
        Planüberschrift:=Planüberschrift, _
        ID:=ID _
             ) Then
+        Dim row As Long
         Set Create = NewPlankopf
+        IndexFactory.GetIndexes Create
         Exit Function
     Else
         Dim frm              As New UserFormMessage
@@ -91,6 +93,7 @@ Public Function LoadFromDatabase(ByVal row As Long) As IPlankopf
            SkipValidation:=False _
                             ) Then
             Set LoadFromDatabase = NewPlankopf
+            IndexFactory.GetIndexes LoadFromDatabase
             Exit Function
         Else
             Dim frm          As New UserFormMessage

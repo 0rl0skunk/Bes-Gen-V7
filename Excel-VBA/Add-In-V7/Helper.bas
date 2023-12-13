@@ -161,17 +161,17 @@ Public Function colToString(col As Collection) As String
 
 End Function
 
-Public Function WLookup(Lookup, range As range, index As Integer, Optional onError As String = "-") As String
+Public Function WLookup(Lookup, range As range, Index As Integer, Optional onError As String = "-") As String
     ' a better version of vlookup
     ' has an on error value if it is not provided it is set to "-"
     On Error GoTo ERR
 
     Lookup = CStr(Lookup)
 
-    If IsError(Application.VLookup(Lookup, range, index, False)) Then
+    If IsError(Application.VLookup(Lookup, range, Index, False)) Then
         WLookup = onError
     Else
-        WLookup = Application.VLookup(Lookup, range, index, False)
+        WLookup = Application.VLookup(Lookup, range, Index, False)
     End If
 
     Exit Function
@@ -546,7 +546,7 @@ Public Function CreateXmlAttribute(Name As String, Bez As String, Wert As String
 
 End Function
 
-Public Function CreateXmlIndexAttribute(index As String, Name As String, Datum As String, Bez As String, NodName As String, nodChild As IXMLDOMElement, oXml As MSXML2.DOMDocument60, nodElement As IXMLDOMElement)
+Public Function CreateXmlIndexAttribute(Index As String, Name As String, Datum As String, Bez As String, NodName As String, nodChild As IXMLDOMElement, oXml As MSXML2.DOMDocument60, nodElement As IXMLDOMElement)
     ' create a TinLine XML Attribute with the given informations
     Dim nodGrandChild        As IXMLDOMElement
 
@@ -554,7 +554,7 @@ Public Function CreateXmlIndexAttribute(index As String, Name As String, Datum A
     nodElement.appendChild nodChild
 
     Set nodGrandChild = oXml.createElement("Index")
-    nodGrandChild.Text = index
+    nodGrandChild.Text = Index
     nodChild.appendChild nodGrandChild
 
     Set nodGrandChild = oXml.createElement("Name")

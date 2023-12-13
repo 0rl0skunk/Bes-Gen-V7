@@ -12,9 +12,13 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Public Property Get index() As String
+Public Property Get IndexID() As String
 End Property
-Public Property Let index(ByVal NewValue As String)
+
+Public Property Get Index() As String
+End Property
+
+Public Property Let Index(NewValue As String)
 End Property
 
 Public Property Get Gezeichnet() As String
@@ -24,5 +28,11 @@ Public Property Get Geprüft() As String
 End Property
 
 Public Property Get Klartext() As String
+End Property
+
+Public Property Get PlanID() As String
+End Property
+
+Public Property Let PlanID(ByVal NewValue As String)
 End Property
 

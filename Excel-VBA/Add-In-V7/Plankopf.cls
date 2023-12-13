@@ -69,6 +69,10 @@ Private Property Get IPlankopf_ID() As String
     IPlankopf_ID = This.ID
 End Property
 
+Private Property Let IPlankopf_ID(ByVal NewValue As String)
+    This.ID = NewValue
+End Property
+
 Private Property Get IPlankopf_IDTinLine() As String
     IPlankopf_IDTinLine = This.IDTinLine
 End Property
@@ -179,6 +183,10 @@ End Property
 
 Private Property Get IPlankopf_Indexes() As Collection
     Set IPlankopf_Indexes = This.indexes
+End Property
+
+Private Property Set IPlankopf_Indexes(ByVal NewIndexes As Collection)
+    Set This.indexes = NewIndexes
 End Property
 
 ' -------------------------------
@@ -374,9 +382,13 @@ End Function
 ' -------------------------------
 Private Sub IPlankopf_AddIndex(NewValue As IIndex)
 
-    NewValue.index = "A"
     This.indexes.Add NewValue
     Set This.currentIndex = NewValue
+
+End Sub
+Private Sub IPlankopf_ClearIndex()
+
+    Set This.indexes = New Collection
 
 End Sub
 

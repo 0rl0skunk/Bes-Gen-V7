@@ -15,6 +15,9 @@ Option Explicit
 Public Property Get ID() As String
 End Property
 
+Public Property Let ID(ByVal NewValue As String)
+End Property
+
 Public Property Get IDTinLine() As String
 End Property
 
@@ -105,6 +108,11 @@ End Property
 Public Property Get indexes() As Collection
 End Property
 
+Public Property Set indexes(ByVal NewIndexes As Collection)
+End Property
+
 Public Sub AddIndex(ByRef NewValue As IIndex)
 End Sub
 
+Public Sub ClearIndex()
+End Sub

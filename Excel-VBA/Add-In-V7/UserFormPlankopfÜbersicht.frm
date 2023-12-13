@@ -3,7 +3,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopf‹bersicht
    ClientHeight    =   6480
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   9585.001
+   ClientWidth     =   13320
    OleObjectBlob   =   "UserFormPlankopf‹bersicht.frx":0000
    StartUpPosition =   1  'Fenstermitte
 End
@@ -12,6 +12,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 
 
 
@@ -35,6 +37,8 @@ Private Sub CommandButton2_Click()
     Dim frm As New UserFormPlankopf
     frm.LoadClass PlankopfFactory.LoadFromDatabase(row), Projekt
     frm.Show 1
+    
+    LoadListView
 
 End Sub
 
@@ -68,6 +72,28 @@ Public Property Let Instruction(Value As String)
     Me.LabelInstructions.Caption = Value
 
 End Property
+
+Private Sub CommandButtonCopy_Click()
+
+    Dim row As Long
+    Dim Plankopf As IPlankopf
+    row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.item(1).Text).row
+    Set Plankopf = PlankopfFactory.LoadFromDatabase(row)
+    Dim frm As New UserFormPlankopf
+    Dim answer As Boolean
+    Select Case MsgBox("Vorhandene Indexe kopieren?", vbYesNo, "Indexe kopieren?")
+    Case vbYes
+        answer = True
+    Case vbNo
+        answer = False
+    End Select
+    Set frm.PlankopfCopyFrom = Plankopf
+    frm.CopyPlankopf Plankopf, Projekt, answer
+    frm.Show 1
+    
+    LoadListView
+
+End Sub
 
 Private Sub ListViewPlankopf_DblClick()
 
