@@ -17,6 +17,12 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
+
+
+
 Option Explicit
 '@IgnoreModule IntegerDataType, EmptyStringLiteral
 '@Folder "Plankopf"

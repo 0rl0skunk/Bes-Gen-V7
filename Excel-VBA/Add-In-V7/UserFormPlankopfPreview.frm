@@ -17,6 +17,12 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
+
+
+
 '@IgnoreModule UseMeaningfulName, IntegerDataType
 Option Explicit
 '@Folder "Plankopf"
