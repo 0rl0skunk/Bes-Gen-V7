@@ -351,17 +351,17 @@ Private Function ValidInputs() As Boolean
     ValidInputs = False
     Dim ErrorSource          As String
     ErrorSource = "Plankopf > ValidInputs > "
-    If Len(Inputs.GezeichnetPerson) = 0 Then writelog ErrorSource & "no 'INPUT GEZEICHNET PERSON' given"
-    If Len(Inputs.GezeichnetDatum) = 0 Then writelog ErrorSource & "no 'INPUT GEZEICHNET DATUM' given"
-    If Len(Inputs.GeprüftPerson) = 0 Then writelog ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
-    If Len(Inputs.GeprüftDatum) = 0 Then writelog ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
-    If Len(Inputs.Gebäude) = 0 Then writelog ErrorSource & "no 'INPUT GEBÄUDE' given"
-    If Len(Inputs.GebäudeTeil) = 0 Then writelog ErrorSource & "no 'INPUT GEBÄUDETEIL' given"
-    If Len(Inputs.Geschoss) = 0 Then writelog ErrorSource & "no 'INPUT GESCHOSS' given"
-    If Len(Inputs.Planüberschrift) = 0 Then writelog ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
-    If Len(Inputs.LayoutGrösse) = 0 Then writelog ErrorSource & "no 'INPUT FORMAT' given"
-    If Len(Inputs.LayoutMasstab) = 0 Then writelog ErrorSource & "no 'INPUT MASSTAB' given"
-    If Len(Inputs.LayoutPlanstand) = 0 Then writelog ErrorSource & "no 'INPUT PLANSTAND' given"
+    If Len(Inputs.GezeichnetPerson) = 0 Then writelog "error", ErrorSource & "no 'INPUT GEZEICHNET PERSON' given"
+    If Len(Inputs.GezeichnetDatum) = 0 Then writelog "error", ErrorSource & "no 'INPUT GEZEICHNET DATUM' given"
+    If Len(Inputs.GeprüftPerson) = 0 Then writelog "error", ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
+    If Len(Inputs.GeprüftDatum) = 0 Then writelog "error", ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
+    If Len(Inputs.Gebäude) = 0 Then writelog "error", ErrorSource & "no 'INPUT GEBÄUDE' given"
+    If Len(Inputs.GebäudeTeil) = 0 Then writelog "error", ErrorSource & "no 'INPUT GEBÄUDETEIL' given"
+    If Len(Inputs.Geschoss) = 0 Then writelog "error", ErrorSource & "no 'INPUT GESCHOSS' given"
+    If Len(Inputs.Planüberschrift) = 0 Then writelog "error", ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
+    If Len(Inputs.LayoutGrösse) = 0 Then writelog "error", ErrorSource & "no 'INPUT FORMAT' given"
+    If Len(Inputs.LayoutMasstab) = 0 Then writelog "error", ErrorSource & "no 'INPUT MASSTAB' given"
+    If Len(Inputs.LayoutPlanstand) = 0 Then writelog "error", ErrorSource & "no 'INPUT PLANSTAND' given"
     ValidInputs = True
 
     writelog "Info", "Plankopf erstellt"

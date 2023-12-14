@@ -16,6 +16,10 @@ Global Const listCols = 30
 Global Const minListHeight = 20
 Global Const HighlightColor = vbCyan
 Global Const TemplatePagesXslm = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
+Global Const LogDepth = 1   ' 3= everything > Slowest
+                            ' 2= warnings and errors
+                            ' 1= Errors only
+
 
 Public WB                    As Workbook
 Public shPData               As Worksheet
@@ -34,7 +38,8 @@ Private pPlanköpfe           As Collection
 
 Public Function Projekt() As IProjekt
     With Application.ActiveWorkbook.Sheets("Projektdaten")
-        If pProjekt Is Nothing Then Set pProjekt = _
+        If pProjekt Is Nothing Then
+        Set pProjekt = _
            ProjektFactory.Create( _
            .range("ADM_Projektnummer").Value, _
            AdressFactory.Create _
@@ -45,6 +50,10 @@ Public Function Projekt() As IProjekt
            .range("ADM_Projektphase").Value, _
            .range("ADM_ProjektpfadSharePoint").Value)
         writelog "Info", "Created Projekt " & pProjekt.Projektnummer
+        Else
+        writelog "Info", "Projekt already exists " & pProjekt.Projektnummer
+        End If
+        
     End With
     Set Projekt = pProjekt
 End Function

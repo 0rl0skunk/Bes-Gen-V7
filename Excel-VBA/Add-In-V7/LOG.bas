@@ -14,11 +14,23 @@ Public Sub writelog(ByVal Typ As String, ByVal a_stringLogThis As String)
     Dim Typstr               As String
     Select Case Typ
         Case "Error"
-            Typstr = ">> ERROR   "
+            If LogDepth >= 1 Then
+                Typstr = ">> ERROR   "
+            Else
+                Exit Sub
+            End If
         Case "Warning"
-            Typstr = ">> WARNING "
+            If LogDepth >= 1 Then
+                Typstr = ">> WARNING "
+            Else
+                Exit Sub
+            End If
         Case "Info"
-            Typstr = ">> INFO    "
+            If LogDepth >= 3 Then
+                Typstr = ">> INFO    "
+            Else
+                Exit Sub
+            End If
     End Select
     l_StringDateTimeNow = Now
     l_StringToday = Format$(l_StringDateTimeNow, "YYYY-MM-DD hh:mm:ss")

@@ -12,6 +12,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 Option Explicit
 '@IgnoreModule IntegerDataType, EmptyStringLiteral
 '@Folder "Plankopf"
@@ -203,7 +205,7 @@ Private Sub UserForm_Initialize()
     Me.TextBoxLayoutMasstab.Value = "1:50"
 
     '--- log
-    writelog "Beschriftungsgeneartor controls complete"
+    writelog "Info", "UserFormPlankopf > Inizialise complete"
     '--- log end
 
 End Sub
@@ -383,10 +385,6 @@ Private Sub ComboBoxEPArt_Change()
 
     Me.ComboBoxEPArt.BackColor = SystemColorConstants.vbWindowBackground
 
-    '--- log
-    writelog "ComboBoxEPArt_Change"
-    '--- log end
-
 End Sub
 
 Private Sub ComboBoxEPUGewerk_Change()
@@ -396,10 +394,6 @@ Private Sub ComboBoxEPUGewerk_Change()
     If Me.ComboBoxEPUGewerk.Value = "" Then
         Me.ComboBoxEPUGewerk.Value = "-- Bitte wählen --"
     End If
-
-    '--- log
-    writelog "ComboBoxEPUGewerk_Change"
-    '--- log end
 
 End Sub
 
@@ -449,10 +443,6 @@ Private Sub ComboBoxEPHGewerk_Change()
         Me.ComboBoxEPArt.Value = "-- Bitte wählen --"
     End If
 
-    '--- log
-    writelog "ComboBoxEPHGewerk_Change"
-    '--- log end
-
     Exit Sub
 
 ErrMsg:
@@ -467,10 +457,6 @@ Private Sub ComboBoxESAnlageTyp_Change()
     Else
         Me.ComboBoxESAnlageTyp.ControlTipText = "Wähle den Anlagentyp des zu beschriftenden Schemas aus."
     End If
-
-    '--- log
-    writelog "ComboBoxESAnlageTyp_Change"
-    '--- log end
 
 End Sub
 
@@ -506,10 +492,6 @@ Private Sub ComboBoxESHGewerk_Change()
     Me.ComboBoxESUGewerk.Value = "-- Bitte wählen --"
 
     Me.ComboBoxESHGewerk.BackColor = SystemColorConstants.vbWindowBackground
-
-    '--- log
-    writelog "ComboBoxESHGewerk_Change"
-    '--- log end
 
     Exit Sub
 
@@ -549,10 +531,6 @@ Private Sub ComboBoxESUGewerk_Change()
             Me.ComboBoxESAnlageTyp.Value = "-- Bitte wählen --"
     End Select
 
-    '--- log
-    writelog "ComboBoxESUGewerk_Change"
-    '--- log end
-
 End Sub
 
 Private Sub ComboBoxPRHGewerk_Change()
@@ -588,10 +566,6 @@ Private Sub ComboBoxPRHGewerk_Change()
     End If
 
     Me.ComboBoxPRHGewerk.BackColor = SystemColorConstants.vbWindowBackground
-
-    '--- log
-    writelog "ComboBoxPRHGewerk_Change"
-    '--- log end
 
     Exit Sub
 
@@ -654,10 +628,6 @@ Debug.Print rng.Address
         End If
     End If
     On Error GoTo 0
-
-    '--- log
-    writelog "ComboBoxGebäude_Change"
-    '--- log end
 
     Exit Sub
 
