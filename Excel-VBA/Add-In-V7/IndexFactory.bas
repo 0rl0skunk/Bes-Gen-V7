@@ -58,8 +58,8 @@ Public Sub AddToDatabase(Index As IIndex)
         .Cells(row, 7).Value = Index.Klartext
         .Cells(row, 8).Value = Index.IndexID
     End With
-    Dim Plannummer           As String: Plannummer = PlankopfFactory.LoadFromDatabase(Globals.shStoreData.range("A:A").Find(Index.PlanID).row).Plannummer
-    writelog "Info", "Index für Plankopf " & Plannummer & " erstellt"
+    
+    writelog "Info", "Index für Plankopf erstellt"
 
 End Sub
 
@@ -67,20 +67,18 @@ Public Function DeletePlan(ByVal ID As String)
     ' Löscht alle Indexe von einem Plan
     Dim row                  As Long
     Dim coll                 As New Collection: Set coll = GetIndexes(ID:=ID)
-    Dim Plannummer           As String: Plannummer = PlankopfFactory.LoadFromDatabase(Globals.shStoreData.range("A:A").Find(ID).row).Plannummer
     With Globals.shIndex
         For row = .range("A1").CurrentRegion.rows.Count To 2 Step -1
             If .Cells(row, 1).Value = ID Then: .Cells(row, 1).EntireRow.Delete
         Next
     End With
 
-    writelog "Info", coll.Count & " Indexe für Plankopf " & Plannummer & " gelöscht"
+    writelog "Info", coll.Count & " Indexe für Plankopf gelöscht"
 
 End Function
 
 Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal ID As String = vbNullString) As Collection
-    ' bibt eine Collection von allen Indexen eines Plankopes zurück
-    Globals.SetWBs
+    ' gibt eine Collection von allen Indexen eines Plankopes zurück
 
     Dim _
     row                      As Long, _
@@ -105,8 +103,14 @@ Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal 
             GeprüftPerson = .Cells(row, 5).Value
             GeprüftDatum = .Cells(row, 6).Value
             Klartext = .Cells(row, 7).Value
-
-            If IDPlan = Plankopf.ID Or IDPlan = ID Then
+            
+            If Not Plankopf Is Nothing Then If IDPlan = Plankopf.ID Then GoTo Matching
+            If IDPlan = ID Then
+                GoTo Matching
+            Else
+                GoTo Skip
+            End If
+Matching:
                 Set Index = Create(ID:=IndexID, _
                                    IDPlan:=IDPlan, _
                                    GezeichnetPerson:=GezeichnetPerson, _
@@ -117,13 +121,15 @@ Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal 
                                    GeprüftDatum:=GeprüftDatum)
                 coll.Add Index
                 If Not Plankopf Is Nothing Then Plankopf.AddIndex Index
-            End If
+Skip:
         Next
     End With
     Set GetIndexes = coll
-
+    On Error GoTo ErrMsg
     writelog "Info", coll.Count & " Indexe für Plankopf" & Plankopf.Plannummer
-
+    Exit Function
+ErrMsg:
+    writelog "Info", "NO Indexe für Plankopf"
 End Function
 
 

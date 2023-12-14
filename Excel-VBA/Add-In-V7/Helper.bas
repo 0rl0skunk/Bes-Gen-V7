@@ -155,12 +155,6 @@ Public Function GetUnterGewerkKF(UnterGewerk As String, Hauptgewerk As String, P
 
 End Function
 
-Public Function colToString(col As Collection) As String
-
-    colToString = Join(CollectionToArray1(col), vbNewLine)
-
-End Function
-
 Public Function WLookup(Lookup, range As range, Index As Integer, Optional onError As String = "-") As String
     ' VLookup mit 'onError' wert welcher selbst zugeordnet werden kann.
     On Error GoTo ERR
@@ -241,9 +235,9 @@ Public Function deleteIndexesXml()
 
     For col = 2 To lastcol Step 2
         For row = 6 To lastrow
-            writelog "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
+            writelog "Info", "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
             If Not IsEmpty(shGebäude.Cells(row, col)) Then
-                writelog "> " & shGebäude.Cells(row, col).Value
+                writelog "Info", "> " & shGebäude.Cells(row, col).Value
                 ' only go if there is something in the cell
                 deleteIndexXml row, col
             End If

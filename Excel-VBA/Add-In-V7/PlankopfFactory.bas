@@ -65,8 +65,6 @@ End Function
 
 Public Function LoadFromDatabase(ByVal row As Long) As IPlankopf
 
-    Globals.SetWBs
-
     Dim NewPlankopf          As Plankopf:    Set NewPlankopf = New Plankopf
     Dim ws                   As Worksheet:    Set ws = Globals.shStoreData
     With ws

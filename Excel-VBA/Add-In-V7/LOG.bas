@@ -14,19 +14,19 @@ Public Sub writelog(ByVal Typ As String, ByVal a_stringLogThis As String)
     Dim Typstr               As String
     Select Case Typ
         Case "Error"
-            If LogDepth >= 1 Then
+            If Globals.LogDepth >= 1 Then
                 Typstr = ">> ERROR   "
             Else
                 Exit Sub
             End If
         Case "Warning"
-            If LogDepth >= 1 Then
+            If Globals.LogDepth >= 1 Then
                 Typstr = ">> WARNING "
             Else
                 Exit Sub
             End If
         Case "Info"
-            If LogDepth >= 3 Then
+            If Globals.LogDepth >= 3 Then
                 Typstr = ">> INFO    "
             Else
                 Exit Sub

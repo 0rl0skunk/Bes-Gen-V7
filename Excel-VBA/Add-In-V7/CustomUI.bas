@@ -105,6 +105,7 @@ RestartExcel:
 End Sub
 
 Sub onActionButton(control As IRibbonControl)
+    writelog "Info", "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
     Globals.SetWBs
     If Not isUILocked Then
         Select Case control.ID
@@ -117,9 +118,13 @@ Sub onActionButton(control As IRibbonControl)
     End If
     Select Case control.ID
         Case "CADFolder"
-            Shell "explorer.exe " & Globals.Projekt.ProjektOrdnerCAD, vbNormalFocus
+            Dim folderpath As String: folderpath = Globals.Projekt.ProjektOrdnerCAD
+            writelog "Info", "Opening CAD-Folder" & vbNewLine & folderpath
+            Shell "explorer.exe " & folderpath, vbNormalFocus
         Case "SharePoint"
-            ActiveWorkbook.FollowHyperlink Address:=Globals.Projekt.ProjektOrdnerSharePoint
+            Dim folderSP As String: folderSP = Globals.Projekt.ProjektOrdnerSharePoint
+            writelog "Info", "Opening SharePoint-Folder" & vbNewLine & folderSP
+            ActiveWorkbook.FollowHyperlink Address:=folderSP
         Case "Drucken"
             'TODO Drucken UserForm
             Dim frmPrint     As New UserFormPrint
@@ -148,8 +153,6 @@ Sub onActionButton(control As IRibbonControl)
             isUILocked = Not isUILocked
             CustomUI.RefreshRibbon
     End Select
-
-    writelog "Info", "Button " & control.ID & " pressed"
 End Sub
 
 Sub onChange(control As IRibbonControl, Text As String)

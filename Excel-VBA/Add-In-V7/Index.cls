@@ -67,6 +67,8 @@ Public Sub FillData( _
     If validateInputs Then
         This = Inputs
     End If
+    
+    writelog "Info", "Index erstellt"
 
 End Sub
 
@@ -87,15 +89,12 @@ Private Function validateInputs() As Boolean
     If This.ID = vbNullString Then This.ID = getNewID(4, Globals.shIndex, Globals.shIndex.range("A1").CurrentRegion, 1)
 
     If This.Index = vbNullString Then
-        Globals.SetWBs
         Dim indexes(1 To 26) As String, LastIndex As String
         Dim i                As Integer
-        For i = 65 To 90
-            indexes(i - 64) = Chr(i)
-        Next
+        'For i = 65 To 90
+        '    indexes(i - 64) = Chr(i)
+        'Next
     End If
-
-    writelog "Info", "Index erstellt"
 
 End Function
 

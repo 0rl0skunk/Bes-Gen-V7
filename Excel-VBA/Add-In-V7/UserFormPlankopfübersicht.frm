@@ -12,8 +12,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
 Option Explicit
 '@Folder "Plankopf"
 Private icons                As UserFormIconLibrary
@@ -135,15 +133,8 @@ Private Sub ListViewPlankopf_DblClick()
 
 End Sub
 
-Private Sub UserForm_Activate()
-
-    LoadListView
-
-End Sub
-
 Private Sub UserForm_Initialize()
 
-    Globals.SetWBs
     LoadListView
 
 End Sub

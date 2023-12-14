@@ -16,9 +16,10 @@ Global Const listCols = 30
 Global Const minListHeight = 20
 Global Const HighlightColor = vbCyan
 Global Const TemplatePagesXslm = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
-Global Const LogDepth = 1   ' 3= everything > Slowest
-                            ' 2= warnings and errors
-                            ' 1= Errors only
+Global Const LogDepth = 1#
+' 3= everything > Slowest
+' 2= warnings and errors
+' 1= Errors only
 
 
 Public WB                    As Workbook
@@ -68,7 +69,7 @@ End Function
 Private Sub GetPlanköpfe()
 
     'TODO Create Planköpfe from Workbook / Database
-    writelog "Info", "Loaded ", pPlanköpfe.Count & " Planköpfe from the Database"
+    writelog "Info", "Loaded " & pPlanköpfe.Count & " Planköpfe from the Database"
 End Sub
 
 Function Initialize() As Boolean

@@ -14,7 +14,7 @@ Public Sub TemplateErrorHandler()
 
     ' vv something could go wrong here vv
     If Not Dev Then On Error GoTo Err1           ' show the fancy error messages for the Users and the functional one for the developers
-    writelog "trying to divide 9/0"
+    writelog "Error", "trying to divide 9/0"
 Debug.Print 9 / 0
 
     GoTo noerr1
