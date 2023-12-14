@@ -12,8 +12,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
 '@Folder "Templates"
 '@ModuleDescription "Wird als Bibliothek für Icons missbraucht."
 ' Die Icons können über 'icons."iconname".picture' geladen werden

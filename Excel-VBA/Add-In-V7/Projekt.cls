@@ -82,7 +82,7 @@ Private Function GetCADPath()
 
     This.ProjektOrdnerCAD = TinLinePath & "\" & Jahr & "\" & This.Projektnummer & "_" & This.ProjektBezeichnung
 
-    log.write "Info", "CAD-Pfad für Projekt " & this.projektnummer & " > " &  This.ProjektOrdnerCAD
+    writelog "Info", "CAD-Pfad für Projekt " & This.Projektnummer & " > " & This.ProjektOrdnerCAD
 
 End Function
 

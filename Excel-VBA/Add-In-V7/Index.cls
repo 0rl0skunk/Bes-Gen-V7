@@ -71,31 +71,31 @@ Public Sub FillData( _
 End Sub
 
 Private Function validateInputs() As Boolean
-' sind alle benötigten Daten gegeben und korrekt
+    ' sind alle benötigten Daten gegeben und korrekt
     validateInputs = False
     If Len(Inputs.IDPlan) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Plan ID' given"
     '--- Zeichner ---
     If Len(Inputs.GezeichnetPerson) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'GezeichnetPerson' given"
     If Len(Inputs.GezeichnetDatum) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'GezeichnetDatum' given"
     If Inputs.GeprüftPerson = "NONE" Then Inputs.GeprüftPerson = vbNullString
-    If Inputs.GeprüftDatum = "NONE" Then Inputs.GeprüftDatum = vbnullstring
+    If Inputs.GeprüftDatum = "NONE" Then Inputs.GeprüftDatum = vbNullString
 
     '--- Planbezeichnung ---
     If Len(Inputs.Klartext) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Klartext' given"
     validateInputs = True
-    
+
     If This.ID = vbNullString Then This.ID = getNewID(4, Globals.shIndex, Globals.shIndex.range("A1").CurrentRegion, 1)
-    
+
     If This.Index = vbNullString Then
-    Globals.SetWBs
+        Globals.SetWBs
         Dim indexes(1 To 26) As String, LastIndex As String
-        Dim i As Integer
+        Dim i                As Integer
         For i = 65 To 90
             indexes(i - 64) = Chr(i)
         Next
     End If
 
-    log.write "Info", "Index erstellt"
+    writelog "Info", "Index erstellt"
 
 End Function
 
@@ -106,7 +106,6 @@ End Property
 Private Property Get IIndex_Index() As String
     IIndex_Index = This.Index
 End Property
-
 Private Property Let IIndex_Index(NewValue As String)
     This.Index = NewValue
 End Property
@@ -126,7 +125,6 @@ End Property
 Private Property Get IIndex_PlanID() As String
     IIndex_PlanID = This.IDPlan
 End Property
-
 Private Property Let IIndex_PlanID(ByVal NewValue As String)
     This.IDPlan = NewValue
 End Property

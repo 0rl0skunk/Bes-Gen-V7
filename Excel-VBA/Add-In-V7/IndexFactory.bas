@@ -33,21 +33,21 @@ End Function
 Public Sub DeleteFromDatabase(ID As String)
     ' löscht den gewählten Index aus der Datenbank
     Globals.shIndex.range("H:H").Find(ID).EntireRow.Delete
-    log.write "Info", "Index gelöscht" 
+    writelog "Info", "Index gelöscht"
 End Sub
 
 Public Sub AddToDatabase(Index As IIndex)
     ' erstellt einen neuen Index in der Datenbank
     Dim _
-    row As Long, _
-    Gezeichnet As String, _
-    Geprüft As String
-    
+    row                      As Long, _
+    Gezeichnet               As String, _
+    Geprüft                  As String
+
     Gezeichnet = Index.Gezeichnet
     Geprüft = Index.Geprüft
-    
+
     row = Globals.shIndex.range("A1").CurrentRegion.rows.Count + 1
-    
+
     With Globals.shIndex
         .Cells(row, 1).Value = Index.PlanID
         .Cells(row, 2).Value = Index.Index
@@ -58,71 +58,71 @@ Public Sub AddToDatabase(Index As IIndex)
         .Cells(row, 7).Value = Index.Klartext
         .Cells(row, 8).Value = Index.IndexID
     End With
-    dim Plannummer as string: Plannummer = plankopffactory.loadfromdatabase(globals.shstoredata.range("A:A").find(index.planID).row).plannummer
-    log.write "Info", "Index für Plankopf " & Plannummer & " erstellt" 
+    Dim Plannummer           As String: Plannummer = PlankopfFactory.LoadFromDatabase(Globals.shStoreData.range("A:A").Find(Index.PlanID).row).Plannummer
+    writelog "Info", "Index für Plankopf " & Plannummer & " erstellt"
 
 End Sub
 
 Public Function DeletePlan(ByVal ID As String)
     ' Löscht alle Indexe von einem Plan
-    Dim row As Long
-    dim coll as new collection: set coll=    getindexes Id:=id
-    dim Plannummer as string: Plannummer = plankopffactory.loadfromdatabase(globals.shstoredata.range("A:A").find(ID).row).plannummer
+    Dim row                  As Long
+    Dim coll                 As New Collection: Set coll = GetIndexes(ID:=ID)
+    Dim Plannummer           As String: Plannummer = PlankopfFactory.LoadFromDatabase(Globals.shStoreData.range("A:A").Find(ID).row).Plannummer
     With Globals.shIndex
         For row = .range("A1").CurrentRegion.rows.Count To 2 Step -1
-        If .Cells(row, 1).Value = ID Then: .Cells(row, 1).EntireRow.Delete
+            If .Cells(row, 1).Value = ID Then: .Cells(row, 1).EntireRow.Delete
         Next
     End With
 
-    log.write "Info", coll.count & " Indexe für Plankopf " & Plannummer & " gelöscht" 
+    writelog "Info", coll.Count & " Indexe für Plankopf " & Plannummer & " gelöscht"
 
 End Function
 
-Public Function GetIndexes(byref optional Plankopf As IPlankopf, byval optional ID as string = vbnullstring) As Collection
+Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal ID As String = vbNullString) As Collection
     ' bibt eine Collection von allen Indexen eines Plankopes zurück
     Globals.SetWBs
 
     Dim _
-    row As Long, _
-    IndexID As String, _
-    IDPlan As String, _
-    GezeichnetPerson As String, _
-    GezeichnetDatum As String, _
-    Klartext As String, _
-    Letter As String, _
-    GeprüftPerson As String, _
-    GeprüftDatum As String, _
-    Index As IIndex, _
-    coll As New Collection
+    row                      As Long, _
+    IndexID                  As String, _
+    IDPlan                   As String, _
+    GezeichnetPerson         As String, _
+    GezeichnetDatum          As String, _
+    Klartext                 As String, _
+    Letter                   As String, _
+    GeprüftPerson            As String, _
+    GeprüftDatum             As String, _
+    Index                    As IIndex, _
+    coll                     As New Collection
 
     With Globals.shIndex
         For row = 2 To .range("A1").CurrentRegion.rows.Count
-        IndexID = .Cells(row, 8).Value
-        IDPlan = .Cells(row, 1).Value
-        Letter = .Cells(row, 2).Value
-        GezeichnetPerson = .Cells(row, 3).Value
-        GezeichnetDatum = .Cells(row, 4).Value
-        GeprüftPerson = .Cells(row, 5).Value
-        GeprüftDatum = .Cells(row, 6).Value
-        Klartext = .Cells(row, 7).Value
+            IndexID = .Cells(row, 8).Value
+            IDPlan = .Cells(row, 1).Value
+            Letter = .Cells(row, 2).Value
+            GezeichnetPerson = .Cells(row, 3).Value
+            GezeichnetDatum = .Cells(row, 4).Value
+            GeprüftPerson = .Cells(row, 5).Value
+            GeprüftDatum = .Cells(row, 6).Value
+            Klartext = .Cells(row, 7).Value
 
-            If IDPlan = Plankopf.ID or IDPlan = ID Then
+            If IDPlan = Plankopf.ID Or IDPlan = ID Then
                 Set Index = Create(ID:=IndexID, _
-                                          IDPlan:=IDPlan, _
-                                          GezeichnetPerson:=GezeichnetPerson, _
-                                          GezeichnetDatum:=GezeichnetDatum, _
-                                          Klartext:=Klartext, _
-                                          Letter:=Letter, _
-                                          GeprüftPerson:=GeprüftPerson, _
-                                          GeprüftDatum:=GeprüftDatum)
+                                   IDPlan:=IDPlan, _
+                                   GezeichnetPerson:=GezeichnetPerson, _
+                                   GezeichnetDatum:=GezeichnetDatum, _
+                                   Klartext:=Klartext, _
+                                   Letter:=Letter, _
+                                   GeprüftPerson:=GeprüftPerson, _
+                                   GeprüftDatum:=GeprüftDatum)
                 coll.Add Index
-                if not plankopf is nothing then                Plankopf.AddIndex Index
+                If Not Plankopf Is Nothing Then Plankopf.AddIndex Index
             End If
         Next
     End With
     Set GetIndexes = coll
 
-    log.write "Info", coll.count & " Indexe für Plankopf" & Plankopf.Plannummer
+    writelog "Info", coll.Count & " Indexe für Plankopf" & Plankopf.Plannummer
 
 End Function
 

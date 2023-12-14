@@ -15,7 +15,7 @@ Global Const XMLVorlage = "H:\TinLine\01_Standards\transform.xsl"
 Global Const listCols = 30
 Global Const minListHeight = 20
 Global Const HighlightColor = vbCyan
-global const TemplatePagesXslm = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
+Global Const TemplatePagesXslm = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
 
 Public WB                    As Workbook
 Public shPData               As Worksheet
@@ -44,7 +44,7 @@ Public Function Projekt() As IProjekt
            .range("ADM_Projektbezeichnung").Value, _
            .range("ADM_Projektphase").Value, _
            .range("ADM_ProjektpfadSharePoint").Value)
-        log.write "Info", "Created Projekt " & pProjekt.Projektnummer
+        writelog "Info", "Created Projekt " & pProjekt.Projektnummer
     End With
     Set Projekt = pProjekt
 End Function
@@ -59,7 +59,7 @@ End Function
 Private Sub GetPlanköpfe()
 
     'TODO Create Planköpfe from Workbook / Database
-    log.write "Info", "Loaded " pPlanköpfe.count & " Planköpfe from the Database"
+    writelog "Info", "Loaded ", pPlanköpfe.Count & " Planköpfe from the Database"
 End Sub
 
 Function Initialize() As Boolean
@@ -156,7 +156,7 @@ Public Function SetWBs()
 
     Globals.Projekt
 
-    log.write "Info", "Loaded all Workbooks in Globals Module"
+    writelog "Info", "Loaded all Workbooks in Globals Module"
 
 End Function
 

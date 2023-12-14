@@ -1,8 +1,9 @@
 Attribute VB_Name = "Helper"
 Option Explicit
+
 '@ModuleDescription "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
 Public Function GetPlanartNamedRange(Planart As String, Hauptgewerk As String) As String
-' Gibt die Range der verschiedenen Planarten des aktuellen Hauptgewerkes zurück
+    ' Gibt die Range der verschiedenen Planarten des aktuellen Hauptgewerkes zurück
     Dim result               As String
 
     Select Case Hauptgewerk
@@ -37,7 +38,7 @@ Public Function GetPlanartNamedRange(Planart As String, Hauptgewerk As String) A
 End Function
 
 Public Function GetUnterGewerkKF(UnterGewerk As String, Hauptgewerk As String, Planart As String) As String
-' Gibt die Kurzform des Untergewerke zurück
+    ' Gibt die Kurzform des Untergewerke zurück
     Dim result               As String
     Select Case Hauptgewerk
         Case "Elektro"
@@ -156,7 +157,7 @@ End Function
 
 Public Function colToString(col As Collection) As String
 
-    colToString = Join(CollectionToArray1(col), vbnewLine)
+    colToString = Join(CollectionToArray1(col), vbNewLine)
 
 End Function
 
@@ -173,12 +174,12 @@ Public Function WLookup(Lookup, range As range, Index As Integer, Optional onErr
     End If
 
     Exit Function
-    log.write "Info", "Wlookup Value Found " &  wlookup
+    writelog "Info", "Wlookup Value Found " & WLookup
 
 ERR:
 
     WLookup = onError
-    log.write "Error", "Wlookup Value for " & lookup & " Not Found"
+    writelog "Error", "Wlookup Value for " & Lookup & " Not Found"
 
 End Function
 
@@ -240,9 +241,9 @@ Public Function deleteIndexesXml()
 
     For col = 2 To lastcol Step 2
         For row = 6 To lastrow
-            log.write "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
+            writelog "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
             If Not IsEmpty(shGebäude.Cells(row, col)) Then
-                log.write "> " & shGebäude.Cells(row, col).Value
+                writelog "> " & shGebäude.Cells(row, col).Value
                 ' only go if there is something in the cell
                 deleteIndexXml row, col
             End If
@@ -539,7 +540,7 @@ Public Function getRange(Region As range, Optional Off As Integer = 1) As range
 ERR:
     Set rng = Nothing
 
-End Function¨
+End Function
 
 Public Function getUsername() As String
 
@@ -610,3 +611,4 @@ Public Function RemoveBlanksFromStringArray(ByRef inputArray() As Variant, Optio
     RemoveBlanksFromStringArray = result
 
 End Function
+

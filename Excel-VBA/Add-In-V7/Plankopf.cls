@@ -61,13 +61,14 @@ Private pProjekt             As IProjekt
 Private Property Get IPlankopf_Gewerk() As String
     IPlankopf_Gewerk = This.Gewerk
 End Property
+
 Private Property Get IPlankopf_UnterGewerk() As String
     IPlankopf_UnterGewerk = This.UnterGewerk
 End Property
+
 Private Property Get IPlankopf_ID() As String
     IPlankopf_ID = This.ID
 End Property
-
 Private Property Let IPlankopf_ID(ByVal NewValue As String)
     This.ID = NewValue
 End Property
@@ -183,7 +184,6 @@ End Property
 Private Property Get IPlankopf_Indexes() As Collection
     Set IPlankopf_Indexes = This.indexes
 End Property
-
 Private Property Set IPlankopf_Indexes(ByVal NewIndexes As Collection)
     Set This.indexes = NewIndexes
 End Property
@@ -214,7 +214,7 @@ Public Function FillData( _
        Optional ByVal Planüberschrift As String = "NEW", _
        Optional ByVal ID As String = "NEW" _
        ) As Boolean
-       ' SkipValidation ist zu debug zwecken zu gebrauchen
+    ' SkipValidation ist zu debug zwecken zu gebrauchen
     With Inputs
         .IDTinLine = TinLineID
         .GezeichnetPerson = GezeichnetPerson
@@ -243,9 +243,9 @@ Public Function FillData( _
         Else
             This.ID = ID
         End If
-        
+
         GetKF
-        
+
         This.DWGFilePath = pProjekt.ProjektOrdnerCAD & "\01_EP\02_EG"
         This.XMLFilePath = This.DWGFilePath
         This.DWGFileName = GetDWGFileName
@@ -271,15 +271,15 @@ End Function
 
 Private Function GetKF()
 
-On Error GoTo ERR
-        This.GebäudeKF = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(1).Value
-        This.GeschossCode = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, -1).Value
-        This.GeschossKF = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, 1).Value
-        This.GebäudeteilKF = Globals.shPData.range("PRO_Gebäudeteil").Find(This.GebäudeTeil).Offset(0, 1).Value
-        This.GewerkKF = Globals.shPData.range("PRO_Hauptgewerk").Find(This.Gewerk).Offset(0, 1).Value
-        
-        Dim col As Long
-        Select Case This.Plantyp
+    On Error GoTo ERR
+    This.GebäudeKF = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(1).Value
+    This.GeschossCode = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, -1).Value
+    This.GeschossKF = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, 1).Value
+    This.GebäudeteilKF = Globals.shPData.range("PRO_Gebäudeteil").Find(This.GebäudeTeil).Offset(0, 1).Value
+    This.GewerkKF = Globals.shPData.range("PRO_Hauptgewerk").Find(This.Gewerk).Offset(0, 1).Value
+
+    Dim col                  As Long
+    Select Case This.Plantyp
         Case "PLA"
 1           col = Application.Match(This.GewerkKF & " PLA", Globals.shPData.range("10:10"), 0)
             This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).Value
@@ -295,14 +295,14 @@ On Error GoTo ERR
             This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).Value
 6           col = Application.Match(This.GewerkKF, Globals.shPData.range("9:9"), 0)
             This.PlanartKF = Globals.shPData.Columns(col).Find(This.Planart).Offset(0, 1).Value
-        End Select
+    End Select
 
-        log.write "Info", "Kurzformen erstellt" 
-Exit Function
+    writelog "Info", "Kurzformen erstellt"
+    Exit Function
 ERR:
-    Debug.Print ">>>   "; ERR.Description
-    log.write "Error", "Beim erstellen der Kurzformen" & vbnewline & _
-err.number & vbnewline & err.description & vbnewline & err.source
+Debug.Print ">>>   "; ERR.description
+    writelog "Error", "Beim erstellen der Kurzformen" & vbNewLine & _
+                     ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
 
 End Function
 
@@ -318,13 +318,13 @@ Private Function GetPlanüberschrift()
         ' Überschrift für Elektropläne
         Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschoss, This.GebäudeTeil)
         If Len(Planüberschrift) > Globals.maxlen Then
-            Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschosskf, This.GebäudeTeil)
+            Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.GeschossKF, This.GebäudeTeil)
             If Len(Planüberschrift) > maxlen Then
-                Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschosskf, This.GebäudeTeilkf)
+                Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.GeschossKF, This.GebäudeteilKF)
                 If Len(Planüberschrift) > maxlen Then
-                    Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerkkf, This.Geschosskf, This.GebäudeTeilkf)
+                    Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerkKF, This.GeschossKF, This.GebäudeteilKF)
                     If Len(Planüberschrift) > maxlen Then
-                        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planartkf, This.UnterGewerkkf, This.Geschosskf, This.GebäudeTeilkf)
+                        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.PlanartKF, This.UnterGewerkKF, This.GeschossKF, This.GebäudeteilKF)
                     End If
                 End If
             End If
@@ -340,9 +340,9 @@ Private Function GetPlanüberschrift()
         End If
     End If
 
-    this.Planüberschrift=Planüberschrift
+    This.Planüberschrift = Planüberschrift
 
-    log.write "Info", "Planüberschrift erstellt: " & this.Planüberschrift
+    writelog "Info", "Planüberschrift erstellt: " & This.Planüberschrift
 
 End Function
 
@@ -351,20 +351,20 @@ Private Function ValidInputs() As Boolean
     ValidInputs = False
     Dim ErrorSource          As String
     ErrorSource = "Plankopf > ValidInputs > "
-    If Len(Inputs.GezeichnetPerson) = 0 Then log.write ErrorSource & "no 'INPUT GEZEICHNET PERSON' given"
-    If Len(Inputs.GezeichnetDatum) = 0 Then log.write ErrorSource & "no 'INPUT GEZEICHNET DATUM' given"
-    If Len(Inputs.GeprüftPerson) = 0 Then log.write ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
-    If Len(Inputs.GeprüftDatum) = 0 Then log.write ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
-    If Len(Inputs.Gebäude) = 0 Then log.write ErrorSource & "no 'INPUT GEBÄUDE' given"
-    If Len(Inputs.GebäudeTeil) = 0 Then log.write ErrorSource & "no 'INPUT GEBÄUDETEIL' given"
-    If Len(Inputs.Geschoss) = 0 Then log.write ErrorSource & "no 'INPUT GESCHOSS' given"
-    If Len(Inputs.Planüberschrift) = 0 Then log.write ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
-    If Len(Inputs.LayoutGrösse) = 0 Then log.write ErrorSource & "no 'INPUT FORMAT' given"
-    If Len(Inputs.LayoutMasstab) = 0 Then log.write ErrorSource & "no 'INPUT MASSTAB' given"
-    If Len(Inputs.LayoutPlanstand) = 0 Then log.write ErrorSource & "no 'INPUT PLANSTAND' given"
+    If Len(Inputs.GezeichnetPerson) = 0 Then writelog ErrorSource & "no 'INPUT GEZEICHNET PERSON' given"
+    If Len(Inputs.GezeichnetDatum) = 0 Then writelog ErrorSource & "no 'INPUT GEZEICHNET DATUM' given"
+    If Len(Inputs.GeprüftPerson) = 0 Then writelog ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
+    If Len(Inputs.GeprüftDatum) = 0 Then writelog ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
+    If Len(Inputs.Gebäude) = 0 Then writelog ErrorSource & "no 'INPUT GEBÄUDE' given"
+    If Len(Inputs.GebäudeTeil) = 0 Then writelog ErrorSource & "no 'INPUT GEBÄUDETEIL' given"
+    If Len(Inputs.Geschoss) = 0 Then writelog ErrorSource & "no 'INPUT GESCHOSS' given"
+    If Len(Inputs.Planüberschrift) = 0 Then writelog ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
+    If Len(Inputs.LayoutGrösse) = 0 Then writelog ErrorSource & "no 'INPUT FORMAT' given"
+    If Len(Inputs.LayoutMasstab) = 0 Then writelog ErrorSource & "no 'INPUT MASSTAB' given"
+    If Len(Inputs.LayoutPlanstand) = 0 Then writelog ErrorSource & "no 'INPUT PLANSTAND' given"
     ValidInputs = True
 
-    log.write "Info", "Plankopf erstellt"
+    writelog "Info", "Plankopf erstellt"
 
 End Function
 
@@ -380,7 +380,7 @@ PDFEP:
     This.PDFFileName = WorksheetFunction.TextJoin _
                        ("_", True, shPData.range("ADM_Projektnummer").Value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday) & ".PDF"
 
-    log.write "Info", "Planablage-Namen aktualisiert" & this.pdffilename
+    writelog "Info", "Planablage-Namen aktualisiert" & This.PDFFileName
 End Function
 
 ' -------------------------------
@@ -392,6 +392,7 @@ Private Sub IPlankopf_AddIndex(NewValue As IIndex)
     Set This.currentIndex = NewValue
 
 End Sub
+
 Private Sub IPlankopf_ClearIndex()
 
     Set This.indexes = New Collection

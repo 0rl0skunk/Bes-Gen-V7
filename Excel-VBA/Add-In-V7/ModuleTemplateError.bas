@@ -14,7 +14,7 @@ Public Sub TemplateErrorHandler()
 
     ' vv something could go wrong here vv
     If Not Dev Then On Error GoTo Err1           ' show the fancy error messages for the Users and the functional one for the developers
-    log.write "trying to divide 9/0"
+    writelog "trying to divide 9/0"
 Debug.Print 9 / 0
 
     GoTo noerr1
@@ -42,10 +42,10 @@ ErrHandler:
             GoTo errSolved
         Case 82
             ' if it is NOT solvable then display the error message
-            errFrm.typeWarning ErrSource & ERR.Number & vbNewLine & "Decsription:" & vbNewLine & ERR.Description
+            errFrm.typeWarning ErrSource & ERR.Number & vbNewLine & "Decsription:" & vbNewLine & ERR.description
             errFrm.Show 1
         Case Else                                'a "unhandled" error occured
-            errFrm.typeError ErrSource & ERR.Number & vbNewLine & "Decsription:" & vbNewLine & ERR.Description, , True
+            errFrm.typeError ErrSource & ERR.Number & vbNewLine & "Decsription:" & vbNewLine & ERR.description, , True
             errFrm.Show 1
     End Select
 

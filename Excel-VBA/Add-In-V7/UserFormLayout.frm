@@ -12,8 +12,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
 Option Explicit
 
 Private pMasstab             As Integer
@@ -264,10 +262,5 @@ Private Sub UserForm_Initialize()
     Me.TitleLabel = "Layout Voransicht"
     Me.LabelInstructions.Caption = "Die Layoutgrösse im Modell und die Plankopfposition sowie die Standardlegenden können hier abgelesen werden."
 End Sub
-
-
-
-
-
 
 

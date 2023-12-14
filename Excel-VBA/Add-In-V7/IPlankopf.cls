@@ -16,7 +16,6 @@ Option Explicit
 
 Public Property Get ID() As String
 End Property
-
 Public Property Let ID(ByVal NewValue As String)
 End Property
 
@@ -71,7 +70,7 @@ End Property
 Public Property Get LayoutName() As String
 End Property
 
-Public Property Get PlanNummer() As String
+Public Property Get Plannummer() As String
 End Property
 
 Public Property Get LayoutGrösse() As String
@@ -109,7 +108,6 @@ End Property
 
 Public Property Get indexes() As Collection
 End Property
-
 Public Property Set indexes(ByVal NewIndexes As Collection)
 End Property
 
@@ -118,3 +116,4 @@ End Sub
 
 Public Sub ClearIndex()
 End Sub
+

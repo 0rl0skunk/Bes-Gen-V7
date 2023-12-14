@@ -13,9 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 '@Folder("Excel-Items")
-Public pModules As New Collection
+Public pModules              As New Collection
 
 Private Sub CommandButtonClose_Click()
 
@@ -45,7 +44,7 @@ End Sub
 Private Sub LoadModules()
 
     Dim Li                   As ListItem
-    Dim e As Long
+    Dim e                    As Long
 
     With Me.ListViewModule
         .ListItems.Clear
@@ -63,7 +62,8 @@ Private Sub LoadModules()
             Set Li = .ListItems.Add()
             Li.ListSubItems.Add , , pModules.item(e)(0)
             Li.ListSubItems.Add , , pModules.item(e)(1)
-            Next
+        Next
     End With
 
 End Sub
+

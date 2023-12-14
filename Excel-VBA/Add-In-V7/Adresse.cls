@@ -27,13 +27,13 @@ Public Sub FillData( _
        ByVal PLZ As String, _
        ByVal Ort As String _
        )
-       ' Erstellt ein neues Adresse Objekt.
+    ' Erstellt ein neues Adresse Objekt.
 
     This.Strasse = Strasse
     This.PLZ = PLZ
     This.Ort = Ort
 
-    log.write "Info", "Adresse erstellt" & This.Strasse & vbNewLine & This.PLZ & " " & This.Ort
+    writelog "Info", "Adresse erstellt" & This.Strasse & vbNewLine & This.PLZ & " " & This.Ort
 
 End Sub
 
@@ -52,3 +52,5 @@ End Property
 Public Property Get IAdresse_Komplett() As String
     IAdresse_Komplett = This.Strasse & vbNewLine & This.PLZ & " " & This.Ort
 End Property
+
+

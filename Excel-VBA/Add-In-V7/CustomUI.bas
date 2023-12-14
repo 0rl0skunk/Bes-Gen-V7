@@ -76,7 +76,7 @@ Sub onLoad(ribbon As IRibbonUI)
     StoreRibbonPointer = ObjPtr(ribbon)
     ThisWorkbook.Names.Add Name:="RibbonID", RefersTo:=StoreRibbonPointer
 
-    log.write "Info", "CustomRibbon successfully Loaded"
+    writelog "Info", "CustomRibbon successfully Loaded"
 
 End Sub
 
@@ -99,13 +99,13 @@ Public Sub RefreshRibbon()
     'ERROR MESSAGES:
 RestartExcel:
     MsgBox "Please restart Excel for Ribbon UI changes to take affect", , "Ribbon UI Refresh Failed"
-    log.write "Error", "trying to refresh CustomRibbon" & vbnewline & _
-    err.number & vbnewline & err.description & vbnewline & err.source
+    writelog "Error", "trying to refresh CustomRibbon" & vbNewLine & _
+                     ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
 
 End Sub
 
 Sub onActionButton(control As IRibbonControl)
-Globals.SetWBs
+    Globals.SetWBs
     If Not isUILocked Then
         Select Case control.ID
             Case "Objektdaten"
@@ -149,7 +149,7 @@ Globals.SetWBs
             CustomUI.RefreshRibbon
     End Select
 
-    log.write "Info", "Button " & control.id & " pressed"
+    writelog "Info", "Button " & control.ID & " pressed"
 End Sub
 
 Sub onChange(control As IRibbonControl, Text As String)
@@ -177,7 +177,7 @@ Sub CallBackGetText(control As IRibbonControl, ByRef returnedVal)
             returnedVal = Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_Projektphase").Value
     End Select
     On Error GoTo 0
-    log.write "Info", control.id & " Text set to: " & returnedVal
+    writelog "Info", control.ID & " Text set to: " & returnedVal
 End Sub
 
 Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal)
@@ -187,7 +187,7 @@ Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal)
         Case Else
             returnedVal = True
     End Select
-    log.write "Info", control.id & " is enabled = " & returnedVal
+    writelog "Info", control.ID & " is enabled = " & returnedVal
 End Sub
 
 Sub isTextEnabled(control As IRibbonControl, ByRef returnedVal)
@@ -199,5 +199,7 @@ Sub isTextEnabled(control As IRibbonControl, ByRef returnedVal)
         Case "comboBoxProjektphase"
             returnedVal = Not isUILocked
     End Select
-    log.write "Info", control.id & " is enabled = " & returnedVal
+    writelog "Info", control.ID & " is enabled = " & returnedVal
 End Sub
+
+

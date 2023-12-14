@@ -12,8 +12,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
 '@IgnoreModule UseMeaningfulName, IntegerDataType
 Option Explicit
 '@Folder "Plankopf"
@@ -29,7 +27,7 @@ Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
     Me.PA40.Caption = Plankopf.Planüberschrift
     Me.PA41.Caption = Plankopf.LayoutGrösse
     Me.PA42.Caption = Plankopf.LayoutMasstab
-    Me.PA43.Caption = Plankopf.PlanNummer
+    Me.PA43.Caption = Plankopf.Plannummer
     Me.PA44.Caption = Plankopf.LayoutPlanstand
     Me.PA30.Caption = Split(Plankopf.Gezeichnet, " ; ")(0)
     Me.PA31.Caption = Split(Plankopf.Gezeichnet, " ; ")(1)
@@ -76,5 +74,4 @@ Public Sub LoadXML(ByVal filePath As String, ByVal Plankopfnummer As Long)
     Next
 
 End Sub
-
 
