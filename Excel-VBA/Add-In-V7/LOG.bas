@@ -2,18 +2,28 @@ Attribute VB_Name = "LOG"
 Option Explicit
 '@IgnoreModule EmptyStringLiteral
 '@Folder "Debug Logger"
+'@ModuleDescription "Logging Module."
+
 Public Const LOGFile         As String = "C:\Users\Public\Documents\TinLine\Bes-Gen_V7.log"
 
-Public Sub Log(ByVal a_stringLogThis As String)
+Public Sub writelog(ByVal Typ As String, ByVal a_stringLogThis As String)
     ' prepare date
     Dim l_StringDateTimeNow  As String, _
     l_StringToday            As String, _
     l_StringLogStatement     As String
-
+    Dim Typstr               As String
+    Select Case Typ
+        Case "Error"
+            Typstr = ">> ERROR   "
+        Case "Warning"
+            Typstr = ">> WARNING "
+        Case "Info"
+            Typstr = ">> INFO    "
+    End Select
     l_StringDateTimeNow = Now
     l_StringToday = Format$(l_StringDateTimeNow, "YYYY-MM-DD hh:mm:ss")
     ' concatenate date and what the user wants logged
-    l_StringLogStatement = l_StringToday & " " & a_stringLogThis
+    l_StringLogStatement = l_StringToday & " " & Typstr & a_stringLogThis
     ' send to TTY
 Debug.Print (l_StringLogStatement)
     ' append (not write) to disk
@@ -28,5 +38,11 @@ Debug.Print ("Erasing the previous logs.")
     Print #1, ""
     Close #1
 End Sub
+
+Private Function samples() As String
+    'for error Logging:
+    writelog "Error", "Where did the error occure?" & vbNewLine & _
+                     ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
+End Function
 
 

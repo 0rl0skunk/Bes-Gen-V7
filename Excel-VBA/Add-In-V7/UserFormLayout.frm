@@ -1,21 +1,17 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormLayout 
-   Caption         =   "UserFormLayout"
    ClientHeight    =   5745
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   5880
    OleObjectBlob   =   "UserFormLayout.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormLayout"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
 Option Explicit
 
 Private pMasstab             As Integer
@@ -266,12 +262,5 @@ Private Sub UserForm_Initialize()
     Me.TitleLabel = "Layout Voransicht"
     Me.LabelInstructions.Caption = "Die Layoutgrösse im Modell und die Plankopfposition sowie die Standardlegenden können hier abgelesen werden."
 End Sub
-
-' © 2023, Orlando Bassi
-
-
-
-
-
 
 

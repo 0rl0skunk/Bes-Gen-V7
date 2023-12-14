@@ -5,16 +5,13 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormMessage
    ClientTop       =   450
    ClientWidth     =   5160
    OleObjectBlob   =   "UserFormMessage.frx":0000
-   StartUpPosition =   3  'Windows-Standard
+   StartUpPosition =   3  'Windows Default
 End
 Attribute VB_Name = "UserFormMessage"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
 '@Folder "Templates"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -54,7 +51,7 @@ End Sub
 
 Private Sub CommandButtonLog_Click()
 
-    CreateObject("Shell.Application").Open (Log.LOGFile)
+    CreateObject("Shell.Application").Open (writelogFile)
 
 End Sub
 

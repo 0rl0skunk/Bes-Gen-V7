@@ -1,7 +1,7 @@
 Attribute VB_Name = "ProjektFactory"
 Option Explicit
 '@Folder "Projekt"
-' a Factory 'creates the new class and binds it to the interface so only the wanted methods are exposed to the user
+'@ModuleDescription "Erstellt ein Projekt-Objekt von welchem die daten einfach ausgelesen werden können."
 
 Public Function Create( _
        ByVal Projektnummer As String, _

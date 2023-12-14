@@ -1,27 +1,24 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopf 
-   Caption         =   "UserFormPlankopf"
    ClientHeight    =   12240
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9960.001
    OleObjectBlob   =   "UserFormPlankopf.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormPlankopf"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
 Option Explicit
 '@IgnoreModule IntegerDataType, EmptyStringLiteral
 '@Folder "Plankopf"
 
 Private icons                As UserFormIconLibrary
 Private pPlankopf            As IPlankopf
+Public PlankopfCopyFrom      As IPlankopf
 Private pProjekt             As IProjekt
 Private shPData              As Worksheet
 Private shGebäude            As Worksheet
@@ -29,15 +26,15 @@ Private shGebäude            As Worksheet
 Public Sub setIcons(ByVal icon As String)
 
     Select Case icon
-    Case "add"
-        Me.TitleIcon.Picture = icons.IconAddProperties.Picture
-        Me.TitleLabel.Caption = "Plankopf erstellen"
-    Case "delete"
-        Me.TitleIcon.Picture = icons.IconImportantProperty.Picture
-        Me.TitleLabel.Caption = "Plankopf löschen"
-    Case "edit"
-        Me.TitleIcon.Picture = icons.IconEditProperties.Picture
-        Me.TitleLabel.Caption = "Plankopf bearbeiten"
+        Case "add"
+            Me.TitleIcon.Picture = icons.IconAddProperties.Picture
+            Me.TitleLabel.Caption = "Plankopf erstellen"
+        Case "delete"
+            Me.TitleIcon.Picture = icons.IconImportantProperty.Picture
+            Me.TitleLabel.Caption = "Plankopf löschen"
+        Case "edit"
+            Me.TitleIcon.Picture = icons.IconEditProperties.Picture
+            Me.TitleLabel.Caption = "Plankopf bearbeiten"
     End Select
 
 End Sub
@@ -56,7 +53,7 @@ End Sub
 Private Sub CommandButtonBeschriftungAktualisieren_Click()
 
     Set pPlankopf = FormToPlankopf
-    Me.TextBoxBeschriftungPlannummer.Value = pPlankopf.PlanNummer
+    Me.TextBoxBeschriftungPlannummer.Value = pPlankopf.Plannummer
     Me.TextBoxBeschriftungDateiname.Value = pPlankopf.PDFFileName
     Me.TextBoxPlanüberschrift.Value = pPlankopf.Planüberschrift
 
@@ -64,17 +61,35 @@ End Sub
 
 Private Sub CommandButtonIndexErstellen_Click()
 
-    pPlankopf.AddIndex IndexFactory.Create( _
-                       IDPlan:=pPlankopf.ID, _
-                       GezeichnetPerson:=Me.TextBoxIndexGez.Value, _
-                       GezeichnetDatum:=Me.TextBoxIndexGezDatum.Value, _
-                       Klartext:=Me.TextBoxIndexKlartext.Value _
-                                  )
+    Dim Index                As IIndex: Set Index = IndexFactory.Create( _
+        IDPlan:=pPlankopf.ID, _
+        GezeichnetPerson:=Me.TextBoxIndexGez.Value, _
+        GezeichnetDatum:=Me.TextBoxIndexGezDatum.Value, _
+        Klartext:=Me.TextBoxIndexKlartext.Value, _
+        Letter:=Me.TextBoxIndexLetter.Value _
+                 )
+    IndexFactory.AddToDatabase Index
+    pPlankopf.AddIndex Index
+
     LoadIndexes
+
     Me.TextBoxIndexGez.Value = vbNullString
     Me.TextBoxIndexGezDatum.Value = vbNullString
     Me.TextBoxIndexKlartext.Value = vbNullString
     Me.TextBoxIndexLetter.Value = vbNullString
+
+End Sub
+
+Private Sub CommandButtonIndexLöschen_Click()
+
+    Dim ID                   As String
+    ID = Me.ListViewIndex.SelectedItem.ListSubItems(1)
+    IndexFactory.DeleteFromDatabase ID
+
+    pPlankopf.ClearIndex
+    IndexFactory.GetIndexes pPlankopf
+
+    LoadIndexes
 
 End Sub
 
@@ -95,10 +110,10 @@ Private Sub EditDWG_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, B
 
     TinLine.setTinProject pProjekt.ProjektOrdnerCAD
     Select Case Me.MultiPageTyp.Value
-    Case 0                                       'Plan
-        TinLine.setTinPlanBibliothek
-    Case 1                                       'Prinzip
-        TinLine.setTinPrinzipBibiothek
+        Case 0                                   'Plan
+            TinLine.setTinPlanBibliothek
+        Case 1                                   'Prinzip
+            TinLine.setTinPrinzipBibiothek
     End Select
 
     CreateObject("Shell.Application").Open (FormToPlankopf.DWGFile)
@@ -118,7 +133,7 @@ Private Sub UserForm_Initialize()
 
     Set icons = New UserFormIconLibrary
 
-    ' ComboBox Listen auffüllen
+    ' ComboBox Listen aufüllen
 
     ' Unterprojekt
     ' Array mit Unterprojekt Name und Nummer nebeneinander
@@ -188,7 +203,7 @@ Private Sub UserForm_Initialize()
     Me.TextBoxLayoutMasstab.Value = "1:50"
 
     '--- log
-    Log.Log "Beschriftungsgeneartor controls complete"
+    writelog "Beschriftungsgeneartor controls complete"
     '--- log end
 
 End Sub
@@ -205,6 +220,7 @@ Private Sub LoadIndexes()
     Dim Li                   As ListItem
 
     With Me.ListViewIndex
+        .ListItems.Clear
         .View = lvwReport
         .CheckBoxes = True
         .Gridlines = True
@@ -212,6 +228,7 @@ Private Sub LoadIndexes()
         With .ColumnHeaders
             .Clear
             .Add , , "", 20
+            .Add , , "", 0
             .Add , , "Index", 20
             .Add , , "Gezeichnet", 40
             .Add , , "Datum", 60
@@ -220,7 +237,8 @@ Private Sub LoadIndexes()
 
         For Each ind In pPlankopf.indexes
             Set Li = .ListItems.Add()
-            Li.ListSubItems.Add , , ind.index
+            Li.ListSubItems.Add , , ind.IndexID
+            Li.ListSubItems.Add , , ind.Index
             Li.ListSubItems.Add , , Split(ind.Gezeichnet, " ; ")(0)
             Li.ListSubItems.Add , , Split(ind.Gezeichnet, " ; ")(1)
             Li.ListSubItems.Add , , ind.Klartext
@@ -229,31 +247,31 @@ Private Sub LoadIndexes()
 
 End Sub
 
-Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt)
+Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional copy As Boolean = False)
 
     Set pProjekt = Projekt
 
     Set pPlankopf = Plankopf
     Set Plankopf = Nothing
-    Dim Planstand As String, _
-    Plantyp As Integer, _
-    Gewerk As String, _
-    UnterGewerk As String
-    
+    Dim Planstand            As String, _
+    Plantyp                  As Integer, _
+    Gewerk                   As String, _
+    UnterGewerk              As String
+
     Select Case pPlankopf.Plantyp
-    Case "PLA"
-        Me.MultiPageTyp.Value = 0
-        Me.ComboBoxEPHGewerk.Value = pPlankopf.Gewerk
-        Me.ComboBoxEPUGewerk.Value = pPlankopf.UnterGewerk
-        Me.ComboBoxEPArt.Value = pPlankopf.Planart
-    Case "SCH"
-        Me.MultiPageTyp.Value = 1
-        Me.ComboBoxESHGewerk.Value = pPlankopf.Gewerk
-        Me.ComboBoxESUGewerk.Value = pPlankopf.UnterGewerk
-    Case "PRI"
-        Me.MultiPageTyp.Value = 2
-        Me.ComboBoxPRHGewerk.Value = pPlankopf.Gewerk
-        Me.ComboBoxPRUGewerk.Value = pPlankopf.UnterGewerk
+        Case "PLA"
+            Me.MultiPageTyp.Value = 0
+            Me.ComboBoxEPHGewerk.Value = pPlankopf.Gewerk
+            Me.ComboBoxEPUGewerk.Value = pPlankopf.UnterGewerk
+            Me.ComboBoxEPArt.Value = pPlankopf.Planart
+        Case "SCH"
+            Me.MultiPageTyp.Value = 1
+            Me.ComboBoxESHGewerk.Value = pPlankopf.Gewerk
+            Me.ComboBoxESUGewerk.Value = pPlankopf.UnterGewerk
+        Case "PRI"
+            Me.MultiPageTyp.Value = 2
+            Me.ComboBoxPRHGewerk.Value = pPlankopf.Gewerk
+            Me.ComboBoxPRUGewerk.Value = pPlankopf.UnterGewerk
     End Select
     Me.ComboBoxGebäude.Value = pPlankopf.Gebäude
     Me.ComboBoxGebäudeTeil.Value = pPlankopf.GebäudeTeil
@@ -267,27 +285,46 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt)
     Me.TextBoxPlanInfoKürzelGeprüft.Value = pPlankopf.GeprüftPerson
     Me.TextBoxPlanüberschrift.Value = pPlankopf.Planüberschrift
     LoadIndexes
-    
-    Me.CommandButtonCreate.Caption = "Update"
-    
+
     Me.ComboBoxStand.Value = pPlankopf.LayoutPlanstand
-    
-    ' disable all inputs which should only be set once
-    Me.MultiPageTyp.Enabled = False
-    Me.ComboBoxEPArt.Enabled = False
-    Me.ComboBoxEPHGewerk.Enabled = False
-    Me.ComboBoxEPUGewerk.Enabled = False
-    Me.ComboBoxESAnlageTyp.Enabled = False
-    Me.ComboBoxESHGewerk.Enabled = False
-    Me.ComboBoxESUGewerk.Enabled = False
-    Me.ComboBoxGebäude.Enabled = False
-    Me.ComboBoxGebäudeTeil.Enabled = False
-    Me.ComboBoxGeschoss.Enabled = False
-    Me.ComboBoxPRHGewerk.Enabled = False
-    Me.ComboBoxPRUGewerk.Enabled = False
-    
-    Me.BesID.Caption = pPlankopf.ID
-    Me.TinLineID.Caption = pPlankopf.IDTinLine
+
+    If Not copy Then
+        ' disable all inputs which should only be set once
+        Me.MultiPageTyp.Enabled = False
+        Me.ComboBoxEPArt.Enabled = False
+        Me.ComboBoxEPHGewerk.Enabled = False
+        Me.ComboBoxEPUGewerk.Enabled = False
+        Me.ComboBoxESAnlageTyp.Enabled = False
+        Me.ComboBoxESHGewerk.Enabled = False
+        Me.ComboBoxESUGewerk.Enabled = False
+        Me.ComboBoxGebäude.Enabled = False
+        Me.ComboBoxGebäudeTeil.Enabled = False
+        Me.ComboBoxGeschoss.Enabled = False
+        Me.ComboBoxPRHGewerk.Enabled = False
+        Me.ComboBoxPRUGewerk.Enabled = False
+
+        Me.CommandButtonCreate.Caption = "Update"
+        Me.BesID.Caption = pPlankopf.ID
+        Me.TinLineID.Caption = pPlankopf.IDTinLine
+    Else
+        Me.BesID.Caption = getNewID(6, Globals.shStoreData, shStoreData.range("A1").CurrentRegion, 1)
+        pPlankopf.ID = Me.BesID.Caption
+        Dim Index            As IIndex
+        For Each Index In pPlankopf.indexes
+            Index.PlanID = pPlankopf.ID
+            IndexFactory.AddToDatabase Index
+        Next
+    End If
+
+End Sub
+
+Public Sub CopyPlankopf(Plankopf As IPlankopf, ByVal Projekt As IProjekt, ByVal CopyIndex As Boolean)
+
+    If CopyIndex Then
+        Set Plankopf.indexes = PlankopfCopyFrom.indexes
+        Set PlankopfCopyFrom = Nothing
+    End If
+    LoadClass Plankopf, Projekt, True
 
 End Sub
 
@@ -297,22 +334,22 @@ Private Function FormToPlankopf() As IPlankopf
     Gewerk                   As String, _
     UnterGewerk              As String
     Select Case Me.MultiPageTyp.Value
-    Case 0
-        Plantyp = "PLA"
-        Gewerk = Me.ComboBoxEPHGewerk.Value
-        UnterGewerk = Me.ComboBoxEPUGewerk.Value
-    Case 1
-        Plantyp = "SCH"
-        Gewerk = Me.ComboBoxESHGewerk.Value
-        UnterGewerk = Me.ComboBoxESUGewerk.Value
-    Case 2
-        Plantyp = "PRI"
-        Gewerk = Me.ComboBoxPRHGewerk.Value
-        UnterGewerk = Me.ComboBoxPRUGewerk.Value
-    Case Else
-        Plantyp = "PLA"
-        Gewerk = Me.ComboBoxEPHGewerk.Value
-        UnterGewerk = Me.ComboBoxEPUGewerk.Value
+        Case 0
+            Plantyp = "PLA"
+            Gewerk = Me.ComboBoxEPHGewerk.Value
+            UnterGewerk = Me.ComboBoxEPUGewerk.Value
+        Case 1
+            Plantyp = "SCH"
+            Gewerk = Me.ComboBoxESHGewerk.Value
+            UnterGewerk = Me.ComboBoxESUGewerk.Value
+        Case 2
+            Plantyp = "PRI"
+            Gewerk = Me.ComboBoxPRHGewerk.Value
+            UnterGewerk = Me.ComboBoxPRUGewerk.Value
+        Case Else
+            Plantyp = "PLA"
+            Gewerk = Me.ComboBoxEPHGewerk.Value
+            UnterGewerk = Me.ComboBoxEPUGewerk.Value
     End Select
     If pProjekt Is Nothing Then Set pProjekt = Globals.Projekt
     Set FormToPlankopf = PlankopfFactory.Create( _
@@ -347,7 +384,7 @@ Private Sub ComboBoxEPArt_Change()
     Me.ComboBoxEPArt.BackColor = SystemColorConstants.vbWindowBackground
 
     '--- log
-    Log.Log "ComboBoxEPArt_Change"
+    writelog "ComboBoxEPArt_Change"
     '--- log end
 
 End Sub
@@ -361,7 +398,7 @@ Private Sub ComboBoxEPUGewerk_Change()
     End If
 
     '--- log
-    Log.Log "ComboBoxEPUGewerk_Change"
+    writelog "ComboBoxEPUGewerk_Change"
     '--- log end
 
 End Sub
@@ -413,7 +450,7 @@ Private Sub ComboBoxEPHGewerk_Change()
     End If
 
     '--- log
-    Log.Log "ComboBoxEPHGewerk_Change"
+    writelog "ComboBoxEPHGewerk_Change"
     '--- log end
 
     Exit Sub
@@ -432,7 +469,7 @@ Private Sub ComboBoxESAnlageTyp_Change()
     End If
 
     '--- log
-    Log.Log "ComboBoxESAnlageTyp_Change"
+    writelog "ComboBoxESAnlageTyp_Change"
     '--- log end
 
 End Sub
@@ -471,7 +508,7 @@ Private Sub ComboBoxESHGewerk_Change()
     Me.ComboBoxESHGewerk.BackColor = SystemColorConstants.vbWindowBackground
 
     '--- log
-    Log.Log "ComboBoxESHGewerk_Change"
+    writelog "ComboBoxESHGewerk_Change"
     '--- log end
 
     Exit Sub
@@ -489,31 +526,31 @@ Private Sub ComboBoxESUGewerk_Change()
     If Me.ComboBoxESUGewerk.Value = "-- Bitte wählen --" Then Exit Sub
     If Me.ComboBoxESUGewerk.Value = "" Then Exit Sub
     Select Case Me.ComboBoxESHGewerk.Value
-    Case "Elektro"
-        If Not IsError(Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.Value, Globals.shPData.range("11:11"), 0)) Then
-1           col = Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.Value, Globals.shPData.range("11:11"), 0)
-            lastrow = Application.WorksheetFunction.CountA(Globals.shPData.Cells(12, col).EntireColumn) + 10
-            Me.ComboBoxESAnlageTyp.Clear
-            For row = 12 To lastrow
-                If Globals.shPData.Cells(row, col).Value <> "" Then
-                    Me.ComboBoxESAnlageTyp.AddItem Globals.shPData.Cells(row, col).Value
-                End If
-            Next row
-            Me.ComboBoxESAnlageTyp.Value = "-- Bitte wählen --"
-        Else
-            Me.ComboBoxESAnlageTyp.Clear
-            Me.ComboBoxESAnlageTyp.Value = "-- Bitte wählen --"
-        End If
-    Case ""
+        Case "Elektro"
+            If Not IsError(Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.Value, Globals.shPData.range("11:11"), 0)) Then
+1               col = Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.Value, Globals.shPData.range("11:11"), 0)
+                lastrow = Application.WorksheetFunction.CountA(Globals.shPData.Cells(12, col).EntireColumn) + 10
+                Me.ComboBoxESAnlageTyp.Clear
+                For row = 12 To lastrow
+                    If Globals.shPData.Cells(row, col).Value <> "" Then
+                        Me.ComboBoxESAnlageTyp.AddItem Globals.shPData.Cells(row, col).Value
+                    End If
+                Next row
+                Me.ComboBoxESAnlageTyp.Value = "-- Bitte wählen --"
+            Else
+                Me.ComboBoxESAnlageTyp.Clear
+                Me.ComboBoxESAnlageTyp.Value = "-- Bitte wählen --"
+            End If
+        Case ""
 
-    Case Else
-        'HLKKS
-        Me.ComboBoxESAnlageTyp.Clear
-        Me.ComboBoxESAnlageTyp.Value = "-- Bitte wählen --"
+        Case Else
+            'HLKKS
+            Me.ComboBoxESAnlageTyp.Clear
+            Me.ComboBoxESAnlageTyp.Value = "-- Bitte wählen --"
     End Select
 
     '--- log
-    Log.Log "ComboBoxESUGewerk_Change"
+    writelog "ComboBoxESUGewerk_Change"
     '--- log end
 
 End Sub
@@ -553,7 +590,7 @@ Private Sub ComboBoxPRHGewerk_Change()
     Me.ComboBoxPRHGewerk.BackColor = SystemColorConstants.vbWindowBackground
 
     '--- log
-    Log.Log "ComboBoxPRHGewerk_Change"
+    writelog "ComboBoxPRHGewerk_Change"
     '--- log end
 
     Exit Sub
@@ -607,7 +644,7 @@ Private Sub ComboBoxGebäude_Change()
             Me.ComboBoxGeschoss.Clear
             Me.ComboBoxGeschoss.Enabled = True
             Set rng = Globals.shGebäude.range(Globals.shGebäude.Cells(5, col), Globals.shGebäude.Cells(lastrow, col + 1))
-            Debug.Print rng.Address
+Debug.Print rng.Address
             arr() = rng.Resize(rng.rows.Count, 1)
             tmparr() = RemoveBlanksFromStringArray(arr())
             Me.ComboBoxGeschoss.List = tmparr()
@@ -619,7 +656,7 @@ Private Sub ComboBoxGebäude_Change()
     On Error GoTo 0
 
     '--- log
-    Log.Log "ComboBoxGebäude_Change"
+    writelog "ComboBoxGebäude_Change"
     '--- log end
 
     Exit Sub

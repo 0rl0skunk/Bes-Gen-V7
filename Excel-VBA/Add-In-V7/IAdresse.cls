@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder "Adresse"
 '@Interface
+'@ModuleDescription "Interface für 'Adresse.cls'."
 
 Option Explicit
 

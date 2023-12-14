@@ -5,16 +5,13 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopfPreview
    ClientTop       =   450
    ClientWidth     =   11880
    OleObjectBlob   =   "UserFormPlankopfPreview.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormPlankopfPreview"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
 '@IgnoreModule UseMeaningfulName, IntegerDataType
 Option Explicit
 '@Folder "Plankopf"
@@ -30,7 +27,7 @@ Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
     Me.PA40.Caption = Plankopf.Planüberschrift
     Me.PA41.Caption = Plankopf.LayoutGrösse
     Me.PA42.Caption = Plankopf.LayoutMasstab
-    Me.PA43.Caption = Plankopf.PlanNummer
+    Me.PA43.Caption = Plankopf.Plannummer
     Me.PA44.Caption = Plankopf.LayoutPlanstand
     Me.PA30.Caption = Split(Plankopf.Gezeichnet, " ; ")(0)
     Me.PA31.Caption = Split(Plankopf.Gezeichnet, " ; ")(1)
@@ -78,10 +75,3 @@ Public Sub LoadXML(ByVal filePath As String, ByVal Plankopfnummer As Long)
 
 End Sub
 
-Private Sub ShowCode_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-
-    Dim frm                  As New UserFormXMLCode
-    frm.load "C:\Users\orlando.bassi\Desktop\TinPlan_EP.xml", pPlankopfnummer
-    frm.Show 1
-
-End Sub

@@ -1,7 +1,7 @@
 Attribute VB_Name = "PlankopfFactory"
 Option Explicit
 '@Folder "Plankopf"
-' a Factory 'creates the new class and binds it to the interface so only the wanted methods are exposed to the user
+'@ModuleDescription "Erstellt ein Plankopf-Objekt von welchem die daten einfach ausgelesen werden können."
 
 Public Function Create( _
        ByVal Projekt As IProjekt, _
@@ -49,7 +49,9 @@ Public Function Create( _
        Planüberschrift:=Planüberschrift, _
        ID:=ID _
             ) Then
+        Dim row              As Long
         Set Create = NewPlankopf
+        IndexFactory.GetIndexes Create
         Exit Function
     Else
         Dim frm              As New UserFormMessage
@@ -91,6 +93,7 @@ Public Function LoadFromDatabase(ByVal row As Long) As IPlankopf
            SkipValidation:=False _
                             ) Then
             Set LoadFromDatabase = NewPlankopf
+            IndexFactory.GetIndexes LoadFromDatabase
             Exit Function
         Else
             Dim frm          As New UserFormMessage
@@ -99,6 +102,7 @@ Public Function LoadFromDatabase(ByVal row As Long) As IPlankopf
         End If
     End With
 
+    writelog "Info", "Plankopf " & LoadFromDatabase.Plannummer & " geladen"
 
 End Function
 
@@ -118,7 +122,7 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
         .Cells(row, 9).Value = Plankopf.Geschoss
         .Cells(row, 10).Value = Plankopf.Klartext
         .Cells(row, 13).Value = Plankopf.Planüberschrift
-        .Cells(row, 14).Value = Plankopf.PlanNummer
+        .Cells(row, 14).Value = Plankopf.Plannummer
         .Cells(row, 15).Value = Plankopf.LayoutGrösse
         .Cells(row, 16).Value = Plankopf.LayoutMasstab
         .Cells(row, 17).Value = Plankopf.LayoutPlanstand
@@ -128,12 +132,13 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
         .Cells(row, 21).Value = Plankopf.GeprüftDatum
         '.Cells(row, 1).Value = Plankopf.currentIndex.index
     End With
+    writelog "Info", "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
 
 End Function
 
 Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
 
-    Dim ID As String: ID = Plankopf.ID
+    Dim ID                   As String: ID = Plankopf.ID
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
     Dim row                  As Long: row = ws.range("A:A").Find(ID).row
     With ws
@@ -148,7 +153,7 @@ Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
         .Cells(row, 9).Value = Plankopf.Geschoss
         .Cells(row, 10).Value = Plankopf.Klartext
         .Cells(row, 13).Value = Plankopf.Planüberschrift
-        .Cells(row, 14).Value = Plankopf.PlanNummer
+        .Cells(row, 14).Value = Plankopf.Plannummer
         .Cells(row, 15).Value = Plankopf.LayoutGrösse
         .Cells(row, 16).Value = Plankopf.LayoutMasstab
         .Cells(row, 17).Value = Plankopf.LayoutPlanstand
@@ -159,5 +164,20 @@ Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
         '.Cells(row, 1).Value = Plankopf.currentIndex.index
     End With
 
+    writelog "Info", "Plankopf " & Plankopf.Plannummer & " in Datenbank aktualisiert"
+
 End Function
+
+Public Function DeleteFromDatabase(row As Long) As Boolean
+
+    Dim ID                   As String
+    Dim Plannummer           As String: Plannummer = shStoreData.Cells(row, 14).Value
+    ID = shStoreData.Cells(row, 1).Value
+    shStoreData.Cells(row, 1).EntireRow.Delete
+    IndexFactory.DeletePlan ID
+
+    writelog "Info", "Plankopf " & Plannummer & " aus Datenbank gelöscht"
+
+End Function
+
 

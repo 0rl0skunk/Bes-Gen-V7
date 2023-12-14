@@ -7,10 +7,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Attribute VB_Description = "Erstellt ein Adress-Objekt von welchem die daten einfach ausgelesen werden können."
-'@IgnoreModule PublicImplementationShouldBePrivate
+
 Option Explicit
-'@ModuleDescription "Erstellt ein Adress-Objekt von welchem die daten einfach ausgelesen werden können."
+'@ModuleDescription "Adress Objekt für einfacheres Management einer Adresse."
+
 Implements IAdresse
 
 '@Folder "Adresse"
@@ -27,10 +27,13 @@ Public Sub FillData( _
        ByVal PLZ As String, _
        ByVal Ort As String _
        )
+    ' Erstellt ein neues Adresse Objekt.
 
     This.Strasse = Strasse
     This.PLZ = PLZ
     This.Ort = Ort
+
+    writelog "Info", "Adresse erstellt" & This.Strasse & vbNewLine & This.PLZ & " " & This.Ort
 
 End Sub
 

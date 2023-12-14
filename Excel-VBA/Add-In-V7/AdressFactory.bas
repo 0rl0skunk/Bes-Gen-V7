@@ -1,7 +1,7 @@
 Attribute VB_Name = "AdressFactory"
 Option Explicit
 '@Folder "Adresse"
-' a Factory 'creates the new class and binds it to the interface so only the wanted methods are exposed to the user
+'@ModuleDescription "Erstellt ein Adress-Objekt von welchem die daten einfach ausgelesen werden können."
 
 Public Function Create( _
        ByVal Strasse As String, _

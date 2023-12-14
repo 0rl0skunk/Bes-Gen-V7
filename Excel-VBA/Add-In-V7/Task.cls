@@ -9,6 +9,8 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 '@Folder "Tasks"
+'@ModuleDescription "Task Objekt für einfacheres Management von Tasks im Projekt."
+
 
 Private Type ttask
     ErfasstAm As String

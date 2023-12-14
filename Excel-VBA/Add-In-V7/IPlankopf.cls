@@ -9,10 +9,14 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder "Plankopf"
 '@Interface
+'@ModuleDescription "Interface für 'Plankopf.cls'."
+
 
 Option Explicit
 
 Public Property Get ID() As String
+End Property
+Public Property Let ID(ByVal NewValue As String)
 End Property
 
 Public Property Get IDTinLine() As String
@@ -66,7 +70,7 @@ End Property
 Public Property Get LayoutName() As String
 End Property
 
-Public Property Get PlanNummer() As String
+Public Property Get Plannummer() As String
 End Property
 
 Public Property Get LayoutGrösse() As String
@@ -104,7 +108,12 @@ End Property
 
 Public Property Get indexes() As Collection
 End Property
+Public Property Set indexes(ByVal NewIndexes As Collection)
+End Property
 
 Public Sub AddIndex(ByRef NewValue As IIndex)
+End Sub
+
+Public Sub ClearIndex()
 End Sub
 

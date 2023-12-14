@@ -7,15 +7,16 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
 '@IgnoreModule EmptyStringLiteral
 '@Folder("Index")
-Option Explicit
+'@ModuleDescription "Index Objekt für einfacheres Management von Indexen."
 
 Implements IIndex
 
 Private Type TIndex
     '--- Identifiers ---
-    index As String
+    Index As String
     ID As String
     IDPlan As String
     '--- Zeichner ---
@@ -48,13 +49,15 @@ Public Sub FillData( _
        ByVal GezeichnetPerson As String, _
        ByVal GezeichnetDatum As String, _
        ByVal Klartext As String, _
+       Optional ByVal ID As String = vbNullString, _
        Optional ByVal Letter As String = vbNullString, _
        Optional ByVal GeprüftPerson As String = vbNullString, _
        Optional ByVal GeprüftDatum As String = vbNullString _
        )
 
+    Inputs.ID = ID
     Inputs.IDPlan = IDPlan
-    Inputs.index = Letter
+    Inputs.Index = Letter
     Inputs.GezeichnetPerson = GezeichnetPerson
     Inputs.GezeichnetDatum = GezeichnetDatum
     Inputs.GeprüftPerson = GeprüftPerson
@@ -68,36 +71,43 @@ Public Sub FillData( _
 End Sub
 
 Private Function validateInputs() As Boolean
-
+    ' sind alle benötigten Daten gegeben und korrekt
     validateInputs = False
     If Len(Inputs.IDPlan) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Plan ID' given"
     '--- Zeichner ---
     If Len(Inputs.GezeichnetPerson) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'GezeichnetPerson' given"
     If Len(Inputs.GezeichnetDatum) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'GezeichnetDatum' given"
     If Inputs.GeprüftPerson = "NONE" Then Inputs.GeprüftPerson = vbNullString
-    If Inputs.GeprüftDatum = "NONE" Then Inputs.GeprüftDatum = ""
+    If Inputs.GeprüftDatum = "NONE" Then Inputs.GeprüftDatum = vbNullString
+
     '--- Planbezeichnung ---
     If Len(Inputs.Klartext) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Klartext' given"
     validateInputs = True
-    
-    If This.index = vbNullString Then
-    Globals.SetWBs
+
+    If This.ID = vbNullString Then This.ID = getNewID(4, Globals.shIndex, Globals.shIndex.range("A1").CurrentRegion, 1)
+
+    If This.Index = vbNullString Then
+        Globals.SetWBs
         Dim indexes(1 To 26) As String, LastIndex As String
-        Dim i As Integer
+        Dim i                As Integer
         For i = 65 To 90
             indexes(i - 64) = Chr(i)
         Next
-        If IsError(LastIndex = Globals.shIndex.range("A:A").Find(Inputs.IDPlan, searchdirection:=xlPrevious).Offset(0, 1).Value) Then
-            This.index = "A"
-        Else
-            This.index = indexes(Application.WorksheetFunction.Match(LastIndex, indexes) + 1)
-        End If
     End If
+
+    writelog "Info", "Index erstellt"
 
 End Function
 
+Private Property Get IIndex_IndexID() As String
+    IIndex_IndexID = This.ID
+End Property
+
 Private Property Get IIndex_Index() As String
-    IIndex_Index = This.index
+    IIndex_Index = This.Index
+End Property
+Private Property Let IIndex_Index(NewValue As String)
+    This.Index = NewValue
 End Property
 
 Private Property Get IIndex_Gezeichnet() As String
@@ -112,8 +122,11 @@ Private Property Get IIndex_Klartext() As String
     IIndex_Klartext = This.Klartext
 End Property
 
-Private Property Let IIndex_Index(ByVal NewValue As String)
-    This.index = NewValue
+Private Property Get IIndex_PlanID() As String
+    IIndex_PlanID = This.IDPlan
+End Property
+Private Property Let IIndex_PlanID(ByVal NewValue As String)
+    This.IDPlan = NewValue
 End Property
 
 
