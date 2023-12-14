@@ -1,8 +1,10 @@
 Attribute VB_Name = "INIFile"
 '@IgnoreModule
 '@Folder "TinLine"
+'@ModuleDescription "Interface to work with *.ini Files from TinLine."
+
 Option Explicit
-'declarations for working with Ini files
+
 #If VBA7 Then
     Private Declare PtrSafe Function GetPrivateProfileSection Lib "kernel32" Alias _
                                      "GetPrivateProfileSectionA" (ByVal lpAppName As String, ByVal lpReturnedString As String, _

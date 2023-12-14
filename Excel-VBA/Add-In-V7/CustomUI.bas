@@ -2,6 +2,8 @@ Attribute VB_Name = "CustomUI"
 Option Explicit
 '@Folder "Custom UI"
 '@Ignore ProcedureNotUsed
+'@ModuleDescription "Handelt die Interaktion mit dem 'Custom Ribbon' welches beim öffnen von Excel erstellt wird."
+
 Private isUILocked           As Boolean
 
 Private Type TpData
@@ -61,8 +63,6 @@ End Sub
 
 Sub onLoad(ribbon As IRibbonUI)
     'PURPOSE: Run code when Ribbon loads the UI to store Ribbon Object's Pointer ID code
-
-    'Handle variable declaration if 32-bit or 64-bit Excel
 #If VBA7 Then
         Dim StoreRibbonPointer As LongPtr
 #Else
@@ -75,6 +75,8 @@ Sub onLoad(ribbon As IRibbonUI)
     'Store pointer to IRibbonUI in a Named Range within add-in file
     StoreRibbonPointer = ObjPtr(ribbon)
     ThisWorkbook.Names.Add Name:="RibbonID", RefersTo:=StoreRibbonPointer
+
+    log.write "Info", "CustomRibbon successfully Loaded"
 
 End Sub
 
@@ -97,6 +99,8 @@ Public Sub RefreshRibbon()
     'ERROR MESSAGES:
 RestartExcel:
     MsgBox "Please restart Excel for Ribbon UI changes to take affect", , "Ribbon UI Refresh Failed"
+    log.write "Error", "trying to refresh CustomRibbon" & vbnewline & _
+    err.number & vbnewline & err.description & vbnewline & err.source
 
 End Sub
 
@@ -127,7 +131,7 @@ Globals.SetWBs
         Case "Übersicht"
             'TODO Planübersicht UserForm
             Globals.shPData.Activate
-            Dim frmÜbersicht As New UserFormPlankopfÜbersicht
+            Dim frmÜbersicht As New UserFormPlankopfübersicht
             frmÜbersicht.Show
         Case "Version"
             Dim frmVersion   As New UserFormInfo
@@ -140,16 +144,15 @@ Globals.SetWBs
         Case "LockProjekt"
             isUILocked = Not isUILocked
             CustomUI.RefreshRibbon
-            Log.Log "Projekt gesperrt"
         Case "unLockProjekt"
             isUILocked = Not isUILocked
             CustomUI.RefreshRibbon
-            Log.Log "Projekt entsperrt"
     End Select
+
+    log.write "Info", "Button " & control.id & " pressed"
 End Sub
 
 Sub onChange(control As IRibbonControl, Text As String)
-    'TODO create validation that the Text should be changed
     TextOld = TextNew
     Select Case control.ID
         Case "Projektnummer"
@@ -163,6 +166,7 @@ Sub onChange(control As IRibbonControl, Text As String)
 End Sub
 
 Sub CallBackGetText(control As IRibbonControl, ByRef returnedVal)
+
     On Error Resume Next
     Select Case control.ID
         Case "Projektnummer"
@@ -173,6 +177,7 @@ Sub CallBackGetText(control As IRibbonControl, ByRef returnedVal)
             returnedVal = Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_Projektphase").Value
     End Select
     On Error GoTo 0
+    log.write "Info", control.id & " Text set to: " & returnedVal
 End Sub
 
 Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal)
@@ -182,7 +187,7 @@ Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal)
         Case Else
             returnedVal = True
     End Select
-
+    log.write "Info", control.id & " is enabled = " & returnedVal
 End Sub
 
 Sub isTextEnabled(control As IRibbonControl, ByRef returnedVal)
@@ -194,5 +199,5 @@ Sub isTextEnabled(control As IRibbonControl, ByRef returnedVal)
         Case "comboBoxProjektphase"
             returnedVal = Not isUILocked
     End Select
+    log.write "Info", control.id & " is enabled = " & returnedVal
 End Sub
-

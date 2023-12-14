@@ -9,6 +9,8 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder "Projekt"
 '@Interface
+'@ModuleDescription "Interface für 'Projekt.cls'."
+
 
 Option Explicit
 

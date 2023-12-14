@@ -1,7 +1,7 @@
 Attribute VB_Name = "IndexFactory"
 Option Explicit
 '@Folder("Index")
-' a Factory 'creates the new class and binds it to the interface so only the wanted methods are exposed to the user
+'@ModuleDescription "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
 
 Public Function Create( _
        ByVal IDPlan As String, _
@@ -31,13 +31,13 @@ Public Function Create( _
 End Function
 
 Public Sub DeleteFromDatabase(ID As String)
-    
+    ' löscht den gewählten Index aus der Datenbank
     Globals.shIndex.range("H:H").Find(ID).EntireRow.Delete
-
+    log.write "Info", "Index gelöscht" 
 End Sub
 
 Public Sub AddToDatabase(Index As IIndex)
-
+    ' erstellt einen neuen Index in der Datenbank
     Dim _
     row As Long, _
     Gezeichnet As String, _
@@ -58,11 +58,28 @@ Public Sub AddToDatabase(Index As IIndex)
         .Cells(row, 7).Value = Index.Klartext
         .Cells(row, 8).Value = Index.IndexID
     End With
+    dim Plannummer as string: Plannummer = plankopffactory.loadfromdatabase(globals.shstoredata.range("A:A").find(index.planID).row).plannummer
+    log.write "Info", "Index für Plankopf " & Plannummer & " erstellt" 
 
 End Sub
 
-Public Function GetIndexes(Plankopf As IPlankopf)
+Public Function DeletePlan(ByVal ID As String)
+    ' Löscht alle Indexe von einem Plan
+    Dim row As Long
+    dim coll as new collection: set coll=    getindexes Id:=id
+    dim Plannummer as string: Plannummer = plankopffactory.loadfromdatabase(globals.shstoredata.range("A:A").find(ID).row).plannummer
+    With Globals.shIndex
+        For row = .range("A1").CurrentRegion.rows.Count To 2 Step -1
+        If .Cells(row, 1).Value = ID Then: .Cells(row, 1).EntireRow.Delete
+        Next
+    End With
 
+    log.write "Info", coll.count & " Indexe für Plankopf " & Plannummer & " gelöscht" 
+
+End Function
+
+Public Function GetIndexes(byref optional Plankopf As IPlankopf, byval optional ID as string = vbnullstring) As Collection
+    ' bibt eine Collection von allen Indexen eines Plankopes zurück
     Globals.SetWBs
 
     Dim _
@@ -74,7 +91,9 @@ Public Function GetIndexes(Plankopf As IPlankopf)
     Klartext As String, _
     Letter As String, _
     GeprüftPerson As String, _
-    GeprüftDatum As String
+    GeprüftDatum As String, _
+    Index As IIndex, _
+    coll As New Collection
 
     With Globals.shIndex
         For row = 2 To .range("A1").CurrentRegion.rows.Count
@@ -87,8 +106,8 @@ Public Function GetIndexes(Plankopf As IPlankopf)
         GeprüftDatum = .Cells(row, 6).Value
         Klartext = .Cells(row, 7).Value
 
-            If IDPlan = Plankopf.ID Then
-                Plankopf.AddIndex Create(ID:=IndexID, _
+            If IDPlan = Plankopf.ID or IDPlan = ID Then
+                Set Index = Create(ID:=IndexID, _
                                           IDPlan:=IDPlan, _
                                           GezeichnetPerson:=GezeichnetPerson, _
                                           GezeichnetDatum:=GezeichnetDatum, _
@@ -96,9 +115,14 @@ Public Function GetIndexes(Plankopf As IPlankopf)
                                           Letter:=Letter, _
                                           GeprüftPerson:=GeprüftPerson, _
                                           GeprüftDatum:=GeprüftDatum)
+                coll.Add Index
+                if not plankopf is nothing then                Plankopf.AddIndex Index
             End If
         Next
     End With
+    Set GetIndexes = coll
+
+    log.write "Info", coll.count & " Indexe für Plankopf" & Plankopf.Plannummer
 
 End Function
 

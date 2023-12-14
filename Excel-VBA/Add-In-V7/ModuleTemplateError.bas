@@ -1,5 +1,7 @@
 Attribute VB_Name = "ModuleTemplateError"
 '@Folder "Templates"
+'@ModuleDescription "Vorlage für Error-Handling."
+
 Option Explicit
 Public Const Dev             As Boolean = False
 
@@ -12,7 +14,7 @@ Public Sub TemplateErrorHandler()
 
     ' vv something could go wrong here vv
     If Not Dev Then On Error GoTo Err1           ' show the fancy error messages for the Users and the functional one for the developers
-    Log.Log "trying to divide 9/0"
+    log.write "trying to divide 9/0"
 Debug.Print 9 / 0
 
     GoTo noerr1

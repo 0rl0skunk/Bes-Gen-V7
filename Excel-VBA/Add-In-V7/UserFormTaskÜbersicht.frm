@@ -1,27 +1,17 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormTaskübersicht 
-   Caption         =   "UserForm1"
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormTaskÜbersicht 
    ClientHeight    =   6480
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9600.001
-   OleObjectBlob   =   "UserFormTaskübersicht.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   OleObjectBlob   =   "UserFormTaskÜbersicht.frx":0000
+   StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "UserFormTaskübersicht"
+Attribute VB_Name = "UserFormTaskÜbersicht"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
-
-
-
 
 
 Option Explicit

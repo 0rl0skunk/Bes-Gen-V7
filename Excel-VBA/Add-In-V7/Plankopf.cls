@@ -7,11 +7,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "Plankopf"
-' To make a method available to the user it must have the prefix of the Interface
-' in this case 'IPlankopf_'
-
 Option Explicit
+'@Folder "Plankopf"
+'@ModuleDescription "Plankopf Objekt für einfacheres Management von Planköpfen."
+
 
 Implements IPlankopf
 
@@ -215,7 +214,7 @@ Public Function FillData( _
        Optional ByVal Planüberschrift As String = "NEW", _
        Optional ByVal ID As String = "NEW" _
        ) As Boolean
-    ' skip validation should be used as a means of debuging or when creating a new Plankopf to give some template information but not validate it while loading
+       ' SkipValidation ist zu debug zwecken zu gebrauchen
     With Inputs
         .IDTinLine = TinLineID
         .GezeichnetPerson = GezeichnetPerson
@@ -250,7 +249,7 @@ Public Function FillData( _
         This.DWGFilePath = pProjekt.ProjektOrdnerCAD & "\01_EP\02_EG"
         This.XMLFilePath = This.DWGFilePath
         This.DWGFileName = GetDWGFileName
-        This.Planüberschrift = GetPlanüberschrift
+        GetPlanüberschrift
         Refresh
     End If
     On Error GoTo 0
@@ -297,9 +296,13 @@ On Error GoTo ERR
 6           col = Application.Match(This.GewerkKF, Globals.shPData.range("9:9"), 0)
             This.PlanartKF = Globals.shPData.Columns(col).Find(This.Planart).Offset(0, 1).Value
         End Select
+
+        log.write "Info", "Kurzformen erstellt" 
 Exit Function
 ERR:
     Debug.Print ">>>   "; ERR.Description
+    log.write "Error", "Beim erstellen der Kurzformen" & vbnewline & _
+err.number & vbnewline & err.description & vbnewline & err.source
 
 End Function
 
@@ -307,25 +310,29 @@ Private Function GetDWGFileName() As String
     GetDWGFileName = "EP_EG.dwg"
 End Function
 
-Private Function GetPlanüberschrift() As String
-
-    '--- log
-    Log.Log "GetPlanüberschrift start"
-    '--- log end
+Private Function GetPlanüberschrift()
 
     Dim Planüberschrift      As String
-
 
     If This.Plantyp = "PLA" Then
         ' Überschrift für Elektropläne
         Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschoss, This.GebäudeTeil)
+        If Len(Planüberschrift) > Globals.maxlen Then
+            Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschosskf, This.GebäudeTeil)
+            If Len(Planüberschrift) > maxlen Then
+                Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschosskf, This.GebäudeTeilkf)
+                If Len(Planüberschrift) > maxlen Then
+                    Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerkkf, This.Geschosskf, This.GebäudeTeilkf)
+                    If Len(Planüberschrift) > maxlen Then
+                        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planartkf, This.UnterGewerkkf, This.Geschosskf, This.GebäudeTeilkf)
+                    End If
+                End If
+            End If
+        End If
     Else
         ' Überschrift für Schemas
         Planüberschrift = "Prinzipschema " & This.UnterGewerk
-
         If Len(Planüberschrift) > Globals.maxlen Then
-            ' the Description is too long to fit in the Plankopf
-            ' use shorter forms
             Planüberschrift = "Prinzipschema " & This.UnterGewerk
             If Len(Planüberschrift) > maxlen Then
                 Planüberschrift = "PR " & This.UnterGewerk
@@ -333,10 +340,9 @@ Private Function GetPlanüberschrift() As String
         End If
     End If
 
-    GetPlanüberschrift = Planüberschrift
-    '--- log
-    Log.Log "GetPlanüberschrift END >> " & GetPlanüberschrift
-    '--- log end
+    this.Planüberschrift=Planüberschrift
+
+    log.write "Info", "Planüberschrift erstellt: " & this.Planüberschrift
 
 End Function
 
@@ -345,26 +351,24 @@ Private Function ValidInputs() As Boolean
     ValidInputs = False
     Dim ErrorSource          As String
     ErrorSource = "Plankopf > ValidInputs > "
-    If Len(Inputs.GezeichnetPerson) = 0 Then Log.Log ErrorSource & "no 'INPUT GEZEICHNET PERSON' given"
-    If Len(Inputs.GezeichnetDatum) = 0 Then Log.Log ErrorSource & "no 'INPUT GEZEICHNET DATUM' given"
-    If Len(Inputs.GeprüftPerson) = 0 Then Log.Log ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
-    If Len(Inputs.GeprüftDatum) = 0 Then Log.Log ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
-    If Len(Inputs.Gebäude) = 0 Then Log.Log ErrorSource & "no 'INPUT GEBÄUDE' given"
-    If Len(Inputs.GebäudeTeil) = 0 Then Log.Log ErrorSource & "no 'INPUT GEBÄUDETEIL' given"
-    If Len(Inputs.Geschoss) = 0 Then Log.Log ErrorSource & "no 'INPUT GESCHOSS' given"
-    If Len(Inputs.Planüberschrift) = 0 Then Log.Log ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
-    If Len(Inputs.LayoutGrösse) = 0 Then Log.Log ErrorSource & "no 'INPUT FORMAT' given"
-    If Len(Inputs.LayoutMasstab) = 0 Then Log.Log ErrorSource & "no 'INPUT MASSTAB' given"
-    If Len(Inputs.LayoutPlanstand) = 0 Then Log.Log ErrorSource & "no 'INPUT PLANSTAND' given"
+    If Len(Inputs.GezeichnetPerson) = 0 Then log.write ErrorSource & "no 'INPUT GEZEICHNET PERSON' given"
+    If Len(Inputs.GezeichnetDatum) = 0 Then log.write ErrorSource & "no 'INPUT GEZEICHNET DATUM' given"
+    If Len(Inputs.GeprüftPerson) = 0 Then log.write ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
+    If Len(Inputs.GeprüftDatum) = 0 Then log.write ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
+    If Len(Inputs.Gebäude) = 0 Then log.write ErrorSource & "no 'INPUT GEBÄUDE' given"
+    If Len(Inputs.GebäudeTeil) = 0 Then log.write ErrorSource & "no 'INPUT GEBÄUDETEIL' given"
+    If Len(Inputs.Geschoss) = 0 Then log.write ErrorSource & "no 'INPUT GESCHOSS' given"
+    If Len(Inputs.Planüberschrift) = 0 Then log.write ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
+    If Len(Inputs.LayoutGrösse) = 0 Then log.write ErrorSource & "no 'INPUT FORMAT' given"
+    If Len(Inputs.LayoutMasstab) = 0 Then log.write ErrorSource & "no 'INPUT MASSTAB' given"
+    If Len(Inputs.LayoutPlanstand) = 0 Then log.write ErrorSource & "no 'INPUT PLANSTAND' given"
     ValidInputs = True
+
+    log.write "Info", "Plankopf erstellt"
 
 End Function
 
 Public Function Refresh()
-
-    '--- log
-    Log.Log "Output start"
-    '--- log end
 
     Dim dateToday            As String
     dateToday = Format(Now(), "yymmdd")
@@ -375,6 +379,8 @@ DWGEP:
 PDFEP:
     This.PDFFileName = WorksheetFunction.TextJoin _
                        ("_", True, shPData.range("ADM_Projektnummer").Value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday) & ".PDF"
+
+    log.write "Info", "Planablage-Namen aktualisiert" & this.pdffilename
 End Function
 
 ' -------------------------------

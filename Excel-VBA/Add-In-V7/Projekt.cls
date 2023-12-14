@@ -7,8 +7,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "Projekt"
 Option Explicit
+'@Folder "Projekt"
+'@ModuleDescription "Projekt Objekt für einfacheres Management vom Projekt."
+
 
 Implements IProjekt
 
@@ -38,7 +40,7 @@ Public Sub FillData( _
     This.Projektphase = Projektphase
     This.ProjektphaseNummer = Globals.shPData.range("PRO_Projektphase").Find(This.Projektphase).Offset(0, 1).Value
     This.ProjektOrdnerSharePoint = ProjektOrdnerSharePoint
-    This.ProjektOrdnerCAD = GetCADPath
+    GetCADPath
 
 End Sub
 
@@ -70,7 +72,7 @@ Private Property Get IProjekt_ProjektOrdnerCAD() As String
     IProjekt_ProjektOrdnerCAD = This.ProjektOrdnerCAD
 End Property
 
-Private Function GetCADPath() As String
+Private Function GetCADPath()
 
     Dim TinLinePath          As String
     TinLinePath = "H:\TinLine\00_Projekte"
@@ -78,7 +80,9 @@ Private Function GetCADPath() As String
     Dim Jahr                 As String
     Jahr = "20" & Left$(This.Projektnummer, 2)
 
-    GetCADPath = TinLinePath & "\" & Jahr & "\" & This.Projektnummer & "_" & This.ProjektBezeichnung
+    This.ProjektOrdnerCAD = TinLinePath & "\" & Jahr & "\" & This.Projektnummer & "_" & This.ProjektBezeichnung
+
+    log.write "Info", "CAD-Pfad für Projekt " & this.projektnummer & " > " &  This.ProjektOrdnerCAD
 
 End Function
 

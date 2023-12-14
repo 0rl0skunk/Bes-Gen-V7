@@ -5,22 +5,13 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormRepair
    ClientTop       =   465
    ClientWidth     =   9600.001
    OleObjectBlob   =   "UserFormRepair.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormRepair"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
-
-
-
 
 
 Option Explicit

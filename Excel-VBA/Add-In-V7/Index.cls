@@ -7,9 +7,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
 '@IgnoreModule EmptyStringLiteral
 '@Folder("Index")
-Option Explicit
+'@ModuleDescription "Index Objekt für einfacheres Management von Indexen."
 
 Implements IIndex
 
@@ -70,14 +71,15 @@ Public Sub FillData( _
 End Sub
 
 Private Function validateInputs() As Boolean
-
+' sind alle benötigten Daten gegeben und korrekt
     validateInputs = False
     If Len(Inputs.IDPlan) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Plan ID' given"
     '--- Zeichner ---
     If Len(Inputs.GezeichnetPerson) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'GezeichnetPerson' given"
     If Len(Inputs.GezeichnetDatum) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'GezeichnetDatum' given"
     If Inputs.GeprüftPerson = "NONE" Then Inputs.GeprüftPerson = vbNullString
-    If Inputs.GeprüftDatum = "NONE" Then Inputs.GeprüftDatum = ""
+    If Inputs.GeprüftDatum = "NONE" Then Inputs.GeprüftDatum = vbnullstring
+
     '--- Planbezeichnung ---
     If Len(Inputs.Klartext) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Klartext' given"
     validateInputs = True
@@ -92,6 +94,8 @@ Private Function validateInputs() As Boolean
             indexes(i - 64) = Chr(i)
         Next
     End If
+
+    log.write "Info", "Index erstellt"
 
 End Function
 

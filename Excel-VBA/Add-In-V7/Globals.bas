@@ -1,22 +1,21 @@
 Attribute VB_Name = "Globals"
 Option Explicit
 '@Folder "Excel-Items"
-
-' defines all nescessairy links and other global variables
+'@ModuleDescription "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
 
 Global Const Version = 5#
 
-Global Const maxlen = 35                         'Maximale Anzahl Zeichen in der Planbschriftung
+Global Const maxlen = 35                         'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
 Global Const OrdnerVorlage = "H:\TinLine\01_Standards\00_Vorlageordner"
 Global Const VorlageEPDWG = "H:\TinLine\01_Standards\EP-Vorlage.dwg"
 Global Const VorlageEPDWGGEB = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg"
 Global Const VorlagePRDWG = "H:\TinLine\01_Standards\PR-Vorlage.dwg"
 Global Const TinLineProjekte = "H:\TinLine\00_Projekte\"
 Global Const XMLVorlage = "H:\TinLine\01_Standards\transform.xsl"
-Global Const LogPath = "C:\Users\Public\Documents\Bes-Gen-V2.1.log"
 Global Const listCols = 30
 Global Const minListHeight = 20
 Global Const HighlightColor = vbCyan
+global const TemplatePagesXslm = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
 
 Public WB                    As Workbook
 Public shPData               As Worksheet
@@ -32,8 +31,6 @@ Public UserName              As String
 
 Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection
-Public pWorkbook             As Workbook
-Public isBesGen              As Boolean
 
 Public Function Projekt() As IProjekt
     With Application.ActiveWorkbook.Sheets("Projektdaten")
@@ -47,9 +44,9 @@ Public Function Projekt() As IProjekt
            .range("ADM_Projektbezeichnung").Value, _
            .range("ADM_Projektphase").Value, _
            .range("ADM_ProjektpfadSharePoint").Value)
+        log.write "Info", "Created Projekt " & pProjekt.Projektnummer
     End With
     Set Projekt = pProjekt
-
 End Function
 
 Public Function Planköpfe() As Collection
@@ -62,7 +59,7 @@ End Function
 Private Sub GetPlanköpfe()
 
     'TODO Create Planköpfe from Workbook / Database
-
+    log.write "Info", "Loaded " pPlanköpfe.count & " Planköpfe from the Database"
 End Sub
 
 Function Initialize() As Boolean
@@ -111,54 +108,55 @@ Function Initialize() As Boolean
 End Function
 
 Public Function SetWBs()
-    ' set workbooks to easily reference them from within the Add-In
-    ' reference the worksheeet by 'Globals.shAdress' and the workbook by 'Globals.WB'
+    ' Setzt alle Workbooks und Worksheets welche vom Add-In verwendet werden.
     If WB Is Nothing Then Set WB = Application.ActiveWorkbook
     Dim i                    As Integer
     Set shAdress = WB.Sheets("Adressverzeichnis")
     If ERR Then
-        Set xlsmPages = Workbooks.Open("H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm")
+        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Adressverzeichnis").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shAdress = WB.Sheets("Adressverzeichnis")
     End If
     Set shStoreData = WB.Sheets("Datenbank")
     If ERR Then
-        Set xlsmPages = Workbooks.Open("H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm")
+        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Datenbank").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shStoreData = WB.Sheets("Datenbank")
     End If
     Set shIndex = WB.Sheets("Index")
     If ERR Then
-        Set xlsmPages = Workbooks.Open("H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm")
+        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Index").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shIndex = WB.Sheets("Index")
     End If
     Set shPlanListe = WB.Sheets("Planlisten")
     If ERR Then
-        Set xlsmPages = Workbooks.Open("H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm")
+        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Planlisten").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shPlanListe = WB.Sheets("Planlisten")
     End If
     Set shVersand = WB.Sheets("Versand")
     If ERR Then
-        Set xlsmPages = Workbooks.Open("H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm")
+        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Versand").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shVersand = WB.Sheets("Versand")
     End If
     Set shGebäude = WB.Sheets("Gebäude")
     If ERR Then
-        Set xlsmPages = Workbooks.Open("H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm")
+        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Gebäude").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shGebäude = WB.Sheets("Gebäude")
     End If
     Set shPData = WB.Sheets("Projektdaten")
     If ERR Then
-        Set xlsmPages = Workbooks.Open("H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm")
+        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Projektdaten").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shPData = WB.Sheets("Projektdaten")
     End If
 
     Globals.Projekt
+
+    log.write "Info", "Loaded all Workbooks in Globals Module"
 
 End Function
 

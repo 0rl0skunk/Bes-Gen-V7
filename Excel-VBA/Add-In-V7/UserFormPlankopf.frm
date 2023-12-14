@@ -5,22 +5,13 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopf
    ClientTop       =   465
    ClientWidth     =   9960.001
    OleObjectBlob   =   "UserFormPlankopf.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormPlankopf"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
-
-
-
 
 
 Option Explicit
@@ -144,7 +135,7 @@ Private Sub UserForm_Initialize()
 
     Set icons = New UserFormIconLibrary
 
-    ' ComboBox Listen auffüllen
+    ' ComboBox Listen aufüllen
 
     ' Unterprojekt
     ' Array mit Unterprojekt Name und Nummer nebeneinander
@@ -214,7 +205,7 @@ Private Sub UserForm_Initialize()
     Me.TextBoxLayoutMasstab.Value = "1:50"
 
     '--- log
-    Log.Log "Beschriftungsgeneartor controls complete"
+    log.write "Beschriftungsgeneartor controls complete"
     '--- log end
 
 End Sub
@@ -395,7 +386,7 @@ Private Sub ComboBoxEPArt_Change()
     Me.ComboBoxEPArt.BackColor = SystemColorConstants.vbWindowBackground
 
     '--- log
-    Log.Log "ComboBoxEPArt_Change"
+    log.write "ComboBoxEPArt_Change"
     '--- log end
 
 End Sub
@@ -409,7 +400,7 @@ Private Sub ComboBoxEPUGewerk_Change()
     End If
 
     '--- log
-    Log.Log "ComboBoxEPUGewerk_Change"
+    log.write "ComboBoxEPUGewerk_Change"
     '--- log end
 
 End Sub
@@ -461,7 +452,7 @@ Private Sub ComboBoxEPHGewerk_Change()
     End If
 
     '--- log
-    Log.Log "ComboBoxEPHGewerk_Change"
+    log.write "ComboBoxEPHGewerk_Change"
     '--- log end
 
     Exit Sub
@@ -480,7 +471,7 @@ Private Sub ComboBoxESAnlageTyp_Change()
     End If
 
     '--- log
-    Log.Log "ComboBoxESAnlageTyp_Change"
+    log.write "ComboBoxESAnlageTyp_Change"
     '--- log end
 
 End Sub
@@ -519,7 +510,7 @@ Private Sub ComboBoxESHGewerk_Change()
     Me.ComboBoxESHGewerk.BackColor = SystemColorConstants.vbWindowBackground
 
     '--- log
-    Log.Log "ComboBoxESHGewerk_Change"
+    log.write "ComboBoxESHGewerk_Change"
     '--- log end
 
     Exit Sub
@@ -561,7 +552,7 @@ Private Sub ComboBoxESUGewerk_Change()
     End Select
 
     '--- log
-    Log.Log "ComboBoxESUGewerk_Change"
+    log.write "ComboBoxESUGewerk_Change"
     '--- log end
 
 End Sub
@@ -601,7 +592,7 @@ Private Sub ComboBoxPRHGewerk_Change()
     Me.ComboBoxPRHGewerk.BackColor = SystemColorConstants.vbWindowBackground
 
     '--- log
-    Log.Log "ComboBoxPRHGewerk_Change"
+    log.write "ComboBoxPRHGewerk_Change"
     '--- log end
 
     Exit Sub
@@ -667,7 +658,7 @@ Private Sub ComboBoxGebäude_Change()
     On Error GoTo 0
 
     '--- log
-    Log.Log "ComboBoxGebäude_Change"
+    log.write "ComboBoxGebäude_Change"
     '--- log end
 
     Exit Sub

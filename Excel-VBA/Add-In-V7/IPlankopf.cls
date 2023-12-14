@@ -9,6 +9,8 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder "Plankopf"
 '@Interface
+'@ModuleDescription "Interface für 'Plankopf.cls'."
+
 
 Option Explicit
 

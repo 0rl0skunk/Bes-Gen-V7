@@ -1,7 +1,7 @@
 Attribute VB_Name = "PlankopfFactory"
 Option Explicit
 '@Folder "Plankopf"
-' a Factory 'creates the new class and binds it to the interface so only the wanted methods are exposed to the user
+'@ModuleDescription "Erstellt ein Plankopf-Objekt von welchem die daten einfach ausgelesen werden können."
 
 Public Function Create( _
        ByVal Projekt As IProjekt, _
@@ -102,6 +102,7 @@ Public Function LoadFromDatabase(ByVal row As Long) As IPlankopf
         End If
     End With
 
+    log.write "Info", "Plankopf " & loadfromdatabase.plannummer & " geladen" 
 
 End Function
 
@@ -131,6 +132,7 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
         .Cells(row, 21).Value = Plankopf.GeprüftDatum
         '.Cells(row, 1).Value = Plankopf.currentIndex.index
     End With
+    log.write "Info", "Plankopf " & plankopf.plannummer & " in Datenbank gespeichert" 
 
 End Function
 
@@ -162,5 +164,18 @@ Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
         '.Cells(row, 1).Value = Plankopf.currentIndex.index
     End With
 
+    log.write "Info", "Plankopf " & plankopf.plannummer & " in Datenbank aktualisiert"
+
 End Function
 
+Public Function DeleteFromDatabase(row As Long) As Boolean
+
+    Dim ID As String
+    dim Plannummer as string: plannummer = shstoredata.cells(row,14).value
+    ID = shStoreData.Cells(row, 1).Value
+    shStoreData.Cells(row, 1).EntireRow.Delete
+    IndexFactory.DeletePlan ID
+
+    log.write "Info", "Plankopf " & plannummer & " aus Datenbank gelöscht"
+
+End Function

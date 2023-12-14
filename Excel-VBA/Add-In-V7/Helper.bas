@@ -1,8 +1,8 @@
 Attribute VB_Name = "Helper"
 Option Explicit
-
+'@ModuleDescription "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
 Public Function GetPlanartNamedRange(Planart As String, Hauptgewerk As String) As String
-
+' Gibt die Range der verschiedenen Planarten des aktuellen Hauptgewerkes zurück
     Dim result               As String
 
     Select Case Hauptgewerk
@@ -37,9 +37,8 @@ Public Function GetPlanartNamedRange(Planart As String, Hauptgewerk As String) A
 End Function
 
 Public Function GetUnterGewerkKF(UnterGewerk As String, Hauptgewerk As String, Planart As String) As String
-
+' Gibt die Kurzform des Untergewerke zurück
     Dim result               As String
-
     Select Case Hauptgewerk
         Case "Elektro"
             Select Case Planart
@@ -157,13 +156,12 @@ End Function
 
 Public Function colToString(col As Collection) As String
 
-    'colToString = "> " & Join(CollectionToArray1(col), vbLf & "> ")
+    colToString = Join(CollectionToArray1(col), vbnewLine)
 
 End Function
 
 Public Function WLookup(Lookup, range As range, Index As Integer, Optional onError As String = "-") As String
-    ' a better version of vlookup
-    ' has an on error value if it is not provided it is set to "-"
+    ' VLookup mit 'onError' wert welcher selbst zugeordnet werden kann.
     On Error GoTo ERR
 
     Lookup = CStr(Lookup)
@@ -175,97 +173,12 @@ Public Function WLookup(Lookup, range As range, Index As Integer, Optional onErr
     End If
 
     Exit Function
+    log.write "Info", "Wlookup Value Found " &  wlookup
 
 ERR:
 
     WLookup = onError
-
-End Function
-
-Public Function CollectionToArray1(ByVal myCol As Collection) As Variant
-    ' convert a collection of elements to an array
-    Dim result               As Variant
-    Dim cnt                  As Long
-    Dim i                    As Integer
-    Dim tmparr()             As Variant
-    Dim col                  As New Collection
-
-    If myCol.Count = 0 Then
-        CollectionToArray1 = Array()
-        Exit Function
-    End If
-
-    ReDim result(myCol.Count - 1)
-    For cnt = 0 To myCol.Count - 1
-        If IsArray(myCol(cnt + 1)) Then
-            ' if it is an array create a new collection to add the items to it.
-            Set col = New Collection
-            For i = LBound(myCol(cnt + 1)) To UBound(myCol(cnt + 1))
-                If IsArray(myCol(cnt + 1)(i)) Then
-                    col.Add Join(myCol(cnt + 1)(i), ";")
-                Else
-                    col.Add myCol(cnt + 1)(i)
-                End If
-            Next i
-            If UBound(CollectionToArray(col)) > 0 Then
-                result(cnt) = Join(CollectionToArray(col), ";")
-            Else
-                result(cnt) = Join(myCol(cnt + 1), ";")
-            End If
-        Else
-            result(cnt) = myCol(cnt + 1)
-        End If
-    Next cnt
-    CollectionToArray1 = result
-
-End Function
-
-Public Function CollectionToArray(myCol As Collection) As Variant
-    ' convert a collection of elements to an array
-    Dim result               As Variant
-    Dim cnt                  As Long
-
-    If myCol.Count = 0 Then
-        CollectionToArray = Array()
-        Exit Function
-    End If
-
-    ReDim result(myCol.Count - 1)
-    For cnt = 0 To myCol.Count - 1
-        result(cnt) = myCol(cnt + 1)
-    Next cnt
-    CollectionToArray = result
-
-End Function
-
-Public Function addToArray(arr As Variant, Value As Variant) As Variant
-    ' add a Value or an array to the supplied array
-    On Error GoTo ERR
-
-    Dim i                    As Long, j As Long, k As Long
-
-    If IsArray(arr) Then
-        If IsArray(Value) Then                   ' if the value is an array
-            j = UBound(Value)                    'last index of supplied array
-            For k = 0 To j
-                i = UBound(arr) + 2
-                ReDim Preserve arr(i - 1)
-                arr(i - 1) = CStr(Value(k))
-            Next k
-        Else                                     ' if the value is a single value (String, integer etc.)
-            i = UBound(arr) + 2
-            ReDim Preserve arr(i - 1)
-            arr(i - 1) = CStr(Value)
-        End If
-    Else
-        GoTo ERR:
-    End If
-
-    addToArray = arr
-    Exit Function
-ERR:
-    addToArray = arr
-Debug.Print "the supplied parametars do not match the specified requirements!"
+    log.write "Error", "Wlookup Value for " & lookup & " Not Found"
 
 End Function
 
@@ -282,10 +195,6 @@ Public Function getES(ID As String) As String
 
     getES = result
 
-    '--- log
-    Log.Log "getES " & getES
-    '--- log end
-
 End Function
 
 Public Function getFormat(oFormat As String) As String
@@ -293,11 +202,11 @@ Public Function getFormat(oFormat As String) As String
     Dim tmpstr()             As String
     tmpstr = Split(oFormat, "H")
     Dim breite
-    Dim hï¿½he
+    Dim höhe
     If Not oFormat Like "*H*B" Then GoTo exitfunction
     breite = Left(tmpstr(1), Len(tmpstr(1)) - 1)
-    hï¿½he = tmpstr(0)
-    Select Case Join(Array(breite, hï¿½he), ",")
+    höhe = tmpstr(0)
+    Select Case Join(Array(breite, höhe), ",")
         Case Join(Array(1, 1), ",")
             getFormat = "A4"
         Case Join(Array(2, 1), ",")
@@ -309,28 +218,18 @@ Public Function getFormat(oFormat As String) As String
         Case Join(Array(4, 4), ",")
             getFormat = "A0"
         Case Else
-            getFormat = hï¿½he * 29.7 & "x" & breite * 21 & "cm"
+            getFormat = höhe * 29.7 & "x" & breite * 21 & "cm"
     End Select
-
-    '--- log
-    Log.Log "getFormat " & getFormat
-    '--- log end
 
     Exit Function
 exitfunction:
     getFormat = "---"
 
-    '--- log
-    Log.Log "getFormat kein Format"
-    '--- log end
-
     Exit Function
 End Function
 
 Public Function deleteIndexesXml()
-    '--- log
-    Log.Log "deleteIndexesXml start"
-    '--- log end
+
     Dim fso                  As Object
 
     Set fso = CreateObject("scripting.FileSystemObject")
@@ -341,9 +240,9 @@ Public Function deleteIndexesXml()
 
     For col = 2 To lastcol Step 2
         For row = 6 To lastrow
-            Log.Log "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
+            log.write "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
             If Not IsEmpty(shGebäude.Cells(row, col)) Then
-                Log.Log "> " & shGebäude.Cells(row, col).Value
+                log.write "> " & shGebäude.Cells(row, col).Value
                 ' only go if there is something in the cell
                 deleteIndexXml row, col
             End If
@@ -372,10 +271,6 @@ Public Function deleteIndexesXml()
         deleteIndexXml 0, 0, shPData.range("ADM_ProjektpfadCAD").Value & "\03_PR\" & GewerkNr & "_" & Gewerk & "\TinPlan_PR_" & Gewerk & ".xml"
     Next i
 
-    '--- log
-    Log.Log "deleteIndexesXml end"
-    '--- log end
-
 End Function
 
 Function deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As String = "")
@@ -386,10 +281,6 @@ Function deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As St
     Else
         xmlfile = i_xmlfile
     End If
-
-    '--- log
-    Log.Log ">> deleteIndexXml start " & xmlfile
-    '--- log end
 
 load:                                            ' load xml file
     Dim oXml                 As MSXML2.DOMDocument60
@@ -408,10 +299,6 @@ load:                                            ' load xml file
     oXml.save xmlfile
     Set oXml = Nothing
     On Error GoTo 0
-
-    '--- log
-    Log.Log ">> deleteIndexXml end"
-    '--- log end
 
 End Function
 
@@ -462,9 +349,6 @@ plan:
 
     getXML = result
 
-    '--- log
-    Log.Log "getXML >> " & result
-    '--- log end
     Exit Function
 
 ErrHandler:
@@ -511,9 +395,19 @@ Public Function getDWG(PCol As Collection) As String
 
     getDWG = result
 
-    '--- log
-    Log.Log "getDWG >> " & result
-    '--- log end
+End Function
+
+Public Sub DeleteRow(ByVal ID As String)
+    ' löscht die gegebene zeile(row) im Worksheet (DATA [shstoredata])
+    Dim row                  As Double
+    row = Application.WorksheetFunction.Match(ID, shStoreData.range("A:A"), False)
+    shStoreData.rows(row).EntireRow.Delete
+
+End Sub
+
+Public Function getNewRow() As Long
+    ' get the next free row in the store sheet
+    getNewRow = shStoreData.range("A1").CurrentRegion.rows.Count + 1
 
 End Function
 
@@ -625,7 +519,7 @@ Public Function getList(RangeName As String) As Variant()
 End Function
 
 Public Function getRange(Region As range, Optional Off As Integer = 1) As range
-    ' Auswahl der aktuell gespeicherten Daten im Worksheet (DATA [shData]) ohne ï¿½berschriften
+    ' Auswahl der aktuell gespeicherten Daten im Worksheet (DATA [shData]) ohne überschriften
     On Error GoTo ERR
 
     Dim rng                  As range
@@ -645,21 +539,7 @@ Public Function getRange(Region As range, Optional Off As Integer = 1) As range
 ERR:
     Set rng = Nothing
 
-End Function
-
-Public Sub DeleteRow(ByVal ID As String)
-    ' lï¿½scht die gegebene zeile(row) im Worksheet (DATA [shstoredata])
-    Dim row                  As Double
-    row = Application.WorksheetFunction.Match(ID, shStoreData.range("A:A"), False)
-    shStoreData.rows(row).EntireRow.Delete
-
-End Sub
-
-Public Function getNewRow() As Long
-    ' get the next free row in the store sheet
-    getNewRow = shStoreData.range("A1").CurrentRegion.rows.Count + 1
-
-End Function
+End Function¨
 
 Public Function getUsername() As String
 
@@ -730,6 +610,3 @@ Public Function RemoveBlanksFromStringArray(ByRef inputArray() As Variant, Optio
     RemoveBlanksFromStringArray = result
 
 End Function
-
-' ï¿½ 2023, Orlando Bassi
-

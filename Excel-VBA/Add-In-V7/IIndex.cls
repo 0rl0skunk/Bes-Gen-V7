@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder("Index")
 '@Interface
+'@ModuleDescription "Interface für 'Index.cls'."
 
 Option Explicit
 
