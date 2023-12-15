@@ -30,9 +30,9 @@ Public shVersand             As Worksheet
 Public shIndex               As Worksheet
 Public shPlanListe           As Worksheet
 Public shGebäude             As Worksheet
+Public shSPSync As Worksheet
 Public xlsmPages             As Workbook
 Public CopyrightSTR          As String
-Public UserName              As String
 
 Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection
@@ -119,6 +119,7 @@ End Function
 
 Public Function SetWBs()
     ' Setzt alle Workbooks und Worksheets welche vom Add-In verwendet werden.
+    
     If WB Is Nothing Then Set WB = Application.ActiveWorkbook
     Dim i                    As Integer
     Set shAdress = WB.Sheets("Adressverzeichnis")
@@ -163,6 +164,13 @@ Public Function SetWBs()
         xlsmPages.Sheets("Projektdaten").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shPData = WB.Sheets("Projektdaten")
     End If
+    Set shSPSync = WB.Sheets("SharePointSync")
+    If ERR Then
+        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
+        xlsmPages.Sheets("SharePointSync").copy after:=WB.Sheets(WB.Sheets.Count)
+        Set shPData = WB.Sheets("SharePointSync")
+    End If
+    
 
     Globals.Projekt
 

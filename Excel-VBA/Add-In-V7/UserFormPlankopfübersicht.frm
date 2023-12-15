@@ -3,7 +3,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopfübersicht
    ClientHeight    =   6480
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   13320
+   ClientWidth     =   17280
    OleObjectBlob   =   "UserFormPlankopfübersicht.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -12,10 +12,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 Option Explicit
 '@Folder "Plankopf"
 Private icons                As UserFormIconLibrary
 Private Planköpfe            As New Collection
+Private Filters              As Boolean
 
 Private Sub CommandButton1_Click()
 
@@ -34,6 +37,30 @@ Private Sub CommandButton2_Click()
     frm.Show 1
 
     LoadListView
+
+End Sub
+
+Private Sub CommandButton3_Click()
+
+    ShowFilter
+
+End Sub
+
+Private Sub ShowFilter()
+
+    If Filters Then
+        Me.CommandButton3.Caption = "< Filter"
+        Me.CommandButton3.Left = 708
+        Me.CommandButtonClose.Left = 786
+        Me.width = 876
+    Else
+        Me.CommandButton3.Caption = "Filter >"
+        Me.CommandButton3.Left = 396
+        Me.CommandButtonClose.Left = 588
+        Me.width = 678
+    End If
+
+    Filters = Not Filters
 
 End Sub
 
@@ -119,6 +146,39 @@ Private Sub CommandButtonDelete_Click()
 
 End Sub
 
+Private Sub CommandButtonFilterReset_Click()
+
+    LoadListView
+
+End Sub
+
+Private Sub FilterListView(ByVal Index As String, ByVal FilterValue As String)
+
+    Dim e                    As ListItem
+StartOver:
+    For Each e In Me.ListViewPlankopf.ListItems
+Debug.Print e.ListSubItems.item(Index).Text
+        If FilterValue <> "Alles" Then
+            If e.ListSubItems.item(Index).Text <> FilterValue Then
+                Me.ListViewPlankopf.ListItems.Remove e.Index
+                GoTo StartOver
+            End If
+        End If
+    Next e
+
+End Sub
+
+Private Sub CommandButtonSetFilter_Click()
+
+    FilterListView 3, Me.ComboBoxFilterGeschoss.Value
+    FilterListView 4, Me.ComboBoxFilterGebäude.Value
+    FilterListView 5, Me.ComboBoxFilterGebäudeteil.Value
+    FilterListView 6, Me.ComboBoxFilterGewerk.Value
+    FilterListView 7, Me.ComboBoxFilterUnterGewerk.Value
+    FilterListView 8, Me.ComboBoxFilterPlanart.Value
+
+End Sub
+
 Private Sub ListViewPlankopf_DblClick()
 
     Dim row                  As Long
@@ -136,6 +196,8 @@ End Sub
 Private Sub UserForm_Initialize()
 
     LoadListView
+    Filters = False
+    ShowFilter
 
 End Sub
 
@@ -146,6 +208,7 @@ Private Sub LoadListView()
 
     Dim row                  As Long, _
     lastrow                  As Long
+
     With Me.ListViewPlankopf
         .ListItems.Clear
         .View = lvwReport
@@ -154,15 +217,18 @@ Private Sub LoadListView()
         .FullRowSelect = True
         With .ColumnHeaders
             .Clear
-            .Add , , "", 20
-            .Add , , "ID", 0
-            .Add , , "Plannummer"
-            .Add , , "Geschoss"
-            .Add , , "Gebüude"
-            .Add , , "Gebüudeteil"
-            .Add , , "Gezeichnet"
-            .Add , , "Geprüft"
-            .Add , , "Index"
+            .Add , , "", 20                      ' 0
+            .Add , , "ID", 0                     ' 1
+            .Add , , "Plannummer"                ' 2
+            .Add , , "Geschoss"                  ' 3
+            .Add , , "Gebäude"                   ' 4
+            .Add , , "Gebäudeteil"               ' 5
+            .Add , , "Gewerk", 0                 ' 6
+            .Add , , "Untergewerk", 0            ' 7
+            .Add , , "Planart", 0                ' 8
+            .Add , , "Gezeichnet"                ' 9
+            .Add , , "Geprüft"                   ' 10
+            .Add , , "Index"                     ' 11
         End With
         If Globals.shStoreData Is Nothing Then Globals.SetWBs
         lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count
@@ -175,11 +241,59 @@ Private Sub LoadListView()
             Li.ListSubItems.Add , , Pla.Geschoss
             Li.ListSubItems.Add , , Pla.Gebäude
             Li.ListSubItems.Add , , Pla.GebäudeTeil
+            Li.ListSubItems.Add , , Pla.Gewerk
+            Li.ListSubItems.Add , , Pla.UnterGewerk
+            Li.ListSubItems.Add , , Pla.Planart
             Li.ListSubItems.Add , , Pla.Gezeichnet
             Li.ListSubItems.Add , , Pla.Geprüft
-            'Li.ListSubItems.Add , , Pla.currentIndex.index
+            Li.ListSubItems.Add , , Pla.currentIndex.Index
         Next row
     End With
+
+    LoadFilters Me.ComboBoxFilterGebäude, "Gebäude"
+    LoadFilters Me.ComboBoxFilterGebäudeteil, "Gebäudeteil"
+    LoadFilters Me.ComboBoxFilterGeschoss, "Geschoss"
+    LoadFilters Me.ComboBoxFilterGewerk, "Gewerk"
+    LoadFilters Me.ComboBoxFilterUnterGewerk, "Untergewerk"
+    LoadFilters Me.ComboBoxFilterPlanart, "Planart"
+
+End Sub
+
+Private Sub LoadFilters(ByRef Filter As MSForms.ComboBox, ByVal FilterText As String)
+
+    Dim e                    As range
+    Dim col                  As Long
+    Dim lastrow              As Long: lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count
+    Dim ws                   As Worksheet: Set ws = Globals.shStoreData
+
+    Select Case FilterText
+        Case "Gebäude"
+            col = 7
+        Case "Geschoss"
+            col = 9
+        Case "Gebäudeteil"
+            col = 8
+        Case "Gewerk"
+            col = 3
+        Case "Untergewerk"
+            col = 4
+        Case "Planart"
+            col = 5
+    End Select
+
+    Filter.Clear
+    With CreateObject("Scripting.Dictionary")
+        .Add "Alles", Nothing
+        For Each e In ws.range(ws.Cells(3, col), ws.Cells(lastrow, col))
+            If Not .Exists(e.Value) Then
+                .Add e.Value, Nothing
+            End If
+        Next e
+
+        Filter.List = .Keys
+    End With
+    Filter.Value = Filter.List(0)
+
 End Sub
 
 

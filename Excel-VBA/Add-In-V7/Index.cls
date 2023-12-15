@@ -31,6 +31,7 @@ Private Type TIndex
     DWGFilePath As String
     XMLFileName As String
     XMLFilePath As String
+    SkipValidation As Boolean
 End Type
 
 Private This                 As TIndex
@@ -52,7 +53,8 @@ Public Sub FillData( _
        Optional ByVal ID As String = vbNullString, _
        Optional ByVal Letter As String = vbNullString, _
        Optional ByVal GeprüftPerson As String = vbNullString, _
-       Optional ByVal GeprüftDatum As String = vbNullString _
+       Optional ByVal GeprüftDatum As String = vbNullString, _
+       Optional ByVal SkipValidation As Boolean _
        )
 
     Inputs.ID = ID
@@ -63,6 +65,7 @@ Public Sub FillData( _
     Inputs.GeprüftPerson = GeprüftPerson
     Inputs.GeprüftDatum = GeprüftDatum
     Inputs.Klartext = Klartext
+    Inputs.SkipValidation = SkipValidation
 
     If validateInputs Then
         This = Inputs
@@ -73,6 +76,9 @@ Public Sub FillData( _
 End Sub
 
 Private Function validateInputs() As Boolean
+
+    If Inputs.SkipValidation Then: validateInputs = True: Exit Function
+    
     ' sind alle benötigten Daten gegeben und korrekt
     validateInputs = False
     If Len(Inputs.IDPlan) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Plan ID' given"

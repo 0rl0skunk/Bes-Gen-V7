@@ -11,7 +11,8 @@ Public Function Create( _
        Optional ByVal ID As String = vbNullString, _
        Optional ByVal Letter As String, _
        Optional ByVal GeprüftPerson As String = vbNullString, _
-       Optional ByVal GeprüftDatum As String = vbNullString _
+       Optional ByVal GeprüftDatum As String = vbNullString, _
+       Optional ByVal SkipValidation As Boolean _
        ) As IIndex
 
     Dim newIndex             As Index
@@ -24,7 +25,8 @@ Public Function Create( _
         GezeichnetDatum:=GezeichnetDatum, _
         GeprüftPerson:=GeprüftPerson, _
         GeprüftDatum:=GeprüftDatum, _
-        Klartext:=Klartext
+        Klartext:=Klartext, _
+        SkipValidation:=SkipValidation
 
     Set Create = newIndex
 

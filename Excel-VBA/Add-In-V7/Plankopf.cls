@@ -178,7 +178,9 @@ Private Property Get IPlankopf_xmlfile() As String
 End Property
 
 Private Property Get IPlankopf_currentIndex() As IIndex
+    If This.currentIndex Is Nothing Then Set This.currentIndex = IndexFactory.Create(This.ID, vbNullString, vbNullString, vbNullString, vbNullString, " ", vbNullString, vbNullString, True)
     Set IPlankopf_currentIndex = This.currentIndex
+    
 End Property
 
 Private Property Get IPlankopf_Indexes() As Collection

@@ -12,6 +12,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 Option Explicit
 '@IgnoreModule IntegerDataType, EmptyStringLiteral
 '@Folder "Plankopf"
@@ -201,11 +203,13 @@ Private Sub UserForm_Initialize()
 
     ' Massstab
     Me.TextBoxLayoutMasstab.Value = "1:50"
+    Me.LabelProjektnummer.Caption = Globals.shPData.range("ADM_Projektnummer").Value
+    
+    Me.TextBoxPlanInfoDatumGezeichnet.Value = Format(Now, "DD.MM.YYYY")
+    Me.TextBoxPlanInfoKürzelGezeichnet.Value = getUserName
 
-    '--- log
     writelog "Info", "UserFormPlankopf > Inizialise complete"
-    '--- log end
-
+    
 End Sub
 
 Private Sub CommandButtonClose_Click()
@@ -315,6 +319,8 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
             IndexFactory.AddToDatabase Index
         Next
     End If
+    
+    CommandButtonBeschriftungAktualisieren_Click
 
 End Sub
 

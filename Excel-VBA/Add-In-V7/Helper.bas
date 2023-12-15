@@ -536,14 +536,16 @@ ERR:
 
 End Function
 
-Public Function getUsername() As String
+Public Function getUserName() As String
 
     Dim arrUsername()        As String, UserName As String
     UserName = Application.UserName
 
-    arrUsername = Split(UserName, " ")
+    'arrUsername = Split(UserName, " ")
 
-    getUsername = Left(arrUsername(1), 2) & Left(arrUsername(0), 2)
+    'getUserName = Left(arrUsername(1), 2) & Left(arrUsername(0), 2)
+    
+    getUserName = UserName
 
 End Function
 
