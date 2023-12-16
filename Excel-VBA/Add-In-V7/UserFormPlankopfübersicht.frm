@@ -13,6 +13,9 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+'@IgnoreModule VariableNotUsed
+
+
 Option Explicit
 '@Folder "Plankopf"
 Private icons                As UserFormIconLibrary
@@ -22,6 +25,7 @@ Private Filters              As Boolean
 Private Sub CommandButton1_Click()
 
     Dim frm                  As New UserFormPlankopf
+    frm.setIcons Add
     frm.Show 1
     LoadListView
 
@@ -33,6 +37,7 @@ Private Sub CommandButton2_Click()
     row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     Dim frm                  As New UserFormPlankopf
     frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt
+    frm.setIcons Edit
     frm.Show 1
 
     LoadListView
@@ -188,6 +193,7 @@ Private Sub ListViewPlankopf_DblClick()
     End If
     Dim frm                  As New UserFormPlankopf
     frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt
+    frm.setIcons Edit
     frm.Show 1
 
 End Sub
@@ -205,8 +211,9 @@ Private Sub LoadListView()
     Dim Pla                  As IPlankopf
     Dim li                   As ListItem
 
-    Dim row                  As Long, _
-    lastrow                  As Long
+    Dim row                  As Long
+    Dim lastrow              As Long
+
 
     With Me.ListViewPlankopf
         .ListItems.Clear
@@ -216,7 +223,7 @@ Private Sub LoadListView()
         .FullRowSelect = True
         With .ColumnHeaders
             .Clear
-            .Add , , "", 20                      ' 0
+            .Add , , vbNullString, 20            ' 0
             .Add , , "ID", 0                     ' 1
             .Add , , "Plannummer"                ' 2
             .Add , , "Geschoss"                  ' 3
@@ -294,5 +301,4 @@ Private Sub LoadFilters(ByRef Filter As MSForms.ComboBox, ByVal FilterText As St
     Filter.Value = Filter.List(0)
 
 End Sub
-
 

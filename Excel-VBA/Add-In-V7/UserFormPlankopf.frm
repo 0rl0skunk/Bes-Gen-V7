@@ -13,9 +13,16 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
 Option Explicit
-'@IgnoreModule IntegerDataType, EmptyStringLiteral
+'@IgnoreModule VariableNotUsed, IntegerDataType, EmptyStringLiteral
 '@Folder "Plankopf"
+
+Public Enum EnumIcon
+    Add = 0
+    Edit = 1
+End Enum
 
 Private icons                As UserFormIconLibrary
 Private pPlankopf            As IPlankopf
@@ -24,16 +31,13 @@ Private pProjekt             As IProjekt
 Private shPData              As Worksheet
 Private shGebäude            As Worksheet
 
-Public Sub setIcons(ByVal icon As String)
+Public Sub setIcons(ByVal icon As EnumIcon)
 
     Select Case icon
-        Case "add"
+        Case 0
             Me.TitleIcon.Picture = icons.IconAddProperties.Picture
             Me.TitleLabel.Caption = "Plankopf erstellen"
-        Case "delete"
-            Me.TitleIcon.Picture = icons.IconImportantProperty.Picture
-            Me.TitleLabel.Caption = "Plankopf löschen"
-        Case "edit"
+        Case 1
             Me.TitleIcon.Picture = icons.IconEditProperties.Picture
             Me.TitleLabel.Caption = "Plankopf bearbeiten"
     End Select
@@ -139,7 +143,7 @@ Private Sub UserForm_Initialize()
     ' Unterprojekt
     ' Array mit Unterprojekt Name und Nummer nebeneinander
 
-    Dim arr()
+    Dim arr()                As Variant
 
     ' populate unterprojekt if there is only one
     'arr() = getList("Unterprojekte")
@@ -188,11 +192,7 @@ Private Sub UserForm_Initialize()
 
     ' Geschoss
     'Me.ComboBoxGeschoss.Clear
-    If Me.ComboBoxGebäude.ListCount = 1 Then
-        Me.ComboBoxGeschoss.Enabled = True
-    Else
-        Me.ComboBoxGeschoss.Enabled = False
-    End If
+    Me.ComboBoxGeschoss.Enabled = Me.ComboBoxGebäude.ListCount = 1
 
     Me.MultiPageTyp.Value = 0
     ' Formate
@@ -256,10 +256,11 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
 
     Set pPlankopf = Plankopf
     Set Plankopf = Nothing
-    Dim Planstand            As String, _
-    Plantyp                  As Integer, _
-    Gewerk                   As String, _
-    UnterGewerk              As String
+    Dim Planstand            As String
+    Dim Plantyp              As Integer
+    Dim Gewerk               As String
+    Dim UnterGewerk          As String
+
 
     Select Case pPlankopf.Plantyp
         Case "PLA"
@@ -335,9 +336,10 @@ End Sub
 
 Private Function FormToPlankopf() As IPlankopf
 
-    Dim Plantyp              As String, _
-    Gewerk                   As String, _
-    UnterGewerk              As String
+    Dim Plantyp              As String
+    Dim Gewerk               As String
+    Dim UnterGewerk          As String
+
     Select Case Me.MultiPageTyp.Value
         Case 0
             Plantyp = "PLA"
@@ -402,7 +404,10 @@ End Sub
 
 Private Sub ComboBoxEPHGewerk_Change()
 
-    Dim row, col             As Integer, lastrow As Long
+    Dim row                  As Variant
+    Dim col                  As Integer
+    Dim lastrow              As Long
+
 
     'If Not Dev Then On Error GoTo ErrMsg
 
@@ -425,7 +430,7 @@ Private Sub ComboBoxEPHGewerk_Change()
     Dim HGewerk              As String
     HGewerk = WLookup(Me.ComboBoxEPHGewerk.Value, Globals.shPData.range("PRO_Hauptgewerk"), 2)
 
-    If Not IsError(Application.Match(HGewerk & " PLA", range("10:10"), 0)) Then
+    If Not IsError(Application.Match(HGewerk & " PLA", Globals.shPData.range("10:10"), 0)) Then
 1       col = Application.Match(HGewerk & " PLA", Globals.shPData.range("10:10"), 0)
         lastrow = Application.CountA(Globals.shPData.Cells(12, col).EntireColumn) + 9
         Me.ComboBoxEPUGewerk.Clear
@@ -448,8 +453,6 @@ Private Sub ComboBoxEPHGewerk_Change()
 
     Exit Sub
 
-ErrMsg:
-
 End Sub
 
 Private Sub ComboBoxESAnlageTyp_Change()
@@ -465,7 +468,10 @@ End Sub
 
 Private Sub ComboBoxESHGewerk_Change()
 
-    Dim row, col             As Integer, lastrow As Long
+    Dim row                  As Variant
+    Dim col                  As Integer
+    Dim lastrow              As Long
+
 
     'If Not Dev Then On Error GoTo ErrMsg
 
@@ -498,13 +504,14 @@ Private Sub ComboBoxESHGewerk_Change()
 
     Exit Sub
 
-ErrMsg:
-
 End Sub
 
 Private Sub ComboBoxESUGewerk_Change()
 
-    Dim col, row, lastrow
+    Dim col                  As Variant
+    Dim row                  As Variant
+    Dim lastrow              As Variant
+
 
     Me.ComboBoxESUGewerk.BackColor = SystemColorConstants.vbWindowBackground
 
@@ -538,7 +545,10 @@ End Sub
 
 Private Sub ComboBoxPRHGewerk_Change()
 
-    Dim row, col             As Integer, lastrow As Long
+    Dim row                  As Variant
+    Dim col                  As Integer
+    Dim lastrow              As Long
+
 
     If Not Dev Then On Error GoTo ErrMsg
 
@@ -586,8 +596,12 @@ Private Sub ComboBoxGebäude_Change()
 
     Me.ComboBoxGebäude.BackColor = SystemColorConstants.vbWindowBackground
     'get current building column
-    Dim col                  As Long, lastrow As Long
-    Dim arr(), tmparr()
+    Dim col                  As Long
+    Dim lastrow              As Long
+
+    Dim arr()                As Variant
+    Dim tmparr()             As Variant
+
     Dim rng                  As range
 
     'If Not Dev Then On Error GoTo ErrMsg
@@ -633,9 +647,6 @@ Debug.Print rng.Address
     On Error GoTo 0
 
     Exit Sub
-
-ErrMsg:
-
 
 End Sub
 

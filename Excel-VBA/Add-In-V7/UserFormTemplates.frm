@@ -13,13 +13,15 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
 '@Folder "Templates"
 Option Explicit
 
 Private Sub CheckBox1_Enter()
 
     Me.LabelToolTip.Caption = " >> CheckBox <<" & vbNewLine & _
-                              "" & vbNewLine & _
+                              vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
                               "Is used instead of a Toggle Button. Shows thw value in a cleaner way and is more flexible with the Label next to it." & vbNewLine & _
                               "> Naming Convention" & vbNewLine & _
@@ -32,7 +34,7 @@ End Sub
 Private Sub ComboBox1_Enter()
 
     Me.LabelToolTip.Caption = " >> ComboBox <<" & vbNewLine & _
-                              "" & vbNewLine & _
+                              vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
                               "It is used to limit the user Input to a predefined selection." & vbNewLine & _
                               "> Naming Convention" & vbNewLine & _
@@ -45,7 +47,7 @@ End Sub
 Private Sub CommandButton1_Enter()
 
     Me.LabelToolTip.Caption = " >> CommabdButton <<" & vbNewLine & _
-                              "" & vbNewLine & _
+                              vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
                               "It is used to 'do something. The Caption should depict what it does > close, load, select Folder." & vbNewLine & _
                               "> Naming Convention" & vbNewLine & _
@@ -64,7 +66,7 @@ End Sub
 Private Sub LabelToolTip_Click()
 
     Me.LabelToolTip.Caption = " >> ToolTip 'LabelControl' <<" & vbNewLine & _
-                              "" & vbNewLine & _
+                              vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
                               "It is used to display the ToolTip for the selected Control. It should simplify the usage of a UserForm while not being to complicated." & vbNewLine & _
                               "> Naming Convention" & vbNewLine & _
@@ -77,7 +79,7 @@ End Sub
 Private Sub OptionButton1_Enter()
 
     Me.LabelToolTip.Caption = " >> OptionButton <<" & vbNewLine & _
-                              "" & vbNewLine & _
+                              vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
                               "Whene there are a small amount of states a Value can be in and also just one at a time. They should be grouped by a Frame named with the broader option description." & vbNewLine & _
                               "> Naming Convention" & vbNewLine & _
@@ -90,7 +92,7 @@ End Sub
 Private Sub TextBox1_Enter()
 
     Me.LabelToolTip.Caption = " >> Textbox <<" & vbNewLine & _
-                              "" & vbNewLine & _
+                              vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
                               "It is used to input and outpur string Values from and to the User." & vbNewLine & _
                               "> Naming Convention" & vbNewLine & _

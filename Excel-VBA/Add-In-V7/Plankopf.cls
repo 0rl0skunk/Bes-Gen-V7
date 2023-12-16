@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Attribute VB_Description = "Plankopf Objekt für einfacheres Management von Planköpfen."
 Option Explicit
 '@Folder "Plankopf"
 '@ModuleDescription "Plankopf Objekt für einfacheres Management von Planköpfen."
@@ -258,7 +259,6 @@ Public Function Filldata( _
     Filldata = True
     Exit Function
 
-NotValid:
     On Error GoTo -1
     On Error GoTo 0
     Dim frm                  As New UserFormMessage
@@ -271,7 +271,7 @@ NotValid:
 
 End Function
 
-Private Function GetKF()
+Private Sub GetKF()
 
     On Error GoTo ERR
     This.GebäudeKF = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(1).Value
@@ -300,19 +300,19 @@ Private Function GetKF()
     End Select
 
     writelog "Info", "Kurzformen erstellt"
-    Exit Function
+    Exit Sub
 ERR:
 Debug.Print ">>>   "; ERR.description
     writelog "Error", "Beim erstellen der Kurzformen" & vbNewLine & _
                      ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
 
-End Function
+End Sub
 
 Private Function GetDWGFileName() As String
     GetDWGFileName = "EP_EG.dwg"
 End Function
 
-Private Function GetPlanüberschrift()
+Private Sub GetPlanüberschrift()
 
     Dim Planüberschrift      As String
 
@@ -346,7 +346,7 @@ Private Function GetPlanüberschrift()
 
     writelog "Info", "Planüberschrift erstellt: " & This.Planüberschrift
 
-End Function
+End Sub
 
 Private Function ValidInputs() As Boolean
 
@@ -370,20 +370,18 @@ Private Function ValidInputs() As Boolean
 
 End Function
 
-Public Function Refresh()
+Public Sub Refresh()
 
     Dim dateToday            As String
     dateToday = Format(Now(), "yymmdd")
     'Select Case This.PlanTyp
-DWGEP:
     This.LayoutName = WorksheetFunction.TextJoin _
                       ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
-PDFEP:
     This.PDFFileName = WorksheetFunction.TextJoin _
                        ("_", True, shPData.range("ADM_Projektnummer").Value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday) & ".PDF"
 
     writelog "Info", "Planablage-Namen aktualisiert" & This.PDFFileName
-End Function
+End Sub
 
 ' -------------------------------
 ' --- Subs

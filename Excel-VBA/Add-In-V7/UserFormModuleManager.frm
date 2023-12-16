@@ -12,6 +12,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Option Explicit
 '@Folder("Excel-Items")
 Public pModules              As New Collection
 
@@ -52,7 +53,7 @@ Private Sub LoadModules()
         .FullRowSelect = True
         With .ColumnHeaders
             'max width = 300
-            .Add , , "", 0
+            .Add , , vbNullString, 0
             .Add , , "FileName", 140
             .Add , , "Modified", 140
         End With

@@ -1,4 +1,5 @@
 Attribute VB_Name = "TinLine"
+Attribute VB_Description = "Funktionen welche das TinLine Betreffen."
 Option Explicit
 '@Folder("TinLine")
 '@ModuleDescription "Funktionen welche das TinLine Betreffen."

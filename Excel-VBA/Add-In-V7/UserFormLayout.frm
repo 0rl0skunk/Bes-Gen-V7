@@ -12,7 +12,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 Private pMasstab             As Integer
@@ -35,22 +34,22 @@ End Sub
 Private Sub ChangeFormat()
 
     ' --- change displayed Layout based on new inputs
-    Dim _
-    paper                    As control, _
-    border                   As control, _
-    Plankopf                 As control, _
-    legende                  As control, _
-    maxHeight                As Double, _
-    maxWidth                 As Double, _
-    height                   As Double, _
-    width                    As Double, _
-    tHeight                  As Double, _
-    tWidth                   As Double, _
-    H                        As Integer, _
-    B                        As Integer, _
-    ratio                    As Double, _
-    mHeight                  As Double, _
-    mWidth                   As Double
+    Dim paper                As control
+    Dim border               As control
+    Dim Plankopf             As control
+    Dim legende              As control
+    Dim maxHeight            As Double
+    Dim maxWidth             As Double
+    Dim height               As Double
+    Dim width                As Double
+    Dim tHeight              As Double
+    Dim tWidth               As Double
+    Dim H                    As Integer
+    Dim B                    As Integer
+    Dim ratio                As Double
+    Dim mHeight              As Double
+    Dim mWidth               As Double
+
 
     Set paper = Me.FramePaperSize
     Set border = Me.FramePaperBorder

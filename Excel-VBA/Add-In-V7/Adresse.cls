@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-
+Attribute VB_Description = "Adress Objekt für einfacheres Management einer Adresse."
 Option Explicit
 '@ModuleDescription "Adress Objekt für einfacheres Management einer Adresse."
 
@@ -49,7 +49,7 @@ Private Property Get IAdresse_Ort() As String
     IAdresse_Ort = This.Ort
 End Property
 
-Public Property Get IAdresse_Komplett() As String
+Private Property Get IAdresse_Komplett() As String
     IAdresse_Komplett = This.Strasse & vbNewLine & This.PLZ & " " & This.Ort
 End Property
 

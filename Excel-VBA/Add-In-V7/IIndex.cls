@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Attribute VB_Description = "Interface für 'Index.cls'."
 '@Folder("Index")
 '@Interface
 '@ModuleDescription "Interface für 'Index.cls'."
@@ -32,7 +33,6 @@ End Property
 
 Public Property Get PlanID() As String
 End Property
-
 Public Property Let PlanID(ByVal NewValue As String)
 End Property
 

@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Attribute VB_Description = "Projekt Objekt für einfacheres Management vom Projekt."
 Option Explicit
 '@Folder "Projekt"
 '@ModuleDescription "Projekt Objekt für einfacheres Management vom Projekt."
@@ -72,7 +73,7 @@ Private Property Get IProjekt_ProjektOrdnerCAD() As String
     IProjekt_ProjektOrdnerCAD = This.ProjektOrdnerCAD
 End Property
 
-Private Function GetCADPath()
+Private Sub GetCADPath()
 
     Dim TinLinePath          As String
     TinLinePath = "H:\TinLine\00_Projekte"
@@ -84,6 +85,6 @@ Private Function GetCADPath()
 
     writelog "Info", "CAD-Pfad für Projekt " & This.Projektnummer & " > " & This.ProjektOrdnerCAD
 
-End Function
+End Sub
 
 

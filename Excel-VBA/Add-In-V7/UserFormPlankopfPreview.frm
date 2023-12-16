@@ -13,6 +13,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
 '@IgnoreModule UseMeaningfulName, IntegerDataType
 Option Explicit
 '@Folder "Plankopf"

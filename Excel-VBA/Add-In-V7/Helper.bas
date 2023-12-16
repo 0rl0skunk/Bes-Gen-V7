@@ -1,4 +1,6 @@
 Attribute VB_Name = "Helper"
+Attribute VB_Description = "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
+'@IgnoreModule VariableNotUsed
 Option Explicit
 
 '@ModuleDescription "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
@@ -155,7 +157,7 @@ Public Function GetUnterGewerkKF(UnterGewerk As String, Hauptgewerk As String, P
 
 End Function
 
-Public Function WLookup(Lookup, range As range, Index As Integer, Optional onError As String = "-") As String
+Public Function WLookup(Lookup As Variant, range As range, Index As Integer, Optional onError As String = "-") As String
     ' VLookup mit 'onError' wert welcher selbst zugeordnet werden kann.
     On Error GoTo ERR
 
@@ -177,61 +179,19 @@ ERR:
 
 End Function
 
-Public Function getES(ID As String) As String
-
-    Dim Projektpath          As String, result As String
-    Dim row                  As Integer
-
-    Projektpath = shPData.range("Projektpfad")
-
-    row = shStoreData.range("A:A").Find(ID).row
-
-    result = Projektpath & "\02_ES\" & shStoreData.Cells(row, 2).Value
-
-    getES = result
-
-End Function
-
-Public Function getFormat(oFormat As String) As String
-
-    Dim tmpstr()             As String
-    tmpstr = Split(oFormat, "H")
-    Dim breite
-    Dim höhe
-    If Not oFormat Like "*H*B" Then GoTo exitfunction
-    breite = Left(tmpstr(1), Len(tmpstr(1)) - 1)
-    höhe = tmpstr(0)
-    Select Case Join(Array(breite, höhe), ",")
-        Case Join(Array(1, 1), ",")
-            getFormat = "A4"
-        Case Join(Array(2, 1), ",")
-            getFormat = "A3"
-        Case Join(Array(2, 2), ",")
-            getFormat = "A2"
-        Case Join(Array(4, 2), ",")
-            getFormat = "A1"
-        Case Join(Array(4, 4), ",")
-            getFormat = "A0"
-        Case Else
-            getFormat = höhe * 29.7 & "x" & breite * 21 & "cm"
-    End Select
-
-    Exit Function
-exitfunction:
-    getFormat = "---"
-
-    Exit Function
-End Function
-
-Public Function deleteIndexesXml()
+Public Sub deleteIndexesXml()
 
     Dim fso                  As Object
+    Dim lastrow              As Integer
+    Dim row                  As Integer
+    Dim col                  As Integer
+    Dim lastcol              As Integer
+
 
     Set fso = CreateObject("scripting.FileSystemObject")
-    Dim lastrow              As Integer, row As Integer, col As Integer, lastcol As Integer
 
-    lastrow = shGebäude.Cells(rows.Count, 2).End(xlUp).row
-    lastcol = shGebäude.Cells(1, Columns.Count).End(xlToLeft).Column
+    lastrow = shGebäude.Cells(shGebäude.rows.Count, 2).End(xlUp).row
+    lastcol = shGebäude.Cells(1, shGebäude.Columns.Count).End(xlToLeft).Column
 
     For col = 2 To lastcol Step 2
         For row = 6 To lastrow
@@ -245,11 +205,19 @@ Public Function deleteIndexesXml()
     Next col
 
     ' ----------------------------- PRINZIPSCHEMAS
-    Dim j                    As Integer, i As Integer, filename As String
-    Dim TinLine, Projektname, Projektpfad, EP, Gewerk As String, GewerkNr As String
+    Dim j                    As Integer
+    Dim i                    As Integer
+    Dim filename             As String
+    Dim TinLine              As String
+    Dim Projektname          As String
+    Dim Projektpfad          As String
+    Dim EP                   As String
+    Dim Gewerk               As String
+    Dim GewerkNr             As String
     Dim rng                  As range
     Dim arr()                As Variant
     Dim tmparr()             As Variant
+
 
     Set rng = shPData.range("ELE_PRI")
     arr() = rng.Resize(rng.rows.Count, 1)
@@ -266,20 +234,18 @@ Public Function deleteIndexesXml()
         deleteIndexXml 0, 0, shPData.range("ADM_ProjektpfadCAD").Value & "\03_PR\" & GewerkNr & "_" & Gewerk & "\TinPlan_PR_" & Gewerk & ".xml"
     Next i
 
-End Function
+End Sub
 
-Function deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As String = "")
+Public Sub deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As String = vbNullString)
 
     Dim xmlfile              As String
-    If i_xmlfile <> "" Then
+    If i_xmlfile <> vbNullString Then
         xmlfile = i_xmlfile
     Else
         xmlfile = i_xmlfile
     End If
 
-load:                                            ' load xml file
-    Dim oXml                 As MSXML2.DOMDocument60
-    Set oXml = New MSXML2.DOMDocument60
+    Dim oXml                 As New MSXML2.DOMDocument60
     oXml.load xmlfile
     Dim nodes                As IXMLDOMNodeList
     Dim node                 As IXMLDOMNode
@@ -295,21 +261,19 @@ load:                                            ' load xml file
     Set oXml = Nothing
     On Error GoTo 0
 
-End Function
+End Sub
 
 Public Function getXML(PCol As Collection) As String
     ' get the xml file path for the genearted PK
 
-    Dim Projektpath          As String, result As String
+    Dim Projektpath          As String
+    Dim result               As String
+
     On Error GoTo ErrHandler
     Projektpath = shPData.range("ADM_ProjektpfadCAD")
     'On Error Resume Next
     Dim buildings            As Boolean
-    If shGebäude.range("D1").Value = "" Then
-        buildings = False
-    Else
-        buildings = True
-    End If
+    buildings = Not (shGebäude.range("D1").Value = vbNullString)
     If PCol(1) = 0 Then
         ' Plan
         If PCol.Count > 7 Then
@@ -361,16 +325,14 @@ End Function
 
 Public Function getDWG(PCol As Collection) As String
     ' get the dwg file path for the genearted PK
-    Dim Projektpath          As String, result As String
+    Dim Projektpath          As String
+    Dim result               As String
+
 
     Projektpath = shPData.range("ADM_ProjektpfadCAD")
 
     Dim buildings            As Boolean
-    If shGebäude.range("D1").Value = "" Then
-        buildings = False
-    Else
-        buildings = True
-    End If
+    buildings = Not (shGebäude.range("D1").Value = vbNullString)
     If PCol(1) = 0 Then
         ' Plan
         If PCol(7)(1) = "DE" Then
@@ -478,7 +440,9 @@ Public Function getNewID(length As Integer, ws As Worksheet, Region As range, ID
 
     Dim rg                   As range
     Set rg = getRange(Region)
-    Dim rows                 As Integer, r As Integer
+    Dim rows                 As Integer
+    Dim r                    As Integer
+
     rows = rg.rows.Count
 
     i = 4 * length
@@ -495,9 +459,11 @@ End Function
 
 Public Function getList(RangeName As String) As Variant()
 
-    Dim arr(), tmparr()
+    Dim arr()                As Variant
+    Dim tmparr()             As Variant
+
     Dim tmprng               As range
-Globals.SetWBs
+    Globals.SetWBs
     Select Case RangeName
         Case "PRO_Gebäude"
             Set tmprng = Globals.shGebäude.range(RangeName)
@@ -511,11 +477,11 @@ Globals.SetWBs
             Set tmprng = Globals.shPData.range(RangeName)
             arr() = tmprng.Resize(tmprng.rows.Count, 1)
             tmparr() = RemoveBlanksFromStringArray(arr())
-        End Select
+    End Select
 
-        getList = tmparr()
+    getList = tmparr()
 
-    End Function
+End Function
 
 Public Function getRange(Region As range, Optional Off As Integer = 1) As range
     ' Auswahl der aktuell gespeicherten Daten im Worksheet (DATA [shData]) ohne überschriften
@@ -542,7 +508,9 @@ End Function
 
 Public Function getUserName() As String
 
-    Dim arrUsername()        As String, UserName As String
+    Dim arrUsername()        As String
+    Dim UserName             As String
+
     UserName = Application.UserName
 
     'arrUsername = Split(UserName, " ")
@@ -554,7 +522,7 @@ Public Function getUserName() As String
 End Function
 
 Function IsInArray(stringToBeFound As String, arr() As String) As Boolean
-    Dim i
+    Dim i                    As Variant
     If IsArray(arr) Then
         For i = LBound(arr) To UBound(arr)
             If arr(i) = stringToBeFound Then
@@ -576,7 +544,7 @@ Public Function RemoveBlanksFromStringArray(ByRef inputArray() As Variant, Optio
 
     Dim countOfNonBlanks     As Long
     Dim i                    As Long
-    Dim myElement
+    Dim myElement            As Variant
 
     If cols Then
         ReDim result(base To UBound(inputArray, 2))

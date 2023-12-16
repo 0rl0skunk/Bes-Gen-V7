@@ -1,4 +1,5 @@
 Attribute VB_Name = "LOG"
+Attribute VB_Description = "Logging Module."
 Option Explicit
 '@IgnoreModule EmptyStringLiteral
 '@Folder "Debug Logger"
@@ -8,9 +9,10 @@ Public Const LOGFile         As String = "C:\Users\Public\Documents\TinLine\Bes-
 
 Public Sub writelog(ByVal Typ As String, ByVal a_stringLogThis As String)
     ' prepare date
-    Dim l_StringDateTimeNow  As String, _
-    l_StringToday            As String, _
-    l_StringLogStatement     As String
+    Dim l_StringDateTimeNow  As String
+    Dim l_StringToday        As String
+    Dim l_StringLogStatement As String
+
     Dim Typstr               As String
     Select Case Typ
         Case "Error"
@@ -51,10 +53,10 @@ Debug.Print ("Erasing the previous logs.")
     Close #1
 End Sub
 
-Private Function samples() As String
+Private Sub samples()
     'for error Logging:
     writelog "Error", "Where did the error occure?" & vbNewLine & _
                      ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
-End Function
+End Sub
 
 

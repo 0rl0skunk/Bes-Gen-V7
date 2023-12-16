@@ -1,20 +1,11 @@
 Attribute VB_Name = "CustomUI"
+Attribute VB_Description = "Handelt die Interaktion mit dem 'Custom Ribbon' welches beim öffnen von Excel erstellt wird."
+'@IgnoreModule ProcedureNotUsed, VariableNotUsed
 Option Explicit
 '@Folder "Custom UI"
-'@Ignore ProcedureNotUsed
 '@ModuleDescription "Handelt die Interaktion mit dem 'Custom Ribbon' welches beim öffnen von Excel erstellt wird."
 
 Private isUILocked           As Boolean
-
-Private Type TpData
-    Number As String
-    Name As String
-    Phase As String
-End Type
-
-Private TextNew              As TpData
-Private TextOld              As TpData
-
 Public myRibbon              As IRibbonUI
 
 #If VBA7 Then
@@ -38,7 +29,7 @@ Set objRibbon = Nothing
 
 End Function
 
-Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal)
+Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
     Select Case control.ID
         Case "customGroupPanels"
         Case "customGroupSIA"
@@ -50,7 +41,7 @@ Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal)
     returnedVal = True
 End Sub
 
-Sub IsButtonVisible(control As IRibbonControl, ByRef returnedVal)
+Sub IsButtonVisible(control As IRibbonControl, ByRef returnedVal As Variant)
 
     Select Case control.ID
         Case "unLockProjekt"
@@ -87,7 +78,7 @@ Public Sub RefreshRibbon()
 
     On Error GoTo RestartExcel
     If myRibbon Is Nothing Then
-        Set myRibbon = GetRibbon(Replace(ThisWorkbook.Names("RibbonID").RefersTo, "=", ""))
+        Set myRibbon = GetRibbon(Replace(ThisWorkbook.Names("RibbonID").RefersTo, "=", vbNullString))
     End If
 
     'Redo Ribbon Load
@@ -117,9 +108,9 @@ Sub onActionButton(control As IRibbonControl)
         End Select
     End If
     Select Case control.ID
-    Case "Person"
-    Dim frmAdresse As New UserFormPerson
-    frmAdresse.Show 1
+        Case "Person"
+            Dim frmAdresse   As New UserFormPerson
+            frmAdresse.Show 1
         Case "CADFolder"
             Dim folderpath   As String: folderpath = Globals.Projekt.ProjektOrdnerCAD
             writelog "Info", "Opening CAD-Folder" & vbNewLine & folderpath
@@ -146,15 +137,16 @@ Sub onActionButton(control As IRibbonControl)
             frmVersion.Show 1
             'TODO Übersicht Planköpfe UserForm
         Case "Chat"
-        'TEMPORARY OVERRIDE
-        Globals.shAdress.Activate
-        Dim frmPerson As New UserFormPerson
-        frmPerson.Show 0
             'TODO E-Mail oder Teams öffnen
+        Case "Adresse"
+            Globals.shAdress.Activate
+            Dim frmPerson    As New UserFormPerson
+            frmPerson.Show 0
         Case "Bot"
-        Dim frmOutlook As New UserFormOutlook
-        frmOutlook.Show 1
             'TODO ChatbotIntegration / URL öffnen
+        Case "Mail"
+            Dim frmOutlook   As New UserFormOutlook
+            frmOutlook.Show 1
         Case "LockProjekt"
             isUILocked = Not isUILocked
             CustomUI.RefreshRibbon
@@ -165,7 +157,6 @@ Sub onActionButton(control As IRibbonControl)
 End Sub
 
 Sub onChange(control As IRibbonControl, Text As String)
-    TextOld = TextNew
     Select Case control.ID
         Case "Projektnummer"
             Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_Projektnummer").Value = Text
@@ -177,7 +168,7 @@ Sub onChange(control As IRibbonControl, Text As String)
 
 End Sub
 
-Sub CallBackGetText(control As IRibbonControl, ByRef returnedVal)
+Sub CallBackGetText(control As IRibbonControl, ByRef returnedVal As Variant)
 
     On Error Resume Next
     Select Case control.ID
@@ -192,7 +183,7 @@ Sub CallBackGetText(control As IRibbonControl, ByRef returnedVal)
     writelog "Info", control.ID & " Text set to: " & returnedVal
 End Sub
 
-Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal)
+Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
     Select Case control.ID
         Case "Objektdaten"
             returnedVal = Not isUILocked
@@ -202,7 +193,7 @@ Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal)
     writelog "Info", control.ID & " is enabled = " & returnedVal
 End Sub
 
-Sub isTextEnabled(control As IRibbonControl, ByRef returnedVal)
+Sub isTextEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
     Select Case control.ID
         Case "Projektnummer"
             returnedVal = Not isUILocked

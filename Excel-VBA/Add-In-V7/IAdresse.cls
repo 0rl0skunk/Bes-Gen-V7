@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Attribute VB_Description = "Interface für 'Adresse.cls'."
 '@Folder "Adresse"
 '@Interface
 '@ModuleDescription "Interface für 'Adresse.cls'."

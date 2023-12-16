@@ -1,4 +1,5 @@
 Attribute VB_Name = "IndexFactory"
+Attribute VB_Description = "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
 Option Explicit
 '@Folder("Index")
 '@ModuleDescription "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
@@ -39,10 +40,10 @@ End Sub
 
 Public Sub AddToDatabase(Index As IIndex)
     ' erstellt einen neuen Index in der Datenbank
-    Dim _
-    row                      As Long, _
-    Gezeichnet               As String, _
-    Geprüft                  As String
+    Dim row                  As Long
+    Dim Gezeichnet           As String
+    Dim Geprüft              As String
+
 
     Gezeichnet = Index.Gezeichnet
     Geprüft = Index.Geprüft
@@ -64,7 +65,7 @@ Public Sub AddToDatabase(Index As IIndex)
 
 End Sub
 
-Public Function DeletePlan(ByVal ID As String)
+Public Sub DeletePlan(ByVal ID As String)
     ' Löscht alle Indexe von einem Plan
     Dim row                  As Long
     Dim coll                 As New Collection: Set coll = GetIndexes(ID:=ID)
@@ -76,23 +77,23 @@ Public Function DeletePlan(ByVal ID As String)
 
     writelog "Info", coll.Count & " Indexe für Plankopf gelöscht"
 
-End Function
+End Sub
 
 Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal ID As String = vbNullString) As Collection
     ' gibt eine Collection von allen Indexen eines Plankopes zurück
 
-    Dim _
-    row                      As Long, _
-    IndexID                  As String, _
-    IDPlan                   As String, _
-    GezeichnetPerson         As String, _
-    GezeichnetDatum          As String, _
-    Klartext                 As String, _
-    Letter                   As String, _
-    GeprüftPerson            As String, _
-    GeprüftDatum             As String, _
-    Index                    As IIndex, _
-    coll                     As New Collection
+    Dim row                  As Long
+    Dim IndexID              As String
+    Dim IDPlan               As String
+    Dim GezeichnetPerson     As String
+    Dim GezeichnetDatum      As String
+    Dim Klartext             As String
+    Dim Letter               As String
+    Dim GeprüftPerson        As String
+    Dim GeprüftDatum         As String
+    Dim Index                As IIndex
+    Dim coll                 As New Collection
+
 
     With Globals.shIndex
         For row = 2 To .range("A1").CurrentRegion.rows.Count

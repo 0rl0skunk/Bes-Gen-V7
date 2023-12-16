@@ -1,4 +1,6 @@
 Attribute VB_Name = "PlankopfFactory"
+Attribute VB_Description = "Erstellt ein Plankopf-Objekt von welchem die daten einfach ausgelesen werden können."
+'@IgnoreModule VariableNotUsed
 Option Explicit
 '@Folder "Plankopf"
 '@ModuleDescription "Erstellt ein Plankopf-Objekt von welchem die daten einfach ausgelesen werden können."
@@ -105,7 +107,7 @@ Public Function LoadFromDataBase(ByVal row As Long) As IPlankopf
 End Function
 
 Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
-
+    AddToDatabase = False
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
     Dim row                  As Long: row = ws.range("A1").CurrentRegion.rows.Count + 1
     With ws
@@ -130,12 +132,13 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
         .Cells(row, 21).Value = Plankopf.GeprüftDatum
         '.Cells(row, 1).Value = Plankopf.currentIndex.index
     End With
+    AddToDatabase = True
     writelog "Info", "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
 
 End Function
 
 Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
-
+    ReplaceInDatabase = False
     Dim ID                   As String: ID = Plankopf.ID
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
     Dim row                  As Long: row = ws.range("A:A").Find(ID).row
@@ -161,19 +164,19 @@ Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
         .Cells(row, 21).Value = Plankopf.GeprüftDatum
         '.Cells(row, 1).Value = Plankopf.currentIndex.index
     End With
-
+    ReplaceInDatabase = True
     writelog "Info", "Plankopf " & Plankopf.Plannummer & " in Datenbank aktualisiert"
 
 End Function
 
 Public Function DeleteFromDatabase(row As Long) As Boolean
-
+    DeleteFromDatabase = False
     Dim ID                   As String
     Dim Plannummer           As String: Plannummer = shStoreData.Cells(row, 14).Value
     ID = shStoreData.Cells(row, 1).Value
     shStoreData.Cells(row, 1).EntireRow.Delete
     IndexFactory.DeletePlan ID
-
+    DeleteFromDatabase = True
     writelog "Info", "Plankopf " & Plannummer & " aus Datenbank gelöscht"
 
 End Function

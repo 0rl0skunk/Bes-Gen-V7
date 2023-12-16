@@ -7,8 +7,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Attribute VB_Description = "Index Objekt für einfacheres Management von Indexen."
 Option Explicit
-'@IgnoreModule EmptyStringLiteral
+'@IgnoreModule VariableNotUsed, EmptyStringLiteral
 '@Folder("Index")
 '@ModuleDescription "Index Objekt für einfacheres Management von Indexen."
 
@@ -87,7 +88,9 @@ Private Function validateInputs() As Boolean
     If This.ID = vbNullString Then This.ID = getNewID(4, Globals.shIndex, Globals.shIndex.range("A1").CurrentRegion, 1)
 
     If This.Index = vbNullString Then
-        Dim indexes(1 To 26) As String, LastIndex As String
+        Dim indexes(1 To 26) As String
+        Dim LastIndex        As String
+
         Dim i                As Integer
         'For i = 65 To 90
         '    indexes(i - 64) = Chr(i)
@@ -112,7 +115,6 @@ End Property
 Private Property Get IIndex_Index() As String
     IIndex_Index = This.Index
 End Property
-
 Private Property Let IIndex_Index(NewValue As String)
     This.Index = NewValue
 End Property
@@ -132,7 +134,6 @@ End Property
 Private Property Get IIndex_PlanID() As String
     IIndex_PlanID = This.IDPlan
 End Property
-
 Private Property Let IIndex_PlanID(ByVal NewValue As String)
     This.IDPlan = NewValue
 End Property

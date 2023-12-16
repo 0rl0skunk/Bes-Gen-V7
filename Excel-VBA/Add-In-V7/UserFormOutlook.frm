@@ -12,37 +12,62 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@IgnoreModule VariableNotUsed
+Option Explicit
+
 '@Folder("Outlook")
 Private pMailTo              As New Collection
 Private pMailCC              As New Collection
+Private pPlanköpfe           As New Collection
 
 Private Sub CommandButton1_Click()
     Dim appOutlook           As New Outlook.Application
     Dim Mail                 As MailItem
 
     Set Mail = appOutlook.CreateItem(olMailItem)
-    
+
     Mail.To = MailRecepientsTO
     Mail.CC = MailRecepientsCC
-    Mail.Subject = "Test"
+    Mail.Subject = Globals.Projekt.Projektnummer & " | Planversand " & Format(Now, "DD.MM.YYYY")
+    Mail.Body = Anrede & vbNewLine & vbNewLine & Me.TextBoxFreitext.Value & vbNewLine & Planliste
     Mail.Display 0
 End Sub
 
+Private Function Planliste() As String
+    Dim e                    As IPlankopf
+    For Each e In pPlanköpfe
+        Planliste = Planliste & e.Plannummer & vbNewLine
+    Next
+    Planliste = "Im Anhang finden sie Folgende Pläne: " & vbNewLine & Planliste
+End Function
+
+Private Function Anrede() As String
+    If pMailTo.Count > 1 Then
+        Anrede = "Hallo Zusammen"
+    Else
+        If pMailTo.Item(1).Anrede = "Du" Then
+            Anrede = "Hallo " & pMailTo.Item(1).Vorname
+        Else
+            Anrede = "Guten Tag " & pMailTo.Item(1).Anrede & " " & pMailTo.Item(1).Nachname
+        End If
+    End If
+End Function
+
 Private Function MailRecepientsTO() As String
 
-Dim Person As IPerson
-For Each Person In pMailTo
-    MailRecepientsTO = MailRecepientsTO & " ; " & Person.EMail
-Next
+    Dim Person               As IPerson
+    For Each Person In pMailTo
+        MailRecepientsTO = MailRecepientsTO & " ; " & Person.EMail
+    Next
 
 End Function
 
 Private Function MailRecepientsCC() As String
 
-Dim Person As IPerson
-For Each Person In pMailCC
-    MailRecepientsCC = MailRecepientsCC & " ; " & Person.EMail
-Next
+    Dim Person               As IPerson
+    For Each Person In pMailCC
+        MailRecepientsCC = MailRecepientsCC & " ; " & Person.EMail
+    Next
 
 End Function
 
@@ -70,6 +95,16 @@ Private Sub ListViewMailCC_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Next
 End Sub
 
+Private Sub ListViewPlankopf_ItemCheck(ByVal Item As MSComctlLib.ListItem)
+    Dim li                   As ListItem
+    Set pPlanköpfe = New Collection
+    For Each li In Me.ListViewPlankopf.ListItems
+        If li.Checked Then
+            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).row)
+        End If
+    Next
+End Sub
+
 Private Sub UserForm_Initialize()
     LoadListViewPlan
     LoadListViewMail Me.ListViewMailTo
@@ -81,8 +116,9 @@ Private Sub LoadListViewPlan()
     Dim Pla                  As IPlankopf
     Dim li                   As ListItem
 
-    Dim row                  As Long, _
-    lastrow                  As Long
+    Dim row                  As Long
+    Dim lastrow              As Long
+
 
     With Me.ListViewPlankopf
         .ListItems.Clear
@@ -92,7 +128,7 @@ Private Sub LoadListViewPlan()
         .FullRowSelect = True
         With .ColumnHeaders
             .Clear
-            .Add , , "", 20                      ' 0
+            .Add , , vbNullString, 20            ' 0
             .Add , , "ID", 0                     ' 1
             .Add , , "Plannummer"                ' 2
             .Add , , "Geschoss"                  ' 3
@@ -131,8 +167,9 @@ Private Sub LoadListViewMail(ByRef control As ListView)
 
     Dim li                   As ListItem
 
-    Dim row                  As range, _
-    lastrow                  As Long
+    Dim row                  As range
+    Dim lastrow              As Long
+
 
     With control
         .ListItems.Clear
@@ -142,7 +179,7 @@ Private Sub LoadListViewMail(ByRef control As ListView)
         .FullRowSelect = True
         With .ColumnHeaders
             .Clear
-            .Add , , "", 20                      ' 0
+            .Add , , vbNullString, 20            ' 0
             .Add , , "ID", 0                     ' 0
             .Add , , "Anrede", 0                 ' 1
             .Add , , "Vorname"                   ' 2
@@ -166,5 +203,4 @@ Private Sub LoadListViewMail(ByRef control As ListView)
     End With
 
 End Sub
-
 

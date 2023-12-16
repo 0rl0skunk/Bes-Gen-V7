@@ -1,22 +1,21 @@
 Attribute VB_Name = "Globals"
+Attribute VB_Description = "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
+'@IgnoreModule VariableNotUsed
 Option Explicit
 '@Folder "Excel-Items"
 '@ModuleDescription "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
 
-Global Const Version = 5#
+Global Const Version As Double = 5#
 
-Global Const maxlen = 35                         'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
-Global Const OrdnerVorlage = "H:\TinLine\01_Standards\00_Vorlageordner"
-Global Const VorlageEPDWG = "H:\TinLine\01_Standards\EP-Vorlage.dwg"
-Global Const VorlageEPDWGGEB = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg"
-Global Const VorlagePRDWG = "H:\TinLine\01_Standards\PR-Vorlage.dwg"
-Global Const TinLineProjekte = "H:\TinLine\00_Projekte\"
-Global Const XMLVorlage = "H:\TinLine\01_Standards\transform.xsl"
-Global Const listCols = 30
-Global Const minListHeight = 20
-Global Const HighlightColor = vbCyan
-Global Const TemplatePagesXslm = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
-Global Const LogDepth = 1#
+Global Const maxlen As Long = 35                 'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
+Global Const OrdnerVorlage As String = "H:\TinLine\01_Standards\00_Vorlageordner" 'TODO Create Folder from Excel
+Global Const VorlageEPDWG As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg" 'TODO Create Folder from Excel
+Global Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg" 'TODO Create Folder from Excel
+Global Const VorlagePRDWG As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg" 'TODO Create Folder from Excel
+Global Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
+Global Const XMLVorlage As String = "H:\TinLine\01_Standards\transform.xsl"
+Global Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
+Global Const LogDepth As Double = 1#
 ' 3= everything > Slowest
 ' 2= warnings and errors
 ' 1= Errors only
@@ -73,7 +72,7 @@ Private Sub GetPlanköpfe()
 End Sub
 
 Function Initialize() As Boolean
-
+    Initialize = False
     Set WB = ActiveWorkbook
 
     CopyrightSTR = _
@@ -85,10 +84,12 @@ Function Initialize() As Boolean
     On Error GoTo 0
     ' Version checking
     If shPData.range("B4").Value < Version Then
-        Dim curVersion       As String, shouldVersion As String
+        Dim curVersion       As String
+        Dim shouldVersion    As String
+
         curVersion = "Bes-Gen-PZM-Add-In-V" & Version
         Select Case shPData.range("B4").Value
-            Case ""
+            Case vbNullString
                 shouldVersion = "Bes-Gen-PZM-Add-In"
             Case Else
                 If shPData.range("B4").Value > Version Then
@@ -101,7 +102,6 @@ Function Initialize() As Boolean
              & "zu verwendende Version: " & vbLf & shouldVersion _
                , vbCritical, "Nicht unterstützte Arbeitsmappe"
         Exit Function
-    Else
     End If
 
     On Error Resume Next
@@ -112,14 +112,14 @@ Function Initialize() As Boolean
     xlsmPages.Close False
     Set xlsmPages = Nothing
     On Error GoTo 0
-
+    Initialize = True
     shPData.Activate
 
 End Function
 
-Public Function SetWBs()
+Public Function SetWBs() As Boolean
     ' Setzt alle Workbooks und Worksheets welche vom Add-In verwendet werden.
-
+    SetWBs = False
     If WB Is Nothing Then Set WB = Application.ActiveWorkbook
     Dim i                    As Integer
     Set shAdress = WB.Sheets("Adressverzeichnis")
@@ -173,7 +173,7 @@ Public Function SetWBs()
 
 
     Globals.Projekt
-
+    SetWBs = True
     writelog "Info", "Loaded all Workbooks in Globals Module"
 
 End Function

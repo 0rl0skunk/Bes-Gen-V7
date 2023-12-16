@@ -1,4 +1,5 @@
 Attribute VB_Name = "ProjektFactory"
+Attribute VB_Description = "Erstellt ein Projekt-Objekt von welchem die daten einfach ausgelesen werden können."
 Option Explicit
 '@Folder "Projekt"
 '@ModuleDescription "Erstellt ein Projekt-Objekt von welchem die daten einfach ausgelesen werden können."

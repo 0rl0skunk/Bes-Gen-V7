@@ -1,4 +1,5 @@
 Attribute VB_Name = "ModuleTemplateError"
+Attribute VB_Description = "Vorlage für Error-Handling."
 '@Folder "Templates"
 '@ModuleDescription "Vorlage für Error-Handling."
 
