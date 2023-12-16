@@ -26,8 +26,8 @@ Public Function Create( _
        Optional ByVal ID As String = "NEW" _
        ) As IPlankopf
 
-    Dim NewPlankopf          As Plankopf: Set NewPlankopf = New Plankopf
-    If NewPlankopf.FillData( _
+    Dim NewPlankopf          As New Plankopf
+    If NewPlankopf.Filldata( _
        Projekt:=Projekt, _
        GezeichnetPerson:=GezeichnetPerson, _
        GezeichnetDatum:=GezeichnetDatum, _
@@ -63,12 +63,12 @@ Public Function Create( _
 
 End Function
 
-Public Function LoadFromDatabase(ByVal row As Long) As IPlankopf
+Public Function LoadFromDataBase(ByVal row As Long) As IPlankopf
 
     Dim NewPlankopf          As Plankopf:    Set NewPlankopf = New Plankopf
     Dim ws                   As Worksheet:    Set ws = Globals.shStoreData
     With ws
-        If NewPlankopf.FillData( _
+        If NewPlankopf.Filldata( _
            Projekt:=Projekt, _
            ID:=.Cells(row, 1).Value, _
            TinLineID:=.Cells(row, 2).Value, _
@@ -90,8 +90,8 @@ Public Function LoadFromDatabase(ByVal row As Long) As IPlankopf
            GeprüftDatum:=.Cells(row, 21).Value, _
            SkipValidation:=False _
                             ) Then
-            Set LoadFromDatabase = NewPlankopf
-            IndexFactory.GetIndexes LoadFromDatabase
+            Set LoadFromDataBase = NewPlankopf
+            IndexFactory.GetIndexes LoadFromDataBase
             Exit Function
         Else
             Dim frm          As New UserFormMessage
@@ -100,7 +100,7 @@ Public Function LoadFromDatabase(ByVal row As Long) As IPlankopf
         End If
     End With
 
-    writelog "Info", "Plankopf " & LoadFromDatabase.Plannummer & " geladen"
+    writelog "Info", "Plankopf " & LoadFromDataBase.Plannummer & " geladen"
 
 End Function
 

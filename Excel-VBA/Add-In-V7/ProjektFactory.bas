@@ -11,9 +11,8 @@ Public Function Create( _
        ByVal ProjektOrdnerSharePoint As String _
        ) As IProjekt
 
-    Dim NewProjekt           As Projekt
-    Set NewProjekt = New Projekt
-    NewProjekt.FillData _
+    Dim NewProjekt           As New Projekt
+    NewProjekt.Filldata _
         Projektnummer, _
         Projektadresse, _
         ProjektBezeichnung, _

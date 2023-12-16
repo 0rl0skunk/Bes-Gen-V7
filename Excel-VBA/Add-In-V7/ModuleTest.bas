@@ -28,7 +28,7 @@ End Sub
 Public Sub test2()
 
     Dim ttask                As New Task
-    ttask.FillData _
+    ttask.Filldata _
         ErfasstAm:="24.11.2023", _
         ErfasstVon:="BaOr", _
         FälligAm:="25.011.2023", _

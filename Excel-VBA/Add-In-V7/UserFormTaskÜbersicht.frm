@@ -13,7 +13,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-
 Option Explicit
 '@Folder("Tasks")
 Private icons                As UserFormIconLibrary

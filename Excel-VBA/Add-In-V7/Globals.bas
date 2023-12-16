@@ -30,7 +30,7 @@ Public shVersand             As Worksheet
 Public shIndex               As Worksheet
 Public shPlanListe           As Worksheet
 Public shGebäude             As Worksheet
-Public shSPSync As Worksheet
+Public shSPSync              As Worksheet
 Public xlsmPages             As Workbook
 Public CopyrightSTR          As String
 
@@ -40,21 +40,21 @@ Private pPlanköpfe           As Collection
 Public Function Projekt() As IProjekt
     With Application.ActiveWorkbook.Sheets("Projektdaten")
         If pProjekt Is Nothing Then
-        Set pProjekt = _
-           ProjektFactory.Create( _
-           .range("ADM_Projektnummer").Value, _
-           AdressFactory.Create _
-           (.range("ADM_ADR_Strasse").Value, _
-            .range("ADM_ADR_PLZ").Value, _
-            .range("ADM_ADR_Ort").Value), _
-           .range("ADM_Projektbezeichnung").Value, _
-           .range("ADM_Projektphase").Value, _
-           .range("ADM_ProjektpfadSharePoint").Value)
-        writelog "Info", "Created Projekt " & pProjekt.Projektnummer
+            Set pProjekt = _
+                         ProjektFactory.Create( _
+                         .range("ADM_Projektnummer").Value, _
+                         AdressFactory.Create _
+                         (.range("ADM_ADR_Strasse").Value, _
+                          .range("ADM_ADR_PLZ").Value, _
+                          .range("ADM_ADR_Ort").Value), _
+                         .range("ADM_Projektbezeichnung").Value, _
+                         .range("ADM_Projektphase").Value, _
+                         .range("ADM_ProjektpfadSharePoint").Value)
+            writelog "Info", "Created Projekt " & pProjekt.Projektnummer
         Else
-        writelog "Info", "Projekt already exists " & pProjekt.Projektnummer
+            writelog "Info", "Projekt already exists " & pProjekt.Projektnummer
         End If
-        
+
     End With
     Set Projekt = pProjekt
 End Function
@@ -119,7 +119,7 @@ End Function
 
 Public Function SetWBs()
     ' Setzt alle Workbooks und Worksheets welche vom Add-In verwendet werden.
-    
+
     If WB Is Nothing Then Set WB = Application.ActiveWorkbook
     Dim i                    As Integer
     Set shAdress = WB.Sheets("Adressverzeichnis")
@@ -170,7 +170,7 @@ Public Function SetWBs()
         xlsmPages.Sheets("SharePointSync").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shPData = WB.Sheets("SharePointSync")
     End If
-    
+
 
     Globals.Projekt
 

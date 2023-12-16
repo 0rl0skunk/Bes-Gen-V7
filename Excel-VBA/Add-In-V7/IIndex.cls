@@ -32,6 +32,7 @@ End Property
 
 Public Property Get PlanID() As String
 End Property
+
 Public Property Let PlanID(ByVal NewValue As String)
 End Property
 

@@ -42,7 +42,7 @@ End Sub
 
 Private Sub LoadModules()
 
-    Dim Li                   As ListItem
+    Dim li                   As ListItem
     Dim e                    As Long
 
     With Me.ListViewModule
@@ -58,9 +58,9 @@ Private Sub LoadModules()
         End With
 
         For e = 1 To pModules.Count
-            Set Li = .ListItems.Add()
-            Li.ListSubItems.Add , , pModules.item(e)(0)
-            Li.ListSubItems.Add , , pModules.item(e)(1)
+            Set li = .ListItems.Add()
+            li.ListSubItems.Add , , pModules.Item(e)(0)
+            li.ListSubItems.Add , , pModules.Item(e)(1)
         Next
     End With
 

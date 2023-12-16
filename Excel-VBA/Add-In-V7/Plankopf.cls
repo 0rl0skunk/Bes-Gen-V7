@@ -180,7 +180,7 @@ End Property
 Private Property Get IPlankopf_currentIndex() As IIndex
     If This.currentIndex Is Nothing Then Set This.currentIndex = IndexFactory.Create(This.ID, vbNullString, vbNullString, vbNullString, vbNullString, " ", vbNullString, vbNullString, True)
     Set IPlankopf_currentIndex = This.currentIndex
-    
+
 End Property
 
 Private Property Get IPlankopf_Indexes() As Collection
@@ -194,7 +194,7 @@ End Property
 ' --- Functions
 ' -------------------------------
 
-Public Function FillData( _
+Public Function Filldata( _
        ByVal Projekt As IProjekt, _
        ByVal GezeichnetPerson As String, _
        ByVal GezeichnetDatum As String, _
@@ -255,7 +255,7 @@ Public Function FillData( _
         Refresh
     End If
     On Error GoTo 0
-    FillData = True
+    Filldata = True
     Exit Function
 
 NotValid:
@@ -266,7 +266,7 @@ NotValid:
                     "öffne den Log um die Fehlenden Inhalte zu sehen.", _
                     "Kein Plankopf erstellt", True
     frm.Show
-    FillData = False
+    Filldata = False
     Exit Function
 
 End Function

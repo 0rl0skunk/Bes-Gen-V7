@@ -15,9 +15,8 @@ Public Function Create( _
        Optional ByVal SkipValidation As Boolean _
        ) As IIndex
 
-    Dim newIndex             As Index
-    Set newIndex = New Index
-    newIndex.FillData _
+    Dim newIndex             As New Index
+    newIndex.Filldata _
         ID:=ID, _
         IDPlan:=IDPlan, _
         Letter:=Letter, _
@@ -60,7 +59,7 @@ Public Sub AddToDatabase(Index As IIndex)
         .Cells(row, 7).Value = Index.Klartext
         .Cells(row, 8).Value = Index.IndexID
     End With
-    
+
     writelog "Info", "Index für Plankopf erstellt"
 
 End Sub
@@ -105,7 +104,7 @@ Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal 
             GeprüftPerson = .Cells(row, 5).Value
             GeprüftDatum = .Cells(row, 6).Value
             Klartext = .Cells(row, 7).Value
-            
+
             If Not Plankopf Is Nothing Then If IDPlan = Plankopf.ID Then GoTo Matching
             If IDPlan = ID Then
                 GoTo Matching
@@ -113,16 +112,16 @@ Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal 
                 GoTo Skip
             End If
 Matching:
-                Set Index = Create(ID:=IndexID, _
-                                   IDPlan:=IDPlan, _
-                                   GezeichnetPerson:=GezeichnetPerson, _
-                                   GezeichnetDatum:=GezeichnetDatum, _
-                                   Klartext:=Klartext, _
-                                   Letter:=Letter, _
-                                   GeprüftPerson:=GeprüftPerson, _
-                                   GeprüftDatum:=GeprüftDatum)
-                coll.Add Index
-                If Not Plankopf Is Nothing Then Plankopf.AddIndex Index
+            Set Index = Create(ID:=IndexID, _
+                               IDPlan:=IDPlan, _
+                               GezeichnetPerson:=GezeichnetPerson, _
+                               GezeichnetDatum:=GezeichnetDatum, _
+                               Klartext:=Klartext, _
+                               Letter:=Letter, _
+                               GeprüftPerson:=GeprüftPerson, _
+                               GeprüftDatum:=GeprüftDatum)
+            coll.Add Index
+            If Not Plankopf Is Nothing Then Plankopf.AddIndex Index
 Skip:
         Next
     End With

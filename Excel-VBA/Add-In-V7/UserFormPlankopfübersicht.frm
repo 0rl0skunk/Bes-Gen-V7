@@ -13,7 +13,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-
 Option Explicit
 '@Folder "Plankopf"
 Private icons                As UserFormIconLibrary
@@ -31,9 +30,9 @@ End Sub
 Private Sub CommandButton2_Click()
 
     Dim row                  As Long
-    row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.item(1).Text).row
+    row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     Dim frm                  As New UserFormPlankopf
-    frm.LoadClass PlankopfFactory.LoadFromDatabase(row), Projekt
+    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt
     frm.Show 1
 
     LoadListView
@@ -102,12 +101,12 @@ Private Sub CommandButtonCopy_Click()
     If Globals.shStoreData.Cells(4, 1).Value = vbNullString Then
         row = 3
     Else
-        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.item(1).Text).row
+        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     End If
-    Set Plankopf = PlankopfFactory.LoadFromDatabase(row)
+    Set Plankopf = PlankopfFactory.LoadFromDataBase(row)
     Dim frm                  As New UserFormPlankopf
     Dim answer               As Boolean
-    If IndexFactory.GetIndexes(PlankopfFactory.LoadFromDatabase(row)).Count > 0 Then
+    If IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count > 0 Then
         Select Case MsgBox("Vorhandene Indexe kopieren?", vbYesNo, "Indexe kopieren?")
             Case vbYes
                 answer = True
@@ -131,10 +130,10 @@ Private Sub CommandButtonDelete_Click()
     If Globals.shStoreData.Cells(4, 1).Value = vbNullString Then
         row = 3
     Else
-        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.item(1).Text).row
+        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     End If
     With Globals.shStoreData
-        Dim info             As String: info = vbNewLine & .Cells(row, 14).Value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDatabase(row)).Count & " Indexe"
+        Dim info             As String: info = vbNewLine & .Cells(row, 14).Value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Indexe"
     End With
     Select Case MsgBox("Bist du sicher dass du den Plankopf löschen willst?" & info, vbYesNo, "Plankopf löschen")
         Case vbYes
@@ -157,9 +156,9 @@ Private Sub FilterListView(ByVal Index As String, ByVal FilterValue As String)
     Dim e                    As ListItem
 StartOver:
     For Each e In Me.ListViewPlankopf.ListItems
-Debug.Print e.ListSubItems.item(Index).Text
+Debug.Print e.ListSubItems.Item(Index).Text
         If FilterValue <> "Alles" Then
-            If e.ListSubItems.item(Index).Text <> FilterValue Then
+            If e.ListSubItems.Item(Index).Text <> FilterValue Then
                 Me.ListViewPlankopf.ListItems.Remove e.Index
                 GoTo StartOver
             End If
@@ -185,10 +184,10 @@ Private Sub ListViewPlankopf_DblClick()
     If Globals.shStoreData.Cells(4, 1).Value = vbNullString Then
         row = 3
     Else
-        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.item(1).Text).row
+        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     End If
     Dim frm                  As New UserFormPlankopf
-    frm.LoadClass PlankopfFactory.LoadFromDatabase(row), Projekt
+    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt
     frm.Show 1
 
 End Sub
@@ -204,7 +203,7 @@ End Sub
 Private Sub LoadListView()
 
     Dim Pla                  As IPlankopf
-    Dim Li                   As ListItem
+    Dim li                   As ListItem
 
     Dim row                  As Long, _
     lastrow                  As Long
@@ -233,20 +232,20 @@ Private Sub LoadListView()
         If Globals.shStoreData Is Nothing Then Globals.SetWBs
         lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count
         For row = 3 To lastrow
-            Set Pla = PlankopfFactory.LoadFromDatabase(row)
+            Set Pla = PlankopfFactory.LoadFromDataBase(row)
             'Planköpfe.Add Pla                    ', Pla.ID
-            Set Li = .ListItems.Add()
-            Li.ListSubItems.Add , , Pla.ID
-            Li.ListSubItems.Add , , Pla.Plannummer
-            Li.ListSubItems.Add , , Pla.Geschoss
-            Li.ListSubItems.Add , , Pla.Gebäude
-            Li.ListSubItems.Add , , Pla.GebäudeTeil
-            Li.ListSubItems.Add , , Pla.Gewerk
-            Li.ListSubItems.Add , , Pla.UnterGewerk
-            Li.ListSubItems.Add , , Pla.Planart
-            Li.ListSubItems.Add , , Pla.Gezeichnet
-            Li.ListSubItems.Add , , Pla.Geprüft
-            Li.ListSubItems.Add , , Pla.currentIndex.Index
+            Set li = .ListItems.Add()
+            li.ListSubItems.Add , , Pla.ID
+            li.ListSubItems.Add , , Pla.Plannummer
+            li.ListSubItems.Add , , Pla.Geschoss
+            li.ListSubItems.Add , , Pla.Gebäude
+            li.ListSubItems.Add , , Pla.GebäudeTeil
+            li.ListSubItems.Add , , Pla.Gewerk
+            li.ListSubItems.Add , , Pla.UnterGewerk
+            li.ListSubItems.Add , , Pla.Planart
+            li.ListSubItems.Add , , Pla.Gezeichnet
+            li.ListSubItems.Add , , Pla.Geprüft
+            li.ListSubItems.Add , , Pla.currentIndex.Index
         Next row
     End With
 

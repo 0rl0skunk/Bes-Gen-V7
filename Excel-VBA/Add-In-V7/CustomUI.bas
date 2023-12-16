@@ -117,12 +117,15 @@ Sub onActionButton(control As IRibbonControl)
         End Select
     End If
     Select Case control.ID
+    Case "Person"
+    Dim frmAdresse As New UserFormPerson
+    frmAdresse.Show 1
         Case "CADFolder"
-            Dim folderpath As String: folderpath = Globals.Projekt.ProjektOrdnerCAD
+            Dim folderpath   As String: folderpath = Globals.Projekt.ProjektOrdnerCAD
             writelog "Info", "Opening CAD-Folder" & vbNewLine & folderpath
             Shell "explorer.exe " & folderpath, vbNormalFocus
         Case "SharePoint"
-            Dim folderSP As String: folderSP = Globals.Projekt.ProjektOrdnerSharePoint
+            Dim folderSP     As String: folderSP = Globals.Projekt.ProjektOrdnerSharePoint
             writelog "Info", "Opening SharePoint-Folder" & vbNewLine & folderSP
             ActiveWorkbook.FollowHyperlink Address:=folderSP
         Case "Drucken"
@@ -143,8 +146,14 @@ Sub onActionButton(control As IRibbonControl)
             frmVersion.Show 1
             'TODO Übersicht Planköpfe UserForm
         Case "Chat"
+        'TEMPORARY OVERRIDE
+        Globals.shAdress.Activate
+        Dim frmPerson As New UserFormPerson
+        frmPerson.Show 0
             'TODO E-Mail oder Teams öffnen
         Case "Bot"
+        Dim frmOutlook As New UserFormOutlook
+        frmOutlook.Show 1
             'TODO ChatbotIntegration / URL öffnen
         Case "LockProjekt"
             isUILocked = Not isUILocked

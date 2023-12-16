@@ -26,7 +26,7 @@ End Type
 
 Private This                 As TProjekt
 
-Public Sub FillData( _
+Public Sub Filldata( _
        ByVal Projektnummer As String, _
        ByVal Projektadresse As IAdresse, _
        ByVal ProjektBezeichnung As String, _

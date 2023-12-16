@@ -13,7 +13,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-
 Option Explicit
 '@IgnoreModule IntegerDataType, EmptyStringLiteral
 '@Folder "Plankopf"
@@ -204,12 +203,12 @@ Private Sub UserForm_Initialize()
     ' Massstab
     Me.TextBoxLayoutMasstab.Value = "1:50"
     Me.LabelProjektnummer.Caption = Globals.shPData.range("ADM_Projektnummer").Value
-    
+
     Me.TextBoxPlanInfoDatumGezeichnet.Value = Format(Now, "DD.MM.YYYY")
     Me.TextBoxPlanInfoKürzelGezeichnet.Value = getUserName
 
     writelog "Info", "UserFormPlankopf > Inizialise complete"
-    
+
 End Sub
 
 Private Sub CommandButtonClose_Click()
@@ -221,7 +220,7 @@ End Sub
 Private Sub LoadIndexes()
 
     Dim ind                  As IIndex
-    Dim Li                   As ListItem
+    Dim li                   As ListItem
 
     With Me.ListViewIndex
         .ListItems.Clear
@@ -240,12 +239,12 @@ Private Sub LoadIndexes()
         End With
 
         For Each ind In pPlankopf.indexes
-            Set Li = .ListItems.Add()
-            Li.ListSubItems.Add , , ind.IndexID
-            Li.ListSubItems.Add , , ind.Index
-            Li.ListSubItems.Add , , Split(ind.Gezeichnet, " ; ")(0)
-            Li.ListSubItems.Add , , Split(ind.Gezeichnet, " ; ")(1)
-            Li.ListSubItems.Add , , ind.Klartext
+            Set li = .ListItems.Add()
+            li.ListSubItems.Add , , ind.IndexID
+            li.ListSubItems.Add , , ind.Index
+            li.ListSubItems.Add , , Split(ind.Gezeichnet, " ; ")(0)
+            li.ListSubItems.Add , , Split(ind.Gezeichnet, " ; ")(1)
+            li.ListSubItems.Add , , ind.Klartext
         Next
     End With
 
@@ -319,7 +318,7 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
             IndexFactory.AddToDatabase Index
         Next
     End If
-    
+
     CommandButtonBeschriftungAktualisieren_Click
 
 End Sub

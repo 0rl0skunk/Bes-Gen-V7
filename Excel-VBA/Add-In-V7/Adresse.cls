@@ -22,7 +22,7 @@ End Type
 
 Private This                 As TAdresse
 
-Public Sub FillData( _
+Public Sub Filldata( _
        ByVal Strasse As String, _
        ByVal PLZ As String, _
        ByVal Ort As String _

@@ -9,11 +9,11 @@ Public Function Create( _
        ByVal Ort As String _
        ) As IAdresse
 
-    Dim NewAdresse           As Adresse: Set NewAdresse = New Adresse
-    NewAdresse.FillData _
-        Strasse, _
-        PLZ, _
-        Ort
+    Dim NewAdresse           As New Adresse
+    NewAdresse.Filldata _
+        Strasse:=Strasse, _
+        PLZ:=PLZ, _
+        Ort:=Ort
 
     Set Create = NewAdresse
 

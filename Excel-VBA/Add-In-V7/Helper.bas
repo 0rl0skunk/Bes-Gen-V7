@@ -497,21 +497,25 @@ Public Function getList(RangeName As String) As Variant()
 
     Dim arr(), tmparr()
     Dim tmprng               As range
+Globals.SetWBs
+    Select Case RangeName
+        Case "PRO_Gebäude"
+            Set tmprng = Globals.shGebäude.range(RangeName)
+            arr() = tmprng.Resize(1, tmprng.Columns.Count)
+            tmparr() = RemoveBlanksFromStringArray(arr(), True)
+        Case "ADM_Firmen"
+            Set tmprng = Globals.shAdress.range(RangeName)
+            arr() = tmprng.Resize(tmprng.rows.Count, 1)
+            tmparr() = RemoveBlanksFromStringArray(arr())
+        Case Else
+            Set tmprng = Globals.shPData.range(RangeName)
+            arr() = tmprng.Resize(tmprng.rows.Count, 1)
+            tmparr() = RemoveBlanksFromStringArray(arr())
+        End Select
 
+        getList = tmparr()
 
-    If RangeName = "PRO_Gebäude" Then
-        Set tmprng = Globals.shGebäude.range(RangeName)
-        arr() = tmprng.Resize(1, tmprng.Columns.Count)
-        tmparr() = RemoveBlanksFromStringArray(arr(), True)
-    Else
-        Set tmprng = Globals.shPData.range(RangeName)
-        arr() = tmprng.Resize(tmprng.rows.Count, 1)
-        tmparr() = RemoveBlanksFromStringArray(arr())
-    End If
-
-    getList = tmparr()
-
-End Function
+    End Function
 
 Public Function getRange(Region As range, Optional Off As Integer = 1) As range
     ' Auswahl der aktuell gespeicherten Daten im Worksheet (DATA [shData]) ohne überschriften
@@ -544,7 +548,7 @@ Public Function getUserName() As String
     'arrUsername = Split(UserName, " ")
 
     'getUserName = Left(arrUsername(1), 2) & Left(arrUsername(0), 2)
-    
+
     getUserName = UserName
 
 End Function
