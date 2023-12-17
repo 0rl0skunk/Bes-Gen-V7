@@ -49,9 +49,9 @@ Public Function Projekt() As IProjekt
                          .range("ADM_Projektbezeichnung").Value, _
                          .range("ADM_Projektphase").Value, _
                          .range("ADM_ProjektpfadSharePoint").Value)
-            writelog "Info", "Created Projekt " & pProjekt.Projektnummer
+            writelog LogInfo, "Created Projekt " & pProjekt.Projektnummer
         Else
-            writelog "Info", "Projekt already exists " & pProjekt.Projektnummer
+            writelog LogInfo, "Projekt already exists " & pProjekt.Projektnummer
         End If
 
     End With
@@ -68,7 +68,11 @@ End Function
 Private Sub GetPlanköpfe()
 
     'TODO Create Planköpfe from Workbook / Database
-    writelog "Info", "Loaded " & pPlanköpfe.Count & " Planköpfe from the Database"
+    Dim Row As range
+    For Each Row In shStoreData.range("A1").CurrentRegion
+        pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Row.Row)
+    Next
+    writelog LogInfo, "Loaded " & pPlanköpfe.Count & " Planköpfe from the Database"
 End Sub
 
 Function Initialize() As Boolean
@@ -174,7 +178,7 @@ Public Function SetWBs() As Boolean
 
     Globals.Projekt
     SetWBs = True
-    writelog "Info", "Loaded all Workbooks in Globals Module"
+    writelog LogInfo, "Loaded all Workbooks in Globals Module"
 
 End Function
 

@@ -12,35 +12,45 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
+
+
+
+
 '@Folder "Templates"
 Option Explicit
 Private icons                As UserFormIconLibrary
+Public Enum MSGTyp
+    typError = 0
+    TypWarning = 1
+    TypInfo = 2
+End Enum
 
-Public Sub typeError(ByVal MessageText As String, Optional ByVal Title As String = "Ein Fehler ist aufgetreten!", Optional ByVal OpenLog As Boolean = False)
+Public Sub Typ(MessageType As MSGTyp, ByVal MessageText As String, Optional ByVal Title As String = "Ein Fehler ist aufgetreten!", Optional ByVal OpenLog As Boolean = False)
 
+    Select Case MessageType
+    Case 0 ' Error
     Me.TitleIcon.Picture = icons.IconError.Picture
     Me.TitleLabel.Caption = Title
     Me.LabelMessage.Value = MessageText
     If OpenLog Then Me.CommandButtonLog.Visible = True
-
-End Sub
-
-Public Sub typeWarning(ByVal MessageText As String, Optional ByVal Title As String = "Achtung", Optional ByVal OpenLog As Boolean = False)
-
+    Case 1 ' Warning
     Me.TitleIcon.Picture = icons.IconWarning.Picture
     Me.TitleLabel.Caption = Title
     Me.LabelMessage.Value = MessageText
     If OpenLog Then Me.CommandButtonLog.Visible = True
-
-End Sub
-
-Public Sub typeInfo(ByVal MessageText As String, Optional ByVal Title As String = "Info", Optional ByVal OpenLog As Boolean = False)
-
+    Case 2 ' Info
     Me.TitleIcon.Picture = icons.IconInfo.Picture
     Me.TitleLabel.Caption = Title
     Me.LabelMessage.Value = MessageText
     If OpenLog Then Me.CommandButtonLog.Visible = True
-
+    Case Else
+Me.TitleIcon.Picture = icons.IconInfo.Picture
+    Me.TitleLabel.Caption = Title
+    Me.LabelMessage.Value = MessageText
+    If OpenLog Then Me.CommandButtonLog.Visible = True
+    End Select
 End Sub
 
 Private Sub CommandButtonClose_Click()
@@ -51,7 +61,7 @@ End Sub
 
 Private Sub CommandButtonLog_Click()
 
-    CreateObject("Shell.Application").Open (LOG.LOGFile)
+    CreateObject("Shell.Application").Open (LOG.LogFile)
 
 End Sub
 

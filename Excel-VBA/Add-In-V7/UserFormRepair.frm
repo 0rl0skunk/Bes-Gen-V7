@@ -15,9 +15,11 @@ Attribute VB_Exposed = False
 
 
 
-Option Explicit
+
+
 
 '@Folder("Repair")
+Option Explicit
 Private icons                As UserFormIconLibrary
 
 Private Sub UserForm_Initialize()

@@ -5,9 +5,15 @@ Option Explicit
 '@Folder "Debug Logger"
 '@ModuleDescription "Logging Module."
 
-Public Const LOGFile         As String = "C:\Users\Public\Documents\TinLine\Bes-Gen_V7.log"
+Public Const LogFile         As String = "C:\Users\Public\Documents\TinLine\Bes-Gen_V7.log"
+Public Enum ErrorLevel
+    LogError = 0
+    logwarning = 1
+    LogInfo = 2
+    LogTrace = 3
+End Enum
 
-Public Sub writelog(ByVal Typ As String, ByVal a_stringLogThis As String)
+Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
     ' prepare date
     Dim l_StringDateTimeNow  As String
     Dim l_StringToday        As String
@@ -15,21 +21,27 @@ Public Sub writelog(ByVal Typ As String, ByVal a_stringLogThis As String)
 
     Dim Typstr               As String
     Select Case Typ
-        Case "Error"
+        Case 0
             If Globals.LogDepth >= 1 Then
                 Typstr = ">> ERROR   "
             Else
                 Exit Sub
             End If
-        Case "Warning"
-            If Globals.LogDepth >= 1 Then
+        Case 1
+            If Globals.LogDepth >= 2 Then
                 Typstr = ">> WARNING "
             Else
                 Exit Sub
             End If
-        Case "Info"
+        Case 2
             If Globals.LogDepth >= 3 Then
                 Typstr = ">> INFO    "
+            Else
+                Exit Sub
+            End If
+        Case 3
+            If Globals.LogDepth >= 3 Then
+                Typstr = ">> TRACE   "
             Else
                 Exit Sub
             End If
@@ -41,21 +53,21 @@ Public Sub writelog(ByVal Typ As String, ByVal a_stringLogThis As String)
     ' send to TTY
 Debug.Print (l_StringLogStatement)
     ' append (not write) to disk
-    Open LOGFile For Append As #1
+    Open LogFile For Append As #1
     Print #1, l_StringLogStatement
     Close #1
 End Sub
 
 Public Sub LogClear()
 Debug.Print ("Erasing the previous logs.")
-    Open LOGFile For Output As #1
+    Open LogFile For Output As #1
     Print #1, ""
     Close #1
 End Sub
 
 Private Sub samples()
     'for error Logging:
-    writelog "Error", "Where did the error occure?" & vbNewLine & _
+    writelog LogError, "Where did the error occure?" & vbNewLine & _
                      ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
 End Sub
 

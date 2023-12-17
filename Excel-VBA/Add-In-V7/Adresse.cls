@@ -33,7 +33,7 @@ Public Sub Filldata( _
     This.PLZ = PLZ
     This.Ort = Ort
 
-    writelog "Info", "Adresse erstellt:" & vbNewLine & This.Strasse & vbNewLine & This.PLZ & " " & This.Ort
+    writelog LogInfo, "Adresse erstellt:" & vbNewLine & This.Strasse & vbNewLine & This.PLZ & " " & This.Ort
 
 End Sub
 

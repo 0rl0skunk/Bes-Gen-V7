@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormOutlook 
-   ClientHeight    =   14250
+   ClientHeight    =   11340
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   30420
+   ClientWidth     =   9720.001
    OleObjectBlob   =   "UserFormOutlook.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -12,23 +12,39 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'@IgnoreModule VariableNotUsed
-Option Explicit
+
+
+
+
+
 
 '@Folder("Outlook")
+'@IgnoreModule VariableNotUsed
+Option Explicit
 Private pMailTo              As New Collection
 Private pMailCC              As New Collection
 Private pPlanköpfe           As New Collection
+Private icons                As UserFormIconLibrary
 
 Private Sub CommandButton1_Click()
+    Dim PrintPath As String
+    If Me.CheckBoxPlot Then
+    'PrintPath = PrintPlan(pPlanköpfe)
+    End If
     Dim appOutlook           As New Outlook.Application
     Dim Mail                 As MailItem
 
     Set Mail = appOutlook.CreateItem(olMailItem)
 
+    If Me.CheckBoxPlot Then
+    Dim pplankopf As IPlankopf
+    For Each pplankopf In pPlanköpfe
+    Mail.Attachments.Add PrintPath & "\" & pplankopf.PDFFileName
+    Next
+    End If
     Mail.To = MailRecepientsTO
     Mail.CC = MailRecepientsCC
-    Mail.Subject = Globals.Projekt.Projektnummer & " | Planversand " & Format(Now, "DD.MM.YYYY")
+    Mail.Subject = Me.TextBoxBetreff.Value
     Mail.Body = Anrede & vbNewLine & vbNewLine & Me.TextBoxFreitext.Value & vbNewLine & Planliste
     Mail.Display 0
 End Sub
@@ -80,7 +96,7 @@ Private Sub ListViewMailTo_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Set pMailTo = New Collection
     For Each li In Me.ListViewMailTo.ListItems
         If li.Checked Then
-            pMailTo.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).row)
+            pMailTo.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).Row)
         End If
     Next
 End Sub
@@ -90,7 +106,7 @@ Private Sub ListViewMailCC_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Set pMailCC = New Collection
     For Each li In Me.ListViewMailCC.ListItems
         If li.Checked Then
-            pMailCC.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).row)
+            pMailCC.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).Row)
         End If
     Next
 End Sub
@@ -100,66 +116,22 @@ Private Sub ListViewPlankopf_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Set pPlanköpfe = New Collection
     For Each li In Me.ListViewPlankopf.ListItems
         If li.Checked Then
-            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).row)
+            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).Row)
         End If
     Next
 End Sub
 
 Private Sub UserForm_Initialize()
-    LoadListViewPlan
+
+    Globals.SetWBs
+    LoadListViewPlan Me.ListViewPlankopf
     LoadListViewMail Me.ListViewMailTo
     LoadListViewMail Me.ListViewMailCC
-End Sub
+    Me.TextBoxBetreff.Value = Globals.Projekt.Projektnummer & " | Planversand " & Format(Now, "DD.MM.YYYY")
 
-Private Sub LoadListViewPlan()
-
-    Dim Pla                  As IPlankopf
-    Dim li                   As ListItem
-
-    Dim row                  As Long
-    Dim lastrow              As Long
-
-
-    With Me.ListViewPlankopf
-        .ListItems.Clear
-        .View = lvwReport
-        .CheckBoxes = True
-        .Gridlines = True
-        .FullRowSelect = True
-        With .ColumnHeaders
-            .Clear
-            .Add , , vbNullString, 20            ' 0
-            .Add , , "ID", 0                     ' 1
-            .Add , , "Plannummer"                ' 2
-            .Add , , "Geschoss"                  ' 3
-            .Add , , "Gebäude"                   ' 4
-            .Add , , "Gebäudeteil"               ' 5
-            .Add , , "Gewerk", 0                 ' 6
-            .Add , , "Untergewerk", 0            ' 7
-            .Add , , "Planart", 0                ' 8
-            .Add , , "Gezeichnet"                ' 9
-            .Add , , "Geprüft"                   ' 10
-            .Add , , "Index"                     ' 11
-        End With
-        If Globals.shStoreData Is Nothing Then Globals.SetWBs
-        lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count
-        For row = 3 To lastrow
-            Set Pla = PlankopfFactory.LoadFromDataBase(row)
-            'Planköpfe.Add Pla                    ', Pla.ID
-            Set li = .ListItems.Add()
-            li.ListSubItems.Add , , Pla.ID
-            li.ListSubItems.Add , , Pla.Plannummer
-            li.ListSubItems.Add , , Pla.Geschoss
-            li.ListSubItems.Add , , Pla.Gebäude
-            li.ListSubItems.Add , , Pla.GebäudeTeil
-            li.ListSubItems.Add , , Pla.Gewerk
-            li.ListSubItems.Add , , Pla.UnterGewerk
-            li.ListSubItems.Add , , Pla.Planart
-            li.ListSubItems.Add , , Pla.Gezeichnet
-            li.ListSubItems.Add , , Pla.Geprüft
-            li.ListSubItems.Add , , Pla.currentIndex.Index
-        Next row
-    End With
+    Set icons = New UserFormIconLibrary
+    Me.TitleIcon.Picture = icons.IconOutlook.Picture
+    Me.TitleLabel.Caption = "E-Mail schreiben"
 
 End Sub
 
@@ -167,7 +139,7 @@ Private Sub LoadListViewMail(ByRef control As ListView)
 
     Dim li                   As ListItem
 
-    Dim row                  As range
+    Dim Row                  As range
     Dim lastrow              As Long
 
 
@@ -185,13 +157,13 @@ Private Sub LoadListViewMail(ByRef control As ListView)
             .Add , , "Vorname"                   ' 2
             .Add , , "Nachname"                  ' 3
             .Add , , "Firma"                     ' 4
-            .Add , , "E-Mail"                    ' 5
+            .Add , , "E-Mail", 0                    ' 5
         End With
         If Globals.shAdress Is Nothing Then Globals.SetWBs
         lastrow = Globals.shAdress.range("ADR_Adressen").rows.Count
-        For Each row In Globals.shAdress.range("ADR_Adressen").rows
+        For Each Row In Globals.shAdress.range("ADR_Adressen").rows
             Set li = .ListItems.Add()
-            With row.Resize(1, 1)
+            With Row.Resize(1, 1)
                 li.ListSubItems.Add , , .Offset(0, 8).Value
                 li.ListSubItems.Add , , .Offset(0, 7).Value
                 li.ListSubItems.Add , , .Offset(0, 1).Value
@@ -199,7 +171,7 @@ Private Sub LoadListViewMail(ByRef control As ListView)
                 li.ListSubItems.Add , , .Offset(0, 2).Value
                 li.ListSubItems.Add , , .Offset(0, 6).Value
             End With
-        Next row
+        Next Row
     End With
 
 End Sub

@@ -50,7 +50,7 @@ End Property
 Public Property Get Gebäude() As String
 End Property
 
-Public Property Get GebäudeTeil() As String
+Public Property Get Gebäudeteil() As String
 End Property
 
 Public Property Get Geschoss() As String
@@ -62,10 +62,10 @@ End Property
 Public Property Get UnterGewerk() As String
 End Property
 
-Public Property Get Klartext() As String
+Public Property Get Planüberschrift() As String
 End Property
 
-Public Property Get Planüberschrift() As String
+Public Property Get CustomPlanüberschrift() As Boolean
 End Property
 
 Public Property Get LayoutName() As String
@@ -92,24 +92,21 @@ End Property
 Public Property Get DWGFile() As String
 End Property
 
-Public Property Get DWGFilePath() As String
-End Property
-
 Public Property Get XMLFileName() As String
 End Property
 
-Public Property Get XMLFilePath() As String
+Public Property Get XMLFile() As String
 End Property
 
-Public Property Get xmlfile() As String
+Public Property Get FolderName() As String
 End Property
 
-Public Property Get currentIndex() As IIndex
+Public Property Get CurrentIndex() As IIndex
 End Property
 
-Public Property Get indexes() As Collection
+Public Property Get Indexes() As Collection
 End Property
-Public Property Set indexes(ByVal NewIndexes As Collection)
+Public Property Set Indexes(ByVal NewIndexes As Collection)
 End Property
 
 Public Sub AddIndex(ByRef NewValue As IIndex)

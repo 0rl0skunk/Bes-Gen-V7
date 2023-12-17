@@ -35,7 +35,7 @@ Public Sub test2()
         FälligAm:="25.011.2023", _
         Gewerk:="Elektro", _
         Gebäude:="Haus1", _
-        GebäudeTeil:="West", _
+        Gebäudeteil:="West", _
         Geschoss:="Erdgeschoss", _
         Erledigt:=False, _
         Priorität:=2, _

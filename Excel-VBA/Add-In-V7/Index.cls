@@ -37,8 +37,9 @@ End Type
 
 Private This                 As TIndex
 Private Inputs               As TIndex
+Private created As Boolean
 
-Public Sub Filldata( _
+Public Function Filldata( _
        ByVal IDPlan As String, _
        ByVal GezeichnetPerson As String, _
        ByVal GezeichnetDatum As String, _
@@ -48,8 +49,8 @@ Public Sub Filldata( _
        Optional ByVal GeprüftPerson As String = vbNullString, _
        Optional ByVal GeprüftDatum As String = vbNullString, _
        Optional ByVal SkipValidation As Boolean _
-       )
-
+       ) As Boolean
+created = False
     Inputs.ID = ID
     Inputs.IDPlan = IDPlan
     Inputs.Index = Letter
@@ -62,11 +63,12 @@ Public Sub Filldata( _
 
     If validateInputs Then
         This = Inputs
+        created = True
     End If
 
-    writelog "Info", "Index erstellt"
+    writelog LogInfo, "Index erstellt"
 
-End Sub
+End Function
 
 Private Function validateInputs() As Boolean
 
@@ -76,19 +78,19 @@ Private Function validateInputs() As Boolean
     validateInputs = False
     If Len(Inputs.IDPlan) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Plan ID' given"
     '--- Zeichner ---
-    If Len(Inputs.GezeichnetPerson) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'GezeichnetPerson' given"
-    If Len(Inputs.GezeichnetDatum) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'GezeichnetDatum' given"
+    If Len(Inputs.GezeichnetPerson) = 0 Then writelog LogError, "Index > ValidateInputs > No 'GezeichnetPerson' given": created = False
+    If Len(Inputs.GezeichnetDatum) = 0 Then writelog LogError, "Index > ValidateInputs > No 'GezeichnetDatum' given": created = False
     If Inputs.GeprüftPerson = "NONE" Then Inputs.GeprüftPerson = vbNullString
     If Inputs.GeprüftDatum = "NONE" Then Inputs.GeprüftDatum = vbNullString
 
     '--- Planbezeichnung ---
-    If Len(Inputs.Klartext) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Klartext' given"
+    If Len(Inputs.Klartext) = 0 Then writelog LogError, "Index > ValidateInputs > No 'Klartext' given"
     validateInputs = True
 
     If This.ID = vbNullString Then This.ID = getNewID(4, Globals.shIndex, Globals.shIndex.range("A1").CurrentRegion, 1)
 
     If This.Index = vbNullString Then
-        Dim indexes(1 To 26) As String
+        Dim Indexes(1 To 26) As String
         Dim LastIndex        As String
 
         Dim i                As Integer
@@ -100,8 +102,8 @@ Private Function validateInputs() As Boolean
 
 End Function
 
-Private Property Get xmlfile() As String
-    xmlfile = This.XMLFilePath & "\" & This.XMLFileName
+Private Property Get XMLFile() As String
+    XMLFile = This.XMLFilePath & "\" & This.XMLFileName
 End Property
 
 Private Property Get DWGFile() As String

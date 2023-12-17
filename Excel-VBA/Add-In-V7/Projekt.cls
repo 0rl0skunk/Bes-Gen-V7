@@ -83,7 +83,7 @@ Private Sub GetCADPath()
 
     This.ProjektOrdnerCAD = TinLinePath & "\" & Jahr & "\" & This.Projektnummer & "_" & This.ProjektBezeichnung
 
-    writelog "Info", "CAD-Pfad für Projekt " & This.Projektnummer & " > " & This.ProjektOrdnerCAD
+    writelog LogInfo, "CAD-Pfad für Projekt " & This.Projektnummer & " > " & This.ProjektOrdnerCAD
 
 End Sub
 

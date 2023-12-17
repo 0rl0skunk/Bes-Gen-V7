@@ -15,11 +15,14 @@ Attribute VB_Exposed = False
 
 
 
-'@IgnoreModule UseMeaningfulName, IntegerDataType
-Option Explicit
+
+
+
 '@Folder "Plankopf"
+Option Explicit
 
 Private pPlankopfnummer      As Long
+Private icons                As UserFormIconLibrary
 
 Private Sub CommandButtonClose_Click()
     Unload Me

@@ -15,8 +15,12 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
 '@Folder "Templates"
 Option Explicit
+Private icons                As UserFormIconLibrary
 
 Private Sub CheckBox1_Enter()
 

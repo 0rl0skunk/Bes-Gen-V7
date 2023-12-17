@@ -15,8 +15,12 @@ Attribute VB_Exposed = False
 
 
 
-Option Explicit
+
+
+
 '@Folder "Plankopf"
+Option Explicit
+Private icons                As UserFormIconLibrary
 
 Private Sub CommandButtonClose_Click()
 

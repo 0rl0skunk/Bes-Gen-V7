@@ -12,10 +12,17 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Option Explicit
 
+
+
+
+
+
+'@Folder "Plankopf"
+Option Explicit
 Private pMasstab             As Integer
 Private MultiPageType        As Integer
+Private icons                As UserFormIconLibrary
 
 Public Sub load(ByVal Format As String, ByVal Masstab As String, ByVal mpType As Integer)
 
@@ -258,6 +265,10 @@ Private Sub SpinButtonFormatH_SpinUp()
 End Sub
 
 Private Sub UserForm_Initialize()
+
+    Set icons = New UserFormIconLibrary
+    Me.TitleIcon.Picture = icons.IconLayout.Picture
+
     Me.Caption = vbNullString
     Me.TitleLabel = "Layout Voransicht"
     Me.LabelInstructions.Caption = "Die Layoutgrösse im Modell und die Plankopfposition sowie die Standardlegenden können hier abgelesen werden."

@@ -15,8 +15,11 @@ Attribute VB_Exposed = False
 
 
 
-Option Explicit
+
+
+
 '@Folder("Tasks")
+Option Explicit
 Private icons                As UserFormIconLibrary
 
 Private Sub UserForm_Initialize()

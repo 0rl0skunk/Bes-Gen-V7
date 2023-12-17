@@ -15,8 +15,11 @@ Attribute VB_Exposed = False
 
 
 
-Option Explicit
+
+
+
 '@Folder "Print"
+Option Explicit
 Private icons                As UserFormIconLibrary
 
 Private Sub UserForm_Initialize()

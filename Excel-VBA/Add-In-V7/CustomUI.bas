@@ -67,7 +67,7 @@ Sub onLoad(ribbon As IRibbonUI)
     StoreRibbonPointer = ObjPtr(ribbon)
     ThisWorkbook.Names.Add Name:="RibbonID", RefersTo:=StoreRibbonPointer
 
-    writelog "Info", "CustomRibbon successfully Loaded"
+    writelog LogInfo, "CustomRibbon successfully Loaded"
 
 End Sub
 
@@ -90,13 +90,13 @@ Public Sub RefreshRibbon()
     'ERROR MESSAGES:
 RestartExcel:
     MsgBox "Please restart Excel for Ribbon UI changes to take affect", , "Ribbon UI Refresh Failed"
-    writelog "Error", "trying to refresh CustomRibbon" & vbNewLine & _
+    writelog LogError, "trying to refresh CustomRibbon" & vbNewLine & _
                      ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
 
 End Sub
 
 Sub onActionButton(control As IRibbonControl)
-    writelog "Info", "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
+    writelog LogInfo, "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
     Globals.SetWBs
     If Not isUILocked Then
         Select Case control.ID
@@ -113,11 +113,11 @@ Sub onActionButton(control As IRibbonControl)
             frmAdresse.Show 1
         Case "CADFolder"
             Dim folderpath   As String: folderpath = Globals.Projekt.ProjektOrdnerCAD
-            writelog "Info", "Opening CAD-Folder" & vbNewLine & folderpath
+            writelog LogInfo, "Opening CAD-Folder" & vbNewLine & folderpath
             Shell "explorer.exe " & folderpath, vbNormalFocus
         Case "SharePoint"
             Dim folderSP     As String: folderSP = Globals.Projekt.ProjektOrdnerSharePoint
-            writelog "Info", "Opening SharePoint-Folder" & vbNewLine & folderSP
+            writelog LogInfo, "Opening SharePoint-Folder" & vbNewLine & folderSP
             ActiveWorkbook.FollowHyperlink Address:=folderSP
         Case "Drucken"
             'TODO Drucken UserForm
@@ -180,7 +180,7 @@ Sub CallBackGetText(control As IRibbonControl, ByRef returnedVal As Variant)
             returnedVal = Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_Projektphase").Value
     End Select
     On Error GoTo 0
-    writelog "Info", control.ID & " Text set to: " & returnedVal
+    writelog LogInfo, control.ID & " Text set to: " & returnedVal
 End Sub
 
 Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
@@ -190,7 +190,7 @@ Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
         Case Else
             returnedVal = True
     End Select
-    writelog "Info", control.ID & " is enabled = " & returnedVal
+    writelog LogInfo, control.ID & " is enabled = " & returnedVal
 End Sub
 
 Sub isTextEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
@@ -202,7 +202,7 @@ Sub isTextEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
         Case "comboBoxProjektphase"
             returnedVal = Not isUILocked
     End Select
-    writelog "Info", control.ID & " is enabled = " & returnedVal
+    writelog LogInfo, control.ID & " is enabled = " & returnedVal
 End Sub
 
 

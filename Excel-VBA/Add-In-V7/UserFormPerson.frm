@@ -13,9 +13,14 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-Option Explicit
+
+
+
+
 
 '@Folder("Person")
+Option Explicit
+Private icons                As UserFormIconLibrary
 
 Private Sub ComboBoxPersonFirma_Change()
     LoadAdress Me.ComboBoxPersonFirma.Value

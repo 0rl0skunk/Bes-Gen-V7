@@ -20,7 +20,7 @@ Private Type ttask
     FälligAm As String
     Gewerk As String
     Gebäude As String
-    GebäudeTeil As String
+    Gebäudeteil As String
     Geschoss As String
     Erledigt As Boolean
     Priorität As Long
@@ -37,7 +37,7 @@ Public Sub Filldata( _
        FälligAm As String, _
        Gewerk As String, _
        Gebäude As String, _
-       GebäudeTeil As String, _
+       Gebäudeteil As String, _
        Geschoss As String, _
        Erledigt As Boolean, _
        Priorität As Long, _
@@ -50,7 +50,7 @@ Public Sub Filldata( _
     Inputs.Gewerk = Gewerk
     Inputs.Gebäude = Gebäude
     Inputs.Geschoss = Geschoss
-    Inputs.GebäudeTeil = GebäudeTeil
+    Inputs.Gebäudeteil = Gebäudeteil
     Inputs.Erledigt = Erledigt
     Inputs.Priorität = Priorität
     Inputs.Text = Text
@@ -82,8 +82,8 @@ Public Property Get Gebäude() As String
     Gebäude = This.Gebäude
 End Property
 
-Public Property Get GebäudeTeil() As String
-    GebäudeTeil = This.GebäudeTeil
+Public Property Get Gebäudeteil() As String
+    Gebäudeteil = This.Gebäudeteil
 End Property
 
 Public Property Get Geschoss() As String

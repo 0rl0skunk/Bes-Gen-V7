@@ -15,11 +15,12 @@ Attribute VB_Exposed = False
 
 
 
-Option Explicit
+
+
+
 '@Folder("Tasks")
-
+Option Explicit
 Private pTask                As Task
-
 Private icons                As UserFormIconLibrary
 
 Private Sub CommandButtonGebäude_Click()

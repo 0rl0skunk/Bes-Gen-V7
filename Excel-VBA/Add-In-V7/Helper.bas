@@ -170,12 +170,12 @@ Public Function WLookup(Lookup As Variant, range As range, Index As Integer, Opt
     End If
 
     Exit Function
-    writelog "Info", "Wlookup Value Found " & WLookup
+    writelog LogInfo, "Wlookup Value Found " & WLookup
 
 ERR:
 
     WLookup = onError
-    writelog "Error", "Wlookup Value for " & Lookup & " Not Found"
+    writelog LogError, "Wlookup Value for " & Lookup & " Not Found"
 
 End Function
 
@@ -183,25 +183,25 @@ Public Sub deleteIndexesXml()
 
     Dim fso                  As Object
     Dim lastrow              As Integer
-    Dim row                  As Integer
+    Dim Row                  As Integer
     Dim col                  As Integer
     Dim lastcol              As Integer
 
 
     Set fso = CreateObject("scripting.FileSystemObject")
 
-    lastrow = shGebäude.Cells(shGebäude.rows.Count, 2).End(xlUp).row
+    lastrow = shGebäude.Cells(shGebäude.rows.Count, 2).End(xlUp).Row
     lastcol = shGebäude.Cells(1, shGebäude.Columns.Count).End(xlToLeft).Column
 
     For col = 2 To lastcol Step 2
-        For row = 6 To lastrow
-            writelog "Info", "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
-            If Not IsEmpty(shGebäude.Cells(row, col)) Then
-                writelog "Info", "> " & shGebäude.Cells(row, col).Value
+        For Row = 6 To lastrow
+            writelog LogInfo, "> empty cell " & Row & " " & col & " " & IsEmpty(shGebäude.Cells(Row, col)) & " " & shGebäude.Cells(Row, col).Address
+            If Not IsEmpty(shGebäude.Cells(Row, col)) Then
+                writelog LogInfo, "> " & shGebäude.Cells(Row, col).Value
                 ' only go if there is something in the cell
-                deleteIndexXml row, col
+                deleteIndexXml Row, col
             End If
-        Next row
+        Next Row
     Next col
 
     ' ----------------------------- PRINZIPSCHEMAS
@@ -236,29 +236,29 @@ Public Sub deleteIndexesXml()
 
 End Sub
 
-Public Sub deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As String = vbNullString)
+Public Sub deleteIndexXml(Row As Integer, col As Integer, Optional i_xmlfile As String = vbNullString)
 
-    Dim xmlfile              As String
+    Dim XMLFile              As String
     If i_xmlfile <> vbNullString Then
-        xmlfile = i_xmlfile
+        XMLFile = i_xmlfile
     Else
-        xmlfile = i_xmlfile
+        XMLFile = i_xmlfile
     End If
 
-    Dim oXml                 As New MSXML2.DOMDocument60
-    oXml.load xmlfile
+    Dim oxml                 As New MSXML2.DOMDocument60
+    oxml.load XMLFile
     Dim nodes                As IXMLDOMNodeList
     Dim node                 As IXMLDOMNode
     Dim root                 As IXMLDOMNode
 
-    Set root = oXml.SelectSingleNode("//tinPlan1")
-    Set nodes = oXml.SelectNodes("//tinPlan1/*[contains(local-name(), 'IN')]")
+    Set root = oxml.SelectSingleNode("//tinPlan1")
+    Set nodes = oxml.SelectNodes("//tinPlan1/*[contains(local-name(), 'IN')]")
     For Each node In nodes
         root.RemoveChild node
     Next
     On Error Resume Next
-    oXml.save xmlfile
-    Set oXml = Nothing
+    oxml.save XMLFile
+    Set oxml = Nothing
     On Error GoTo 0
 
 End Sub
@@ -356,9 +356,9 @@ End Function
 
 Public Sub DeleteRow(ByVal ID As String)
     ' löscht die gegebene zeile(row) im Worksheet (DATA [shstoredata])
-    Dim row                  As Double
-    row = Application.WorksheetFunction.Match(ID, shStoreData.range("A:A"), False)
-    shStoreData.rows(row).EntireRow.Delete
+    Dim Row                  As Double
+    Row = Application.WorksheetFunction.Match(ID, shStoreData.range("A:A"), False)
+    shStoreData.rows(Row).EntireRow.Delete
 
 End Sub
 
@@ -370,57 +370,7 @@ End Function
 
 Public Function getRow(PCol As Collection) As Integer
     ' get the corresponding row from the stored data
-    getRow = shStoreData.range("A:A").Find(PCol(11), LookIn:=xlValues).row
-
-End Function
-
-Public Function CreateXmlAttribute(Name As String, Bez As String, Wert As String, str As String, nodChild As IXMLDOMElement, oXml As MSXML2.DOMDocument60, nodElement As IXMLDOMElement)
-    ' create a TinLine XML Attribute with the given informations
-    Dim nodGrandChild        As IXMLDOMElement
-
-    Set nodChild = oXml.createElement(str)
-    nodElement.appendChild nodChild
-
-    Set nodGrandChild = oXml.createElement("Name")
-    nodGrandChild.Text = Name
-    nodChild.appendChild nodGrandChild
-
-    Set nodGrandChild = oXml.createElement("Bez")
-    nodGrandChild.Text = Bez
-    nodChild.appendChild nodGrandChild
-
-    Set nodGrandChild = oXml.createElement("Wert")
-    nodGrandChild.Text = Wert
-    nodChild.appendChild nodGrandChild
-
-    CreateXmlAttribute = True
-
-End Function
-
-Public Function CreateXmlIndexAttribute(Index As String, Name As String, Datum As String, Bez As String, NodName As String, nodChild As IXMLDOMElement, oXml As MSXML2.DOMDocument60, nodElement As IXMLDOMElement)
-    ' create a TinLine XML Attribute with the given informations
-    Dim nodGrandChild        As IXMLDOMElement
-
-    Set nodChild = oXml.createElement(NodName)
-    nodElement.appendChild nodChild
-
-    Set nodGrandChild = oXml.createElement("Index")
-    nodGrandChild.Text = Index
-    nodChild.appendChild nodGrandChild
-
-    Set nodGrandChild = oXml.createElement("Name")
-    nodGrandChild.Text = Name
-    nodChild.appendChild nodGrandChild
-
-    Set nodGrandChild = oXml.createElement("Datum")
-    nodGrandChild.Text = Datum
-    nodChild.appendChild nodGrandChild
-
-    Set nodGrandChild = oXml.createElement("Bez")
-    nodGrandChild.Text = Bez
-    nodChild.appendChild nodGrandChild
-
-    CreateXmlIndexAttribute = True
+    getRow = shStoreData.range("A:A").Find(PCol(11), LookIn:=xlValues).Row
 
 End Function
 
@@ -434,7 +384,7 @@ Public Function GetArrLength(a As Variant) As Long
 
 End Function
 
-Public Function getNewID(length As Integer, ws As Worksheet, Region As range, IDcol As Integer) As String
+Public Function getNewID(length As Integer, WS As Worksheet, Region As range, IDcol As Integer) As String
     ' get a new unique ID for a PK
     Dim i                    As Integer
 
@@ -452,7 +402,7 @@ newID:
 
     For r = 2 To rows + 1
         ' check if the ID already exists
-        If getNewID = ws.Cells(r, IDcol).Value Then GoTo newID
+        If getNewID = WS.Cells(r, IDcol).Value Then GoTo newID
     Next r
 
 End Function
