@@ -28,7 +28,7 @@ Private Type TPlankopf
     GeprüftPerson As String
     GeprüftDatum As String
     '--- Gebäude ---
-    Gebäude As String: GebäudeKF As String
+    Gebäude As String: GebäudeKF As String: GebäudeCode As String
     Gebäudeteil As String: GebäudeteilKF As String
     Geschoss As String: GeschossKF As String: GeschossCode As String
     '--- Gewerk ---
@@ -239,7 +239,7 @@ Public Function Filldata( _
     If SkipValidation Or ValidInputs Then
         This = Inputs
         If ID = "NEW" Then
-            This.ID = getNewID(6, Globals.shStoreData, shStoreData.range("A1").CurrentRegion, 1)
+            This.ID = getNewID(IDPlankopf)
         Else
             This.ID = ID
         End If
@@ -269,6 +269,11 @@ Private Sub GetKF()
 
     On Error GoTo ERR
     This.GebäudeKF = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(1).Value
+    If This.GebäudeKF = vbNullString Then
+    This.GebäudeCode = vbNullString
+    Else
+    This.GebäudeCode = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(2).Value
+    End If
     This.GeschossCode = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, -1).Value
     This.GeschossKF = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, 1).Value
     This.GebäudeteilKF = Globals.shPData.range("PRO_Gebäudeteil").Find(This.Gebäudeteil).Offset(0, 1).Value
@@ -335,22 +340,33 @@ Private Function GetFileNames()
     ' --- Pfad
     Select Case This.Plantyp
         Case "PLA"
+        If This.Gebäude = "GES" Then
             Select Case This.TinLineTyp
                 Case "EP"
-                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\"
+                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP"
                 Case "BR"
-                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR\"
+                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR"
                 Case "TF"
-                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF\"
+                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF"
             End Select
+        Else ' Mehrere Gebäude
+            Select Case This.TinLineTyp
+                Case "EP"
+                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\" & This.GebäudeCode & "_" & This.GebäudeKF
+                Case "BR"
+                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR\" & This.GebäudeCode & "_" & This.GebäudeKF
+                Case "TF"
+                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF\" & This.GebäudeCode & "_" & This.GebäudeKF
+            End Select
+        End If
         Case "SCH"
-            This.Pfad = pProjekt.ProjektOrdnerCAD & "\02_ES\" & This.LayoutName
+            This.Pfad = pProjekt.ProjektOrdnerCAD & "\02_ES" & This.LayoutName
         Case "PRI"
-            This.Pfad = pProjekt.ProjektOrdnerCAD & "\03_PR\"
+            This.Pfad = pProjekt.ProjektOrdnerCAD & "\03_PR"
     End Select
     ' --- FilePath
-    This.DWGFilePath = This.Pfad & "\" & This.DWGFileName
-    This.XMLFilePath = This.Pfad & "\" & This.XMLFileName
+    This.DWGFilePath = This.Pfad & "\" & This.GeschossCode & "_" & This.GeschossKF
+    This.XMLFilePath = This.DWGFilePath
 End Function
 
 Private Sub GetPlanüberschrift()

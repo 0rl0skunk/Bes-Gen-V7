@@ -15,13 +15,10 @@ Attribute VB_Exposed = False
 
 
 
-
-
-
 '@Folder "Plankopf"
 Option Explicit
 Private icons                As UserFormIconLibrary
-Private Planköpfe            As New Collection
+Private planköpfe            As New Collection
 Private Filters              As Boolean
 
 Private Sub CommandButtonAdd_Click()

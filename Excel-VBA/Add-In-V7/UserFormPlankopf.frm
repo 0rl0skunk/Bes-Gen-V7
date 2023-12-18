@@ -12,6 +12,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
+
 '@Folder "Plankopf"
 Option Explicit
 
@@ -21,7 +24,7 @@ Public Enum EnumIcon
 End Enum
 
 Private icons                As UserFormIconLibrary
-Private pplankopf            As IPlankopf
+Private pPlankopf            As IPlankopf
 Public PlankopfCopyFrom      As IPlankopf
 Private pProjekt             As IProjekt
 Private shPData              As Worksheet
@@ -53,28 +56,28 @@ End Sub
 
 Private Sub CommandButtonBeschriftungAktualisieren_Click()
 
-    Set pplankopf = FormToPlankopf
-    Me.TextBoxBeschriftungPlannummer.Value = pplankopf.Plannummer
-    Me.TextBoxBeschriftungDateiname.Value = pplankopf.PDFFileName
-    Me.TextBoxPlanüberschrift.Value = pplankopf.Planüberschrift
+    Set pPlankopf = FormToPlankopf
+    Me.TextBoxBeschriftungPlannummer.Value = pPlankopf.Plannummer
+    Me.TextBoxBeschriftungDateiname.Value = pPlankopf.PDFFileName
+    Me.TextBoxPlanüberschrift.Value = pPlankopf.Planüberschrift
     
-    Me.LabelDWGFileName.Caption = pplankopf.DWGFileName
-    Me.LabelXMLFileName.Caption = pplankopf.XMLFileName
-    Me.LabelFolderName.Caption = pplankopf.FolderName
+    Me.LabelDWGFileName.Caption = pPlankopf.DWGFileName
+    Me.LabelXMLFileName.Caption = pPlankopf.XMLFileName
+    Me.LabelFolderName.Caption = pPlankopf.FolderName
 
 End Sub
 
 Private Sub CommandButtonIndexErstellen_Click()
 
     Dim Index                As IIndex: Set Index = IndexFactory.Create( _
-        IDPlan:=pplankopf.ID, _
+        IDPlan:=pPlankopf.ID, _
         GezeichnetPerson:=Me.TextBoxIndexGez.Value, _
         GezeichnetDatum:=Me.TextBoxIndexGezDatum.Value, _
         Klartext:=Me.TextBoxIndexKlartext.Value, _
         Letter:=Me.TextBoxIndexLetter.Value _
                  )
     IndexFactory.AddToDatabase Index
-    pplankopf.AddIndex Index
+    pPlankopf.AddIndex Index
 
     LoadIndexes
 
@@ -91,8 +94,8 @@ Private Sub CommandButtonIndexLöschen_Click()
     ID = Me.ListViewIndex.SelectedItem.ListSubItems(1)
     IndexFactory.DeleteFromDatabase ID
 
-    pplankopf.ClearIndex
-    IndexFactory.GetIndexes pplankopf
+    pPlankopf.ClearIndex
+    IndexFactory.GetIndexes pPlankopf
 
     LoadIndexes
 
@@ -260,7 +263,7 @@ Private Sub LoadIndexes()
             .Add , , "Beschreibung", 250
         End With
 
-        For Each ind In pplankopf.Indexes
+        For Each ind In pPlankopf.Indexes
             Set li = .ListItems.Add()
             li.ListSubItems.Add , , ind.IndexID
             li.ListSubItems.Add , , ind.Index
@@ -276,7 +279,7 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
 
     Set pProjekt = Projekt
 
-    Set pplankopf = Plankopf
+    Set pPlankopf = Plankopf
     Set Plankopf = Nothing
     Dim Planstand            As String
     Dim Plantyp              As Integer
@@ -284,37 +287,37 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
     Dim UnterGewerk          As String
 
 
-    Select Case pplankopf.Plantyp
+    Select Case pPlankopf.Plantyp
         Case "PLA"
             Me.MultiPageTyp.Value = 0
-            Me.ComboBoxEPHGewerk.Value = pplankopf.Gewerk
-            Me.ComboBoxEPUGewerk.Value = pplankopf.UnterGewerk
-            Me.ComboBoxEPArt.Value = pplankopf.Planart
+            Me.ComboBoxEPHGewerk.Value = pPlankopf.Gewerk
+            Me.ComboBoxEPUGewerk.Value = pPlankopf.UnterGewerk
+            Me.ComboBoxEPArt.Value = pPlankopf.Planart
         Case "SCH"
             Me.MultiPageTyp.Value = 1
-            Me.ComboBoxESHGewerk.Value = pplankopf.Gewerk
-            Me.ComboBoxESUGewerk.Value = pplankopf.UnterGewerk
+            Me.ComboBoxESHGewerk.Value = pPlankopf.Gewerk
+            Me.ComboBoxESUGewerk.Value = pPlankopf.UnterGewerk
         Case "PRI"
             Me.MultiPageTyp.Value = 2
-            Me.ComboBoxPRHGewerk.Value = pplankopf.Gewerk
-            Me.ComboBoxPRUGewerk.Value = pplankopf.UnterGewerk
+            Me.ComboBoxPRHGewerk.Value = pPlankopf.Gewerk
+            Me.ComboBoxPRUGewerk.Value = pPlankopf.UnterGewerk
     End Select
-    Me.ComboBoxGebäude.Value = pplankopf.Gebäude
-    Me.ComboBoxGebäudeTeil.Value = pplankopf.Gebäudeteil
-    Me.ComboBoxGeschoss.Value = pplankopf.Geschoss
-    Me.ComboBoxLayoutFormat.Value = pplankopf.LayoutGrösse
-    Me.TextBoxLayoutMasstab.Value = pplankopf.LayoutMasstab
-    Me.TextBoxPlanInfoDatumGezeichnet.Value = pplankopf.GezeichnetDatum
-    Me.TextBoxPlanInfoKürzelGezeichnet.Value = pplankopf.GezeichnetPerson
-    Me.TextBoxPlanInfoDatumGeprüft.Value = pplankopf.GeprüftDatum
-    Me.TextBoxPlanInfoKürzelGeprüft.Value = pplankopf.GeprüftPerson
-    Me.TextBoxPlanüberschrift.Value = pplankopf.Planüberschrift
-    Me.LabelDWGFileName.Caption = pplankopf.DWGFileName
-    Me.LabelXMLFileName.Caption = pplankopf.XMLFileName
-    Me.LabelFolderName.Caption = pplankopf.FolderName
+    Me.ComboBoxGebäude.Value = pPlankopf.Gebäude
+    Me.ComboBoxGebäudeTeil.Value = pPlankopf.Gebäudeteil
+    Me.ComboBoxGeschoss.Value = pPlankopf.Geschoss
+    Me.ComboBoxLayoutFormat.Value = pPlankopf.LayoutGrösse
+    Me.TextBoxLayoutMasstab.Value = pPlankopf.LayoutMasstab
+    Me.TextBoxPlanInfoDatumGezeichnet.Value = pPlankopf.GezeichnetDatum
+    Me.TextBoxPlanInfoKürzelGezeichnet.Value = pPlankopf.GezeichnetPerson
+    Me.TextBoxPlanInfoDatumGeprüft.Value = pPlankopf.GeprüftDatum
+    Me.TextBoxPlanInfoKürzelGeprüft.Value = pPlankopf.GeprüftPerson
+    Me.TextBoxPlanüberschrift.Value = pPlankopf.Planüberschrift
+    Me.LabelDWGFileName.Caption = pPlankopf.DWGFileName
+    Me.LabelXMLFileName.Caption = pPlankopf.XMLFileName
+    Me.LabelFolderName.Caption = pPlankopf.FolderName
     LoadIndexes
 
-    Me.ComboBoxStand.Value = pplankopf.LayoutPlanstand
+    Me.ComboBoxStand.Value = pPlankopf.LayoutPlanstand
 
     If Not copy Then
         ' disable all inputs which should only be set once
@@ -332,14 +335,14 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
         Me.ComboBoxPRUGewerk.Enabled = False
 
         Me.CommandButtonCreate.Caption = "Update"
-        Me.BesID.Caption = pplankopf.ID
-        Me.TinLineID.Caption = pplankopf.IDTinLine
+        Me.BesID.Caption = pPlankopf.ID
+        Me.TinLineID.Caption = pPlankopf.IDTinLine
     Else
-        Me.BesID.Caption = getNewID(6, Globals.shStoreData, shStoreData.range("A1").CurrentRegion, 1)
-        pplankopf.ID = Me.BesID.Caption
+        Me.BesID.Caption = getNewID(IDPlankopf)
+        pPlankopf.ID = Me.BesID.Caption
         Dim Index            As IIndex
-        For Each Index In pplankopf.Indexes
-            Index.PlanID = pplankopf.ID
+        For Each Index In pPlankopf.Indexes
+            Index.PlanID = pPlankopf.ID
             IndexFactory.AddToDatabase Index
         Next
     End If
@@ -363,7 +366,10 @@ Private Function FormToPlankopf() As IPlankopf
     Dim Plantyp              As String
     Dim Gewerk               As String
     Dim UnterGewerk          As String
-
+    Dim ID As String
+    
+    If Me.BesID.Caption = "ID" Then ID = getNewID(IDPlankopf)
+    
     Select Case Me.MultiPageTyp.Value
         Case 0
             Plantyp = "PLA"

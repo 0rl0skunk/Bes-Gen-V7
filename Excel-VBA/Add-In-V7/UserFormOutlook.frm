@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormOutlook 
-   ClientHeight    =   11340
+   ClientHeight    =   9240.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9720.001
@@ -15,9 +15,6 @@ Attribute VB_Exposed = False
 
 
 
-
-
-
 '@Folder("Outlook")
 '@IgnoreModule VariableNotUsed
 Option Explicit
@@ -28,18 +25,16 @@ Private icons                As UserFormIconLibrary
 
 Private Sub CommandButton1_Click()
     Dim PrintPath As String
-    If Me.CheckBoxPlot Then
-    'PrintPath = PrintPlan(pPlanköpfe)
-    End If
     Dim appOutlook           As New Outlook.Application
     Dim Mail                 As MailItem
 
     Set Mail = appOutlook.CreateItem(olMailItem)
 
     If Me.CheckBoxPlot Then
-    Dim pplankopf As IPlankopf
-    For Each pplankopf In pPlanköpfe
-    Mail.Attachments.Add PrintPath & "\" & pplankopf.PDFFileName
+    Dim pPlankopf As IPlankopf
+    PrintPath = CreatePlotList(pPlanköpfe)
+    For Each pPlankopf In pPlanköpfe
+    Mail.Attachments.Add PrintPath & "\" & pPlankopf.PDFFileName
     Next
     End If
     Mail.To = MailRecepientsTO

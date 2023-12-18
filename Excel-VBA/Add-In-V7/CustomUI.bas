@@ -30,15 +30,36 @@ Set objRibbon = Nothing
 End Function
 
 Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
-    Select Case control.ID
+If Application.ActiveWorkbook.FileFormat <> 50 Then
+returnedVal = False
+If control.ID = "customGroupNoBesGen" Then returnedVal = True
+Else
+        Select Case control.ID
+        Case "customGroupNoBesGen"
+        returnedVal = False
         Case "customGroupPanels"
-        Case "customGroupSIA"
+        returnedVal = True
         Case "customGroupBuildings"
+        If Globals.shPData Is Nothing Then Globals.SetWBs
+        If Globals.shPData.range("ADM_ProjektPfadCAD").Value = vbNullString Then
+        returnedVal = True
+        Else
+        returnedVal = False
+        End If
         Case "customGroupExplorer"
+        returnedVal = True
         Case "customGroupHelp"
+        returnedVal = True
+        Case "customGroupCreateProject"
+        If Globals.shPData.range("ADM_ProjektPfadCAD").Value = vbNullString Then
+        returnedVal = True
+        Else
+        returnedVal = False
+        End If
         Case Else
+        returnedVal = True
     End Select
-    returnedVal = True
+    End If
 End Sub
 
 Sub IsButtonVisible(control As IRibbonControl, ByRef returnedVal As Variant)
@@ -98,16 +119,9 @@ End Sub
 Sub onActionButton(control As IRibbonControl)
     writelog LogInfo, "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
     Globals.SetWBs
-    If Not isUILocked Then
-        Select Case control.ID
-            Case "Objektdaten"
-                'TODO Objektdaten Input UserForm
-                'Dim frmObj As New UserFormTemplateV7
-                'frmObj.Show 0
-                ActiveWorkbook.Sheets("Gebäude").Activate
-        End Select
-    End If
     Select Case control.ID
+        Case "Objektdaten"
+                ActiveWorkbook.Sheets("Gebäude").Activate
         Case "Person"
             Dim frmAdresse   As New UserFormPerson
             frmAdresse.Show 1
@@ -147,40 +161,9 @@ Sub onActionButton(control As IRibbonControl)
         Case "Mail"
             Dim frmOutlook   As New UserFormOutlook
             frmOutlook.Show 1
-        Case "LockProjekt"
-            isUILocked = Not isUILocked
-            CustomUI.RefreshRibbon
-        Case "unLockProjekt"
-            isUILocked = Not isUILocked
-            CustomUI.RefreshRibbon
+        Case "CADElektro"
+            'TODO Create new CAD Project for TinLine
     End Select
-End Sub
-
-Sub onChange(control As IRibbonControl, Text As String)
-    Select Case control.ID
-        Case "Projektnummer"
-            Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_Projektnummer").Value = Text
-        Case "Projektname"
-            Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_ProjektBezeichnung").Value = Text
-        Case "comboBoxProjektphase"
-            Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_Projektphase").Value = Text
-    End Select
-
-End Sub
-
-Sub CallBackGetText(control As IRibbonControl, ByRef returnedVal As Variant)
-
-    On Error Resume Next
-    Select Case control.ID
-        Case "Projektnummer"
-            returnedVal = Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_Projektnummer").Value
-        Case "Projektname"
-            returnedVal = Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_ProjektBezeichnung").Value
-        Case "comboBoxProjektphase"
-            returnedVal = Application.ActiveWorkbook.Sheets("Projektdaten").range("ADM_Projektphase").Value
-    End Select
-    On Error GoTo 0
-    writelog LogInfo, control.ID & " Text set to: " & returnedVal
 End Sub
 
 Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
@@ -192,17 +175,4 @@ Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
     End Select
     writelog LogInfo, control.ID & " is enabled = " & returnedVal
 End Sub
-
-Sub isTextEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
-    Select Case control.ID
-        Case "Projektnummer"
-            returnedVal = Not isUILocked
-        Case "Projektname"
-            returnedVal = Not isUILocked
-        Case "comboBoxProjektphase"
-            returnedVal = Not isUILocked
-    End Select
-    writelog LogInfo, control.ID & " is enabled = " & returnedVal
-End Sub
-
 

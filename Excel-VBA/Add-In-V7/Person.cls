@@ -33,7 +33,7 @@ Public Sub Filldata( _
        Optional ByVal Anrede As String, _
        Optional ByVal ID As String = vbNullString _
        )
-    If ID = vbNullString Then ID = getNewID(6, Globals.shAdress, Globals.shAdress.range("ADR_Adressen"), 9)
+    If ID = vbNullString Then ID = getNewID(IDPerson)
     This.ID = ID
     This.Nachname = Nachname
     This.Vorname = Vorname

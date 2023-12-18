@@ -87,7 +87,7 @@ Private Function validateInputs() As Boolean
     If Len(Inputs.Klartext) = 0 Then writelog LogError, "Index > ValidateInputs > No 'Klartext' given"
     validateInputs = True
 
-    If This.ID = vbNullString Then This.ID = getNewID(4, Globals.shIndex, Globals.shIndex.range("A1").CurrentRegion, 1)
+    If This.ID = vbNullString Then This.ID = getNewID(IDIndex)
 
     If This.Index = vbNullString Then
         Dim Indexes(1 To 26) As String

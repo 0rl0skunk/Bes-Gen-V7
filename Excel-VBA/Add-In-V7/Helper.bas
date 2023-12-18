@@ -2,6 +2,12 @@ Attribute VB_Name = "Helper"
 Attribute VB_Description = "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
 '@IgnoreModule VariableNotUsed
 Option Explicit
+Public Enum IDType
+    IDPlankopf = 0
+    IDIndex = 1
+    IDTask = 2
+    IDPerson = 3
+End Enum
 
 '@ModuleDescription "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
 Public Function GetPlanartNamedRange(Planart As String, Hauptgewerk As String) As String
@@ -384,8 +390,28 @@ Public Function GetArrLength(a As Variant) As Long
 
 End Function
 
-Public Function getNewID(length As Integer, WS As Worksheet, Region As range, IDcol As Integer) As String
-    ' get a new unique ID for a PK
+Public Function getNewID(ByVal Typ As IDType) As String
+ ' get a new unique ID for a PK
+    Dim length As Integer, WS As Worksheet, Region As range, IDcol As Integer
+    
+    Select Case Typ
+    Case 0 ' Plan
+        length = 6
+        Set WS = Globals.shStoreData
+        Set Region = shStoreData.range("A1").CurrentRegion
+        IDcol = 1
+    Case 1 ' Index
+        length = 4
+        Set WS = Globals.shIndex
+        Set Region = Globals.shIndex.range("A1").CurrentRegion
+        IDcol = 1
+    Case 2 ' Task
+    Case 3 ' Person
+        length = 6
+        Set WS = Globals.shAdress
+        Set Region = Globals.shAdress.range("ADR_Adressen")
+        IDcol = 9
+    End Select
     Dim i                    As Integer
 
     Dim rg                   As range

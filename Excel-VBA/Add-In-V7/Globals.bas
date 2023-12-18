@@ -58,10 +58,10 @@ Public Function Projekt() As IProjekt
     Set Projekt = pProjekt
 End Function
 
-Public Function Planköpfe() As Collection
+Public Function planköpfe() As Collection
 
     If pPlanköpfe Is Nothing Then GetPlanköpfe
-    Set Planköpfe = pPlanköpfe
+    Set planköpfe = pPlanköpfe
 
 End Function
 

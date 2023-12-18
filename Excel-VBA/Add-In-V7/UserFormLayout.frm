@@ -15,9 +15,6 @@ Attribute VB_Exposed = False
 
 
 
-
-
-
 '@Folder "Plankopf"
 Option Explicit
 Private pMasstab             As Integer
