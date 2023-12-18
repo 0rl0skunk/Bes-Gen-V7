@@ -41,7 +41,7 @@ Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
                 returnedVal = True
             Case "customGroupBuildings"
                 If Globals.shPData Is Nothing Then Globals.SetWBs
-                If Globals.shPData.range("ADM_ProjektPfadCAD").Value = vbNullString Then
+                If Globals.shPData.range("ADM_ProjektPfadCAD").value = vbNullString Then
                     returnedVal = True
                 Else
                     returnedVal = False
@@ -51,7 +51,7 @@ Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
             Case "customGroupHelp"
                 returnedVal = True
             Case "customGroupCreateProject"
-                If Globals.shPData.range("ADM_ProjektPfadCAD").Value = vbNullString Then
+                If Globals.shPData.range("ADM_ProjektPfadCAD").value = vbNullString Then
                     returnedVal = True
                 Else
                     returnedVal = False

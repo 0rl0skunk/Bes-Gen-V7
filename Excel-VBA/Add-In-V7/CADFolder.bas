@@ -2,25 +2,49 @@ Attribute VB_Name = "CADFolder"
 '@Folder("Projekt")
 Option Explicit
 
-Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean)
+Global Const OrdnerVorlage As String = "H:\TinLine\01_Standards\00_Vorlageordner" 'TODO Create Folder from Excel
+Global Const VorlageEPDWG As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg" 'TODO Create Folder from Excel
+Global Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg" 'TODO Create Folder from Excel
+Global Const VorlagePRDWG As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg" 'TODO Create Folder from Excel
 
+Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean)
+    
+    Globals.Projekt True
     If Globals.shGebäude Is Nothing Then Globals.SetWBs
-    CreateFoldersTinLine
+    If Not CreateFoldersTinLine Then Exit Sub
     If Pläne Then CreateFoldersEP
     If Prinzip Then CreateFoldersPR
     If Schemata Then CreateFoldersES
     If Türfachplanung Then CreateFoldersTF
     If Brandschutz Then CreateFoldersBR
-
+    Select Case MsgBox("Pfad im Explorer öffnen?", vbYesNo, "Projekt TinLine erstellt")
+        Case vbYes
+            ' open explorer
+            Shell "explorer.exe" & " " & Globals.Projekt.ProjektOrdnerCAD, vbNormalFocus
+            Exit Sub
+        Case vbNo
+            ' exit sub
+            Exit Sub
+    End Select
 End Sub
 
-Private Sub CreateFoldersTinLine()
+Private Function CreateFoldersTinLine() As Boolean
+    On Error GoTo ErrHandler
     MkDir Globals.Projekt.ProjektOrdnerCAD
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\99 TinConfiguration"
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten"
 
     TinLineProjectXML
-End Sub
+    Globals.shPData.range("ADM_ProjektPfadCAD").value = Globals.Projekt.ProjektOrdnerCAD
+    CreateFoldersTinLine = True
+    Exit Function
+ErrHandler:
+    Select Case ERR.Number
+    Case 75
+        MsgBox "Der Ordner besteht bereits!" & vbNewLine & "Stell sicher, dass die Projektnummer korrekt eingetragen wurde." & vbNewLine & vbNewLine & "Wenn die Projektnummer etc. korrekt eingetragen wurde, melde dich beim QS-Verantwortlichen!", vbCritical, "Projekt bereits Vorhanden"
+        CreateFoldersTinLine = False
+    End Select
+End Function
 
 Private Sub CreateFoldersEP()
     Dim Folder               As String
@@ -37,6 +61,39 @@ Private Sub CreateFoldersPR()
     Folder = Globals.Projekt.ProjektOrdnerCAD & "\03_PR"
     MkDir Folder
     UGewerke = getList("ELE_PRI")
+    Dim i As Long
+    Dim Plan As IPlankopf
+    Dim iStr As String
+    For i = LBound(UGewerke) To UBound(UGewerke)
+        iStr = i - 1
+        If Len(iStr) < 2 Then iStr = "0" & iStr
+        
+        Set Plan = PlankopfFactory.Create(Projekt:=Projekt, _
+           ID:=vbNullString, _
+           TinLineID:=vbNullString, _
+           Gewerk:="Elektro", _
+           UnterGewerk:=UGewerke(i), _
+           Planart:=vbNullString, _
+           Plantyp:="PRI", _
+           Gebäude:=vbNullString, _
+           Gebäudeteil:=vbNullString, _
+           Geschoss:=vbNullString, _
+           Planüberschrift:=vbNullString, _
+           Format:=vbNullString, _
+           Masstab:=vbNullString, _
+           Stand:=vbNullString, _
+           GezeichnetPerson:=vbNullString, _
+           GezeichnetDatum:=vbNullString, _
+           GeprüftPerson:=vbNullString, _
+           GeprüftDatum:=vbNullString, _
+           SkipValidation:=True, _
+           CustomÜberschrift:=False _
+           )
+           MkDir Folder & "\" & iStr & "_" & Plan.UnterGewerkKF
+            TinLinePrinzip Plan
+            FileCopy VorlagePRDWG, Plan.DWGFile
+    Next
+    
 End Sub
 
 Private Sub CreateFoldersES()
@@ -74,11 +131,10 @@ Private Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String)
     Dim ii                   As Long
     Dim lastrow              As Long
     Dim Pfad                 As String
-    Dim Pfad2                As String
 
     Set ws = Globals.shGebäude
     arrGeb() = getList("PRO_Gebäude")
-    For i = LBound(arrGeb) + 1 To UBound(arrGeb)
+    For i = LBound(arrGeb) To UBound(arrGeb)
         'get all Geschosse from the current Building
         larrGeb(0) = arrGeb(i)
         Set rng = ws.range("PRO_Gebäude")
@@ -86,7 +142,7 @@ Private Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String)
         larrGeb(1) = Application.WorksheetFunction.XLookup(larrGeb(0), rng, rng.Offset(1), "-")
         larrGeb(2) = Application.WorksheetFunction.XLookup(larrGeb(0), rng, rng.Offset(2), "-")
 
-        If ws.range("D1").Value <> "" Then
+        If ws.range("D1").value <> "" Then
             ' mehrere Gebäude, für jedes Gebäude ein Unterordner erstellen und die entsprechenden Etagen einfügen.
             buildings = True
             Pfad = Folder & "\" & larrGeb(2) & "_" & larrGeb(1)
@@ -94,6 +150,7 @@ Private Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String)
         Else
             ' nur ein Gebäude -> Kein unterordner erstellen
             Pfad = Folder
+            buildings = False
         End If
         ' Geschoss
 
@@ -112,15 +169,7 @@ Private Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String)
             Set rng = ws.range(ws.Cells(5, tmpcol), ws.Cells(tmplastrow, tmpcol + 1))
             Set rng = rng.Resize(rng.rows.Count, 1)
             larrGes(1) = Application.WorksheetFunction.XLookup(larrGes(0), rng, rng.Offset(0, 1), , 0)
-            larrGes(2) = ws.Cells(rng.Find(larrGes(0)).row, 1).Value
-
-            Pfad2 = Pfad & "\" & larrGes(2) & "_" & larrGes(1)
-            MkDir Pfad2
-            If buildings Then
-                FileCopy VorlageEPDWGGEB, Pfad2 & "\" & Right(Folder, 2) & "_" & larrGes(1) & ".dwg"
-            Else
-                FileCopy VorlageEPDWG, Pfad2 & "\" & Right(Folder, 2) & "_" & larrGes(1) & ".dwg"
-            End If
+            larrGes(2) = ws.Cells(rng.Find(larrGes(0)).row, 1).value
             
             Set Plan = PlankopfFactory.Create(Projekt:=Projekt, _
            ID:=vbNullString, _
@@ -143,6 +192,15 @@ Private Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String)
            SkipValidation:=True, _
            CustomÜberschrift:=False _
            )
+            
+            MkDir Plan.FolderName
+            
+            If buildings Then
+            FileCopy VorlageEPDWGGEB, Plan.DWGFile
+            Else
+            FileCopy VorlageEPDWG, Plan.DWGFile
+            End If
+            
             TinLineFloorXML Plan
             TinLinePlan Plan
         Next ii
@@ -178,9 +236,10 @@ Private Sub TinLineFloorXML(ByRef Plan As IPlankopf)
     nodChild.appendChild nodGrandChild
 
     ' XML formatieren
-    oXml.Save Plan.XMLFile
+    Debug.Print Plan.FolderName & "\TinFloor.xml"
+    oXml.Save Plan.FolderName & "\TinFloor.xml"
     oXml.transformNodeToObject oXsl, oXml
-    oXml.Save Plan.XMLFile
+    oXml.Save Plan.FolderName & "\TinFloor.xml"
 
 End Sub
 
@@ -218,6 +277,7 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     'nodGrandChild.text = ""
     'nodChild.appendChild nodGrandChild
     ' XML formatieren
+    Debug.Print Plan.XMLFile
     oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
     oXml.Save Plan.XMLFile
@@ -258,6 +318,7 @@ Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     'nodGrandChild.text = ""
     'nodChild.appendChild nodGrandChild
     ' XML formatieren
+    Debug.Print Plan.XMLFile
     oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
     oXml.Save Plan.XMLFile

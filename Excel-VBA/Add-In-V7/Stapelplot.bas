@@ -26,7 +26,6 @@ Sub plotPlanliste()
     wsh.Run """C:\Program Files\TinLine\TinLine 23-Deu\accoreconsole.exe"" /i ""H:\TinLine\01_Standards\TinBlank.dwg"" /s ""C:\Users\Public\Documents\plotter.scr"" /l EN-US", windowStyle, waitOnReturn
 
     Select Case MsgBox("Pfad im Explorer öffnen?", vbYesNo, "Pläne erstellt")
-
         Case vbYes
             ' open explorer
             Shell "explorer.exe" & " " & OutputFolder, vbNormalFocus

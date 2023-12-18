@@ -20,6 +20,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 '@Folder "Plankopf"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -51,14 +53,14 @@ Public Sub load(ByVal filepath As String, ByVal Plankopfnummer As Long)
         End If
     Next
 
-    Me.TextBox1.Value = xmlDOMDoc.xml
+    Me.TextBox1.value = xmlDOMDoc.xml
     Me.TextBox1.TextAlign = fmTextAlignLeft
 
 End Sub
 
 Private Sub UserForm_Initialize()
 
-    Me.TextBox1.Value = "--- No XML-File was loaded ---"
+    Me.TextBox1.value = "--- No XML-File was loaded ---"
     Me.TextBox1.TextAlign = fmTextAlignCenter
 
 End Sub

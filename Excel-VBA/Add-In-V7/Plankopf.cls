@@ -12,7 +12,6 @@ Option Explicit
 '@Folder "Plankopf"
 '@ModuleDescription "Plankopf Objekt für einfacheres Management von Planköpfen."
 
-
 Implements IPlankopf
 
 Private Type TPlankopf
@@ -52,6 +51,7 @@ Private Type TPlankopf
     '--- Index ---
     CurrentIndex As IIndex
     Indexes As New Collection
+    SkipValidation As Boolean
 End Type
 
 Private This                 As TPlankopf
@@ -67,6 +67,10 @@ End Property
 
 Private Property Get IPlankopf_UnterGewerk() As String
     IPlankopf_UnterGewerk = This.UnterGewerk
+End Property
+
+Private Property Get IPlankopf_UnterGewerkKF() As String
+    IPlankopf_UnterGewerkKF = This.UnterGewerkKF
 End Property
 
 Private Property Get IPlankopf_ID() As String
@@ -233,10 +237,11 @@ Public Function Filldata( _
         .Planart = Planart
         .Plantyp = Plantyp
         .CustomPlanüberschrift = CustomÜberschrift
+        .SkipValidation = SkipValidation
     End With
     Set pProjekt = Projekt
     'On Error GoTo NotValid
-    If SkipValidation Or ValidInputs Then
+    If ValidInputs Then
         This = Inputs
         If ID = "NEW" Then
             This.ID = getNewID(IDPlankopf)
@@ -267,25 +272,25 @@ End Function
 
 Private Sub GetKF()
 
-    On Error GoTo ERR
-    This.GebäudeKF = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(1).Value
+    On Error GoTo ErrHandler
+    This.GebäudeKF = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(1).value
     If This.GebäudeKF = vbNullString Then
         This.GebäudeCode = vbNullString
     Else
-        This.GebäudeCode = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(2).Value
+        This.GebäudeCode = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(2).value
     End If
-    This.GeschossCode = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, -1).Value
-    This.GeschossKF = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, 1).Value
-    This.GebäudeteilKF = Globals.shPData.range("PRO_Gebäudeteil").Find(This.Gebäudeteil).Offset(0, 1).Value
-    This.GewerkKF = Globals.shPData.range("PRO_Hauptgewerk").Find(This.Gewerk).Offset(0, 1).Value
+    This.GeschossCode = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, -1).value
+    This.GeschossKF = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, 1).value
+    This.GebäudeteilKF = Globals.shPData.range("PRO_Gebäudeteil").Find(This.Gebäudeteil).Offset(0, 1).value
+    This.GewerkKF = Globals.shPData.range("PRO_Hauptgewerk").Find(This.Gewerk).Offset(0, 1).value
 
     Dim col                  As Long
     Select Case This.Plantyp
         Case "PLA"
 1           col = Application.Match(This.GewerkKF & " PLA", Globals.shPData.range("10:10"), 0)
-            This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).Value
+            This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
 2           col = Application.Match(This.GewerkKF, Globals.shPData.range("9:9"), 0)
-            This.PlanartKF = Globals.shPData.Columns(col).Find(This.Planart).Offset(0, 1).Value
+            This.PlanartKF = Globals.shPData.Columns(col).Find(This.Planart).Offset(0, 1).value
             ' Welcher Kürzel kommt vor die Stockwerkbezeichnung beim DWG?
             Select Case This.GewerkKF
                 Case "ELE"
@@ -297,13 +302,13 @@ Private Sub GetKF()
             End Select
         Case "SCH"
 3           col = Application.Match(This.GewerkKF & " SCH", Globals.shPData.range("10:10"), 0)
-            This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).Value
+            This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
 4           col = Application.Match(This.GewerkKF, Globals.shPData.range("9:9"), 0)
-            This.PlanartKF = Globals.shPData.Columns(col).Find(This.Planart).Offset(0, 1).Value
+            This.PlanartKF = Globals.shPData.Columns(col).Find(This.Planart).Offset(0, 1).value
             This.TinLineTyp = vbNullString
         Case "PRI"
 5           col = Application.Match(This.GewerkKF & " PRI", Globals.shPData.range("10:10"), 0)
-            This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).Value
+            This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
 6           col = Application.Match(This.GewerkKF, Globals.shPData.range("9:9"), 0)
             This.PlanartKF = "PR"
             This.TinLineTyp = "PR"
@@ -311,7 +316,7 @@ Private Sub GetKF()
 
     writelog LogInfo, "Kurzformen erstellt"
     Exit Sub
-ERR:
+ErrHandler:
 Debug.Print ">>>   "; ERR.description
     writelog LogError, "Beim erstellen der Kurzformen" & vbNewLine & _
                       ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
@@ -319,6 +324,7 @@ Debug.Print ">>>   "; ERR.description
 End Sub
 
 Private Function GetFileNames()
+'BUG Hier kommen noch nicht die korrekten Pfäde raus.
     ' --- DWG FileName
     Select Case This.Plantyp
         Case "PLA"
@@ -340,7 +346,7 @@ Private Function GetFileNames()
     ' --- Pfad
     Select Case This.Plantyp
         Case "PLA"
-            If This.Gebäude = "GES" Then
+            If This.Gebäude = "Gesamt" And Globals.shGebäude.range("D1").value = "" Then
                 Select Case This.TinLineTyp
                     Case "EP"
                         This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP"
@@ -352,21 +358,30 @@ Private Function GetFileNames()
             Else                                 ' Mehrere Gebäude
                 Select Case This.TinLineTyp
                     Case "EP"
-                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\" & This.GebäudeCode & "_" & This.GebäudeKF
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\" & This.GebäudeCode & "_" & This.GebäudeKF & "\" & This.GeschossCode & "_" & This.GeschossKF
                     Case "BR"
-                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR\" & This.GebäudeCode & "_" & This.GebäudeKF
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR\" & This.GebäudeCode & "_" & This.GebäudeKF & "\" & This.GeschossCode & "_" & This.GeschossKF
                     Case "TF"
-                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF\" & This.GebäudeCode & "_" & This.GebäudeKF
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF\" & This.GebäudeCode & "_" & This.GebäudeKF & "\" & This.GeschossCode & "_" & This.GeschossKF
                 End Select
             End If
+            This.DWGFilePath = This.Pfad
+            This.XMLFilePath = This.DWGFilePath
         Case "SCH"
             This.Pfad = pProjekt.ProjektOrdnerCAD & "\02_ES" & This.LayoutName
+            This.DWGFilePath = This.Pfad
+            This.XMLFilePath = This.DWGFilePath
         Case "PRI"
+            Dim ind As Long
+            Dim indstr As String
+            ind = ArrayIndex(Array("OBJ", "STS", "SLS", "KOM", "MES", "NOT", "BRA", "EVA", "GAT", "ZUT", "SEC", "ERD", "PRO"), This.UnterGewerkKF)
+            indstr = ind
+            If Len(indstr) < 2 Then indstr = "0" & indstr
             This.Pfad = pProjekt.ProjektOrdnerCAD & "\03_PR"
+            This.DWGFilePath = This.Pfad & "\" & indstr & "_" & This.UnterGewerkKF
+            This.XMLFilePath = This.DWGFilePath
     End Select
     ' --- FilePath
-    This.DWGFilePath = This.Pfad & "\" & This.GeschossCode & "_" & This.GeschossKF
-    This.XMLFilePath = This.DWGFilePath
 End Function
 
 Private Sub GetPlanüberschrift()
@@ -414,7 +429,9 @@ Private Sub GetPlanüberschrift()
 End Sub
 
 Private Function ValidInputs() As Boolean
-
+    
+    If Inputs.SkipValidation Then ValidInputs = True: Exit Function
+    
     ValidInputs = False
     Dim ErrorSource          As String
     ErrorSource = "Plankopf > ValidInputs > "
@@ -444,7 +461,7 @@ Public Sub Refresh()
                       ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
                       
     This.PDFFileName = WorksheetFunction.TextJoin _
-                       ("_", True, shPData.range("ADM_Projektnummer").Value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
+                       ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
     writelog LogInfo, "Planablage-Namen aktualisiert" & This.PDFFileName
 End Sub
 

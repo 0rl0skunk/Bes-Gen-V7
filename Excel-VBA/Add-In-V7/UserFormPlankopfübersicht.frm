@@ -20,6 +20,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 '@Folder "Plankopf"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -82,28 +84,28 @@ Private Sub CommandButtonClose_Click()
 
 End Sub
 
-Public Property Let Title(Value As String)
+Public Property Let Title(value As String)
 
-    Me.TitleLabel.Caption = Value
+    Me.TitleLabel.Caption = value
 
 End Property
 
-Public Property Let icon(Value As String)
+Public Property Let icon(value As String)
 
     Set icons = New UserFormIconLibrary
     Dim icon                 As MSForms.control
 
     For Each icon In icons.Controls
-        If icon.Tag = "icon" And icon.Name = Value Then
+        If icon.Tag = "icon" And icon.Name = value Then
             Me.TitleIcon.Picture = icon.Picture
         End If
     Next
 
 End Property
 
-Public Property Let Instruction(Value As String)
+Public Property Let Instruction(value As String)
 
-    Me.LabelInstructions.Caption = Value
+    Me.LabelInstructions.Caption = value
 
 End Property
 
@@ -111,7 +113,7 @@ Private Sub CommandButtonCopy_Click()
 
     Dim row                  As Long
     Dim Plankopf             As IPlankopf
-    If Globals.shStoreData.Cells(4, 1).Value = vbNullString Then
+    If Globals.shStoreData.Cells(4, 1).value = vbNullString Then
         row = 3
     Else
         row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
@@ -142,13 +144,13 @@ End Sub
 Private Sub CommandButtonDelete_Click()
 
     Dim row                  As Long
-    If Globals.shStoreData.Cells(4, 1).Value = vbNullString Then
+    If Globals.shStoreData.Cells(4, 1).value = vbNullString Then
         row = 3
     Else
         row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
     End If
     With Globals.shStoreData
-        Dim info             As String: info = vbNewLine & .Cells(row, 14).Value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Indexe"
+        Dim info             As String: info = vbNewLine & .Cells(row, 14).value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Indexe"
     End With
     Select Case MsgBox("Bist du sicher dass du den Plankopf löschen willst?" & info, vbYesNo, "Plankopf löschen")
         Case vbYes
@@ -187,19 +189,19 @@ End Sub
 
 Private Sub CommandButtonSetFilter_Click()
 
-    FilterListView 3, Me.ComboBoxFilterGeschoss.Value
-    FilterListView 4, Me.ComboBoxFilterGebäude.Value
-    FilterListView 5, Me.ComboBoxFilterGebäudeteil.Value
-    FilterListView 6, Me.ComboBoxFilterGewerk.Value
-    FilterListView 7, Me.ComboBoxFilterUnterGewerk.Value
-    FilterListView 8, Me.ComboBoxFilterPlanart.Value
+    FilterListView 3, Me.ComboBoxFilterGeschoss.value
+    FilterListView 4, Me.ComboBoxFilterGebäude.value
+    FilterListView 5, Me.ComboBoxFilterGebäudeteil.value
+    FilterListView 6, Me.ComboBoxFilterGewerk.value
+    FilterListView 7, Me.ComboBoxFilterUnterGewerk.value
+    FilterListView 8, Me.ComboBoxFilterPlanart.value
 
 End Sub
 
 Private Sub ListViewPlankopf_DblClick()
 
     Dim row                  As Long
-    If Globals.shStoreData.Cells(4, 1).Value = vbNullString Then
+    If Globals.shStoreData.Cells(4, 1).value = vbNullString Then
         row = 3
     Else
         row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
@@ -258,14 +260,14 @@ Private Sub LoadFilters(ByRef Filter As MSForms.ComboBox, ByVal FilterText As St
     With CreateObject("Scripting.Dictionary")
         .Add "Alles", Nothing
         For Each e In ws.range(ws.Cells(3, col), ws.Cells(lastrow, col))
-            If Not .Exists(e.Value) Then
-                .Add e.Value, Nothing
+            If Not .Exists(e.value) Then
+                .Add e.value, Nothing
             End If
         Next e
 
         Filter.List = .Keys
     End With
-    Filter.Value = Filter.List(0)
+    Filter.value = Filter.List(0)
 
 End Sub
 

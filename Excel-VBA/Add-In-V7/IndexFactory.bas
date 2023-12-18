@@ -51,14 +51,14 @@ Public Sub AddToDatabase(Index As IIndex)
     row = Globals.shIndex.range("A1").CurrentRegion.rows.Count + 1
 
     With Globals.shIndex
-        .Cells(row, 1).Value = Index.PlanID
-        .Cells(row, 2).Value = Index.Index
-        .Cells(row, 3).Value = Split(Gezeichnet, ";")(0)
-        .Cells(row, 4).Value = Split(Gezeichnet, ";")(1)
-        .Cells(row, 5).Value = Split(Geprüft, ";")(0)
-        .Cells(row, 6).Value = Split(Geprüft, ";")(1)
-        .Cells(row, 7).Value = Index.Klartext
-        .Cells(row, 8).Value = Index.IndexID
+        .Cells(row, 1).value = Index.PlanID
+        .Cells(row, 2).value = Index.Index
+        .Cells(row, 3).value = Split(Gezeichnet, ";")(0)
+        .Cells(row, 4).value = Split(Gezeichnet, ";")(1)
+        .Cells(row, 5).value = Split(Geprüft, ";")(0)
+        .Cells(row, 6).value = Split(Geprüft, ";")(1)
+        .Cells(row, 7).value = Index.Klartext
+        .Cells(row, 8).value = Index.IndexID
     End With
 
     writelog LogInfo, "Index für Plankopf erstellt"
@@ -71,7 +71,7 @@ Public Sub DeletePlan(ByVal ID As String)
     Dim coll                 As New Collection: Set coll = GetIndexes(ID:=ID)
     With Globals.shIndex
         For row = .range("A1").CurrentRegion.rows.Count To 2 Step -1
-            If .Cells(row, 1).Value = ID Then: .Cells(row, 1).EntireRow.Delete
+            If .Cells(row, 1).value = ID Then: .Cells(row, 1).EntireRow.Delete
         Next
     End With
 
@@ -97,14 +97,14 @@ Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal 
 
     With Globals.shIndex
         For row = 2 To .range("A1").CurrentRegion.rows.Count
-            IndexID = .Cells(row, 8).Value
-            IDPlan = .Cells(row, 1).Value
-            Letter = .Cells(row, 2).Value
-            GezeichnetPerson = .Cells(row, 3).Value
-            GezeichnetDatum = .Cells(row, 4).Value
-            GeprüftPerson = .Cells(row, 5).Value
-            GeprüftDatum = .Cells(row, 6).Value
-            Klartext = .Cells(row, 7).Value
+            IndexID = .Cells(row, 8).value
+            IDPlan = .Cells(row, 1).value
+            Letter = .Cells(row, 2).value
+            GezeichnetPerson = .Cells(row, 3).value
+            GezeichnetDatum = .Cells(row, 4).value
+            GeprüftPerson = .Cells(row, 5).value
+            GeprüftDatum = .Cells(row, 6).value
+            Klartext = .Cells(row, 7).value
 
             If Not Plankopf Is Nothing Then If IDPlan = Plankopf.ID Then GoTo Matching
             If IDPlan = ID Then

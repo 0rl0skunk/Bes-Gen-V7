@@ -62,6 +62,9 @@ End Property
 Public Property Get UnterGewerk() As String
 End Property
 
+Public Property Get UnterGewerkKF() As String
+End Property
+
 Public Property Get Planüberschrift() As String
 End Property
 

@@ -38,15 +38,15 @@ Public Sub AddToDatabase(Person As IPerson)
 
     row = ws.range("A" & ws.rows.Count).End(xlUp).row + 1
     With ws
-        .Cells(row, 1).Value = Person.Nachname
-        .Cells(row, 2).Value = Person.Vorname
-        .Cells(row, 3).Value = Person.Firma
-        .Cells(row, 4).Value = Person.Adresse.Strasse
-        .Cells(row, 5).Value = Person.Adresse.PLZ
-        .Cells(row, 6).Value = Person.Adresse.Ort
-        .Cells(row, 7).Value = Person.EMail
-        .Cells(row, 8).Value = Person.Anrede
-        .Cells(row, 9).Value = Person.ID
+        .Cells(row, 1).value = Person.Nachname
+        .Cells(row, 2).value = Person.Vorname
+        .Cells(row, 3).value = Person.Firma
+        .Cells(row, 4).value = Person.Adresse.Strasse
+        .Cells(row, 5).value = Person.Adresse.PLZ
+        .Cells(row, 6).value = Person.Adresse.Ort
+        .Cells(row, 7).value = Person.EMail
+        .Cells(row, 8).value = Person.Anrede
+        .Cells(row, 9).value = Person.ID
     End With
 
     writelog LogInfo, "Person erfasst"
@@ -63,15 +63,15 @@ Public Function LoadFromDataBase(row As Long) As IPerson
 
     With ws
         Set NewPerson = Create( _
-                        Nachname:=.Cells(row, 1).Value, _
-                        Vorname:=.Cells(row, 2).Value, _
-                        Firma:=.Cells(row, 3).Value, _
+                        Nachname:=.Cells(row, 1).value, _
+                        Vorname:=.Cells(row, 2).value, _
+                        Firma:=.Cells(row, 3).value, _
                         Adresse:=AdressFactory.Create( _
-                                  Strasse:=.Cells(row, 4).Value, _
-                        PLZ:=.Cells(row, 5).Value, _
-                        Ort:=.Cells(row, 6).Value), _
-                        EMail:=.Cells(row, 7).Value, _
-                        Anrede:=.Cells(row, 8).Value _
+                                  Strasse:=.Cells(row, 4).value, _
+                        PLZ:=.Cells(row, 5).value, _
+                        Ort:=.Cells(row, 6).value), _
+                        EMail:=.Cells(row, 7).value, _
+                        Anrede:=.Cells(row, 8).value _
                                  )
     End With
 

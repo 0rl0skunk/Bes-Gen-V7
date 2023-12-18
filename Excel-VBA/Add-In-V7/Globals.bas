@@ -8,10 +8,6 @@ Option Explicit
 Global Const Version As Double = 5#
 
 Global Const maxlen As Long = 35                 'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
-Global Const OrdnerVorlage As String = "H:\TinLine\01_Standards\00_Vorlageordner" 'TODO Create Folder from Excel
-Global Const VorlageEPDWG As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg" 'TODO Create Folder from Excel
-Global Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg" 'TODO Create Folder from Excel
-Global Const VorlagePRDWG As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg" 'TODO Create Folder from Excel
 Global Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
 Global Const XMLVorlage As String = "H:\TinLine\01_Standards\transform.xsl"
 Global Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
@@ -36,19 +32,19 @@ Public CopyrightSTR          As String
 Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection
 
-Public Function Projekt() As IProjekt
+Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
     With Application.ActiveWorkbook.Sheets("Projektdaten")
-        If pProjekt Is Nothing Then
+        If pProjekt Is Nothing Or ForceNew Then
             Set pProjekt = _
                          ProjektFactory.Create( _
-                         .range("ADM_Projektnummer").Value, _
+                         .range("ADM_Projektnummer").value, _
                          AdressFactory.Create _
-                         (.range("ADM_ADR_Strasse").Value, _
-                          .range("ADM_ADR_PLZ").Value, _
-                          .range("ADM_ADR_Ort").Value), _
-                         .range("ADM_Projektbezeichnung").Value, _
-                         .range("ADM_Projektphase").Value, _
-                         .range("ADM_ProjektpfadSharePoint").Value)
+                         (.range("ADM_ADR_Strasse").value, _
+                          .range("ADM_ADR_PLZ").value, _
+                          .range("ADM_ADR_Ort").value), _
+                         .range("ADM_Projektbezeichnung").value, _
+                         .range("ADM_Projektphase").value, _
+                         .range("ADM_ProjektpfadSharePoint").value)
             writelog LogInfo, "Created Projekt " & pProjekt.Projektnummer
         Else
             writelog LogInfo, "Projekt already exists " & pProjekt.Projektnummer
@@ -87,17 +83,17 @@ Function Initialize() As Boolean
 
     On Error GoTo 0
     ' Version checking
-    If shPData.range("B4").Value < Version Then
+    If shPData.range("B4").value < Version Then
         Dim curVersion       As String
         Dim shouldVersion    As String
 
         curVersion = "Bes-Gen-PZM-Add-In-V" & Version
-        Select Case shPData.range("B4").Value
+        Select Case shPData.range("B4").value
             Case vbNullString
                 shouldVersion = "Bes-Gen-PZM-Add-In"
             Case Else
-                If shPData.range("B4").Value > Version Then
-                    shouldVersion = "Bes-Gen-PZM-Add-In-V" & shPData.range("B4").Value & " oder neuer"
+                If shPData.range("B4").value > Version Then
+                    shouldVersion = "Bes-Gen-PZM-Add-In-V" & shPData.range("B4").value & " oder neuer"
                 End If
         End Select
         MsgBox "Die Arbeitsmappe wird von dieser Version vom Beschriftungsgenerator nicht unterstüzt!" & vbLf _

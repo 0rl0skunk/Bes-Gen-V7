@@ -40,7 +40,7 @@ Public Sub Filldata( _
     Set This.Projektadresse = Projektadresse
     This.ProjektBezeichnung = ProjektBezeichnung
     This.Projektphase = Projektphase
-    This.ProjektphaseNummer = Globals.shPData.range("PRO_Projektphase").Find(This.Projektphase).Offset(0, 1).Value
+    This.ProjektphaseNummer = Globals.shPData.range("PRO_Projektphase").Find(This.Projektphase).Offset(0, 1).value
     This.ProjektOrdnerSharePoint = ProjektOrdnerSharePoint
     GetCADPath
 

@@ -20,6 +20,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 '@Folder("Tasks")
 Option Explicit
 Private pTask                As Task
@@ -55,7 +57,7 @@ Public Sub LoadClass(Task As Task)
     Set pTask = Task
     Set Task = Nothing
 
-    Me.ComboBoxPriorität.Value = pTask.Priorität
+    Me.ComboBoxPriorität.value = pTask.Priorität
 
 End Sub
 

@@ -40,13 +40,13 @@ Public Function ReadIniSection(filename As String, Section As String) As String
 End Function
 
 'writes an Ini string
-Public Sub WriteIni(filename As String, Section As String, Key As String, Value As String)
-    WritePrivateProfileString Section, Key, Value, filename
+Public Sub WriteIni(filename As String, Section As String, Key As String, value As String)
+    WritePrivateProfileString Section, Key, value, filename
 End Sub
 
 'writes an Ini section
-Public Sub WriteIniSection(filename As String, Section As String, Value As String)
-    WritePrivateProfileSection Section, Value, filename
+Public Sub WriteIniSection(filename As String, Section As String, value As String)
+    WritePrivateProfileSection Section, value, filename
 End Sub
 
 

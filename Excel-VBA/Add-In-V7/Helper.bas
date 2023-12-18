@@ -203,7 +203,7 @@ Public Sub deleteIndexesXml()
         For row = 6 To lastrow
             writelog LogInfo, "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
             If Not IsEmpty(shGebäude.Cells(row, col)) Then
-                writelog LogInfo, "> " & shGebäude.Cells(row, col).Value
+                writelog LogInfo, "> " & shGebäude.Cells(row, col).value
                 ' only go if there is something in the cell
                 deleteIndexXml row, col
             End If
@@ -232,12 +232,12 @@ Public Sub deleteIndexesXml()
     Projektname = shPData.range("ADM_Projektnummer") & "_" & shPData.range("ADM_Projektbezeichnung")
 
     For i = LBound(tmparr) To UBound(tmparr)     ' for every Prinzipschema
-        Gewerk = rng.Find(tmparr(i)).Offset(0, 1).Value
-        GewerkNr = rng.Find(tmparr(i)).Offset(0, 2).Value
+        Gewerk = rng.Find(tmparr(i)).Offset(0, 1).value
+        GewerkNr = rng.Find(tmparr(i)).Offset(0, 2).value
         If Len(GewerkNr) < 2 Then
             GewerkNr = "0" & GewerkNr
         End If
-        deleteIndexXml 0, 0, shPData.range("ADM_ProjektpfadCAD").Value & "\03_PR\" & GewerkNr & "_" & Gewerk & "\TinPlan_PR_" & Gewerk & ".xml"
+        deleteIndexXml 0, 0, shPData.range("ADM_ProjektpfadCAD").value & "\03_PR\" & GewerkNr & "_" & Gewerk & "\TinPlan_PR_" & Gewerk & ".xml"
     Next i
 
 End Sub
@@ -279,7 +279,7 @@ Public Function getXML(PCol As Collection) As String
     Projektpath = shPData.range("ADM_ProjektpfadCAD")
     'On Error Resume Next
     Dim buildings            As Boolean
-    buildings = Not (shGebäude.range("D1").Value = vbNullString)
+    buildings = Not (shGebäude.range("D1").value = vbNullString)
     If PCol(1) = 0 Then
         ' Plan
         If PCol.Count > 7 Then
@@ -338,7 +338,7 @@ Public Function getDWG(PCol As Collection) As String
     Projektpath = shPData.range("ADM_ProjektpfadCAD")
 
     Dim buildings            As Boolean
-    buildings = Not (shGebäude.range("D1").Value = vbNullString)
+    buildings = Not (shGebäude.range("D1").value = vbNullString)
     If PCol(1) = 0 Then
         ' Plan
         If PCol(7)(1) = "DE" Then
@@ -428,7 +428,7 @@ newID:
 
     For r = 2 To rows + 1
         ' check if the ID already exists
-        If getNewID = ws.Cells(r, IDcol).Value Then GoTo newID
+        If getNewID = ws.Cells(r, IDcol).value Then GoTo newID
     Next r
 
 End Function
@@ -496,6 +496,18 @@ Public Function getUserName() As String
     getUserName = UserName
 
 End Function
+
+Function ArrayIndex(ByVal arr As Variant, ByVal value As Variant) As Long
+Dim i As Long
+If IsArray(arr) Then
+For i = LBound(arr) To UBound(arr)
+If arr(i) = value Then ArrayIndex = i: Exit Function
+Next i
+End If
+ArrayIndex = -1
+End Function
+
+
 
 Function IsInArray(stringToBeFound As String, arr() As String) As Boolean
     Dim i                    As Variant

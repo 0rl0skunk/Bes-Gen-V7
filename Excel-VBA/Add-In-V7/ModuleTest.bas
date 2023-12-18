@@ -51,7 +51,7 @@ End Sub
 Sub test3()
 
     Application.ActiveWorkbook.Names.Add "BesGenVersion"
-    Application.ActiveWorkbook.Names("BesGenVersion").Value = "V7"
+    Application.ActiveWorkbook.Names("BesGenVersion").value = "V7"
 
 End Sub
 

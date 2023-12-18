@@ -20,6 +20,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 '@Folder "Templates"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -35,22 +37,22 @@ Public Sub Typ(MessageType As MSGTyp, ByVal MessageText As String, Optional ByVa
         Case 0                                   ' Error
             Me.TitleIcon.Picture = icons.IconError.Picture
             Me.TitleLabel.Caption = Title
-            Me.LabelMessage.Value = MessageText
+            Me.LabelMessage.value = MessageText
             If OpenLog Then Me.CommandButtonLog.Visible = True
         Case 1                                   ' Warning
             Me.TitleIcon.Picture = icons.IconWarning.Picture
             Me.TitleLabel.Caption = Title
-            Me.LabelMessage.Value = MessageText
+            Me.LabelMessage.value = MessageText
             If OpenLog Then Me.CommandButtonLog.Visible = True
         Case 2                                   ' Info
             Me.TitleIcon.Picture = icons.IconInfo.Picture
             Me.TitleLabel.Caption = Title
-            Me.LabelMessage.Value = MessageText
+            Me.LabelMessage.value = MessageText
             If OpenLog Then Me.CommandButtonLog.Visible = True
         Case Else
             Me.TitleIcon.Picture = icons.IconInfo.Picture
             Me.TitleLabel.Caption = Title
-            Me.LabelMessage.Value = MessageText
+            Me.LabelMessage.value = MessageText
             If OpenLog Then Me.CommandButtonLog.Visible = True
     End Select
 End Sub

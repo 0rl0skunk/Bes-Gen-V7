@@ -20,6 +20,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 '@Folder "Plankopf"
 Option Explicit
 Private pMasstab             As Integer
@@ -28,13 +30,13 @@ Private icons                As UserFormIconLibrary
 
 Public Sub load(ByVal Format As String, ByVal Masstab As String, ByVal mpType As Integer)
 
-    Me.TextBoxFormatH.Value = Split(Format, "H")(0)
-    Me.TextBoxFormatB.Value = Split(Split(Format, "H")(1), "B")(0)
+    Me.TextBoxFormatH.value = Split(Format, "H")(0)
+    Me.TextBoxFormatB.value = Split(Split(Format, "H")(1), "B")(0)
     MultiPageType = mpType
 
     pMasstab = CInt(Split(Masstab, ":")(1))
 
-    Me.TextBoxMasstab.Value = pMasstab
+    Me.TextBoxMasstab.value = pMasstab
 
     ChangeFormat
 
@@ -68,8 +70,8 @@ Private Sub ChangeFormat()
     maxHeight = border.height - 12
     maxWidth = border.width - 12
 
-    H = CInt(Me.TextBoxFormatH.Value)
-    B = CInt(Me.TextBoxFormatB.Value)
+    H = CInt(Me.TextBoxFormatH.value)
+    B = CInt(Me.TextBoxFormatB.value)
 
     ' --- get height
     height = H * 29.7
@@ -107,8 +109,8 @@ Private Sub ChangeFormat()
 
     paper.width = tWidth
     paper.height = tHeight
-    Me.TextBoxFormatB.Value = B
-    Me.TextBoxFormatH.Value = H
+    Me.TextBoxFormatB.value = B
+    Me.TextBoxFormatH.value = H
 
     Plankopf.width = (tWidth / B)
     Plankopf.Left = (tWidth / B) * (B - 1)
@@ -197,26 +199,26 @@ Private Sub ChangeFormat()
             End Select
     End Select
 
-    Me.TextBoxLayout.Value = "Höhe:" & H & "H" & vbLf & _
+    Me.TextBoxLayout.value = "Höhe:" & H & "H" & vbLf & _
                              "Beite:" & B & "B" & vbLf & _
                              height & "x" & width & "cm"
 
     Select Case MultiPageType
         Case 0                                   'Plan
-            Me.TextBoxModell.Value = "Modellbereich: " & vbLf & _
+            Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                      "Höhe: " & mHeight & "m" & vbLf & _
                                      "Beite: " & mWidth & "m"
         Case 1                                   'Schema
-            Me.TextBoxModell.Value = "Modellbereich: " & vbLf & _
+            Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                      "Höhe: " & mHeight & "m" & vbLf & _
                                      "Beite: " & mWidth & "m"
         Case 2                                   'Prinzip
-            Me.TextBoxModell.Value = "Modellbereich: " & vbLf & _
+            Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                      "Höhe: " & Application.WorksheetFunction.RoundDown(mHeight / 3, 0) & " Geschosse" & vbLf & _
                                      "Beite: " & mWidth & "m"
 
         Case 3                                   'Detail
-            Me.TextBoxModell.Value = "Modellbereich: " & vbLf & _
+            Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                      "Höhe: " & mHeight & "m" & vbLf & _
                                      "Beite: " & mWidth & "m"
     End Select
@@ -225,13 +227,13 @@ End Sub
 
 Private Sub CommandButton2_Click()
 
-    Me.CheckBoxLoad.Value = True
+    Me.CheckBoxLoad.value = True
     Unload Me
 
 End Sub
 
 Private Sub CommandButton3_Click()
-    pMasstab = CInt(Me.TextBoxMasstab.Value)
+    pMasstab = CInt(Me.TextBoxMasstab.value)
 
     ChangeFormat
 End Sub
@@ -243,26 +245,26 @@ Private Sub CommandButtonClose_Click()
 End Sub
 
 Private Sub SpinButtonFormatB_SpinDown()
-    If CInt(Me.TextBoxFormatB.Value) - 1 <= 0 Then Exit Sub
-    Me.TextBoxFormatB.Value = Me.TextBoxFormatB.Value - 1
+    If CInt(Me.TextBoxFormatB.value) - 1 <= 0 Then Exit Sub
+    Me.TextBoxFormatB.value = Me.TextBoxFormatB.value - 1
     ChangeFormat
 End Sub
 
 Private Sub SpinButtonFormatB_SpinUp()
-    If CInt(Me.TextBoxFormatB.Value) + 1 > 20 Then Exit Sub
-    Me.TextBoxFormatB.Value = Me.TextBoxFormatB.Value + 1
+    If CInt(Me.TextBoxFormatB.value) + 1 > 20 Then Exit Sub
+    Me.TextBoxFormatB.value = Me.TextBoxFormatB.value + 1
     ChangeFormat
 End Sub
 
 Private Sub SpinButtonFormatH_SpinDown()
-    If CInt(Me.TextBoxFormatH.Value) - 1 <= 0 Then Exit Sub
-    Me.TextBoxFormatH.Value = Me.TextBoxFormatH.Value - 1
+    If CInt(Me.TextBoxFormatH.value) - 1 <= 0 Then Exit Sub
+    Me.TextBoxFormatH.value = Me.TextBoxFormatH.value - 1
     ChangeFormat
 End Sub
 
 Private Sub SpinButtonFormatH_SpinUp()
-    If CInt(Me.TextBoxFormatH.Value) + 1 > 3 Then Exit Sub
-    Me.TextBoxFormatH.Value = Me.TextBoxFormatH.Value + 1
+    If CInt(Me.TextBoxFormatH.value) + 1 > 3 Then Exit Sub
+    Me.TextBoxFormatH.value = Me.TextBoxFormatH.value + 1
     ChangeFormat
 End Sub
 

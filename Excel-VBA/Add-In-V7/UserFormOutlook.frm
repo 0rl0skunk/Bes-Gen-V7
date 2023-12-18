@@ -12,6 +12,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 '@Folder("Outlook")
 '@IgnoreModule VariableNotUsed
 Option Explicit
@@ -36,8 +38,8 @@ Private Sub CommandButton1_Click()
     End If
     Mail.To = MailRecepientsTO
     Mail.CC = MailRecepientsCC
-    Mail.Subject = Me.TextBoxBetreff.Value
-    Mail.Body = Anrede & vbNewLine & vbNewLine & Me.TextBoxFreitext.Value & vbNewLine & Planliste
+    Mail.Subject = Me.TextBoxBetreff.value
+    Mail.Body = Anrede & vbNewLine & vbNewLine & Me.TextBoxFreitext.value & vbNewLine & Planliste
     Mail.Display 0
 End Sub
 
@@ -119,7 +121,7 @@ Private Sub UserForm_Initialize()
     LoadListViewPlan Me.ListViewPlankopf
     LoadListViewMail Me.ListViewMailTo
     LoadListViewMail Me.ListViewMailCC
-    Me.TextBoxBetreff.Value = Globals.Projekt.Projektnummer & " | Planversand " & Format(Now, "DD.MM.YYYY")
+    Me.TextBoxBetreff.value = Globals.Projekt.Projektnummer & " | Planversand " & Format(Now, "DD.MM.YYYY")
 
     Set icons = New UserFormIconLibrary
     Me.TitleIcon.Picture = icons.IconOutlook.Picture
@@ -156,12 +158,12 @@ Private Sub LoadListViewMail(ByRef control As ListView)
         For Each row In Globals.shAdress.range("ADR_Adressen").rows
             Set li = .ListItems.Add()
             With row.Resize(1, 1)
-                li.ListSubItems.Add , , .Offset(0, 8).Value
-                li.ListSubItems.Add , , .Offset(0, 7).Value
-                li.ListSubItems.Add , , .Offset(0, 1).Value
-                li.ListSubItems.Add , , .Offset(0, 0).Value
-                li.ListSubItems.Add , , .Offset(0, 2).Value
-                li.ListSubItems.Add , , .Offset(0, 6).Value
+                li.ListSubItems.Add , , .Offset(0, 8).value
+                li.ListSubItems.Add , , .Offset(0, 7).value
+                li.ListSubItems.Add , , .Offset(0, 1).value
+                li.ListSubItems.Add , , .Offset(0, 0).value
+                li.ListSubItems.Add , , .Offset(0, 2).value
+                li.ListSubItems.Add , , .Offset(0, 6).value
             End With
         Next row
     End With
