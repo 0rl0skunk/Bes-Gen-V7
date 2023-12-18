@@ -257,8 +257,8 @@ Public Function Filldata( _
     On Error GoTo 0
     Dim frm                  As New UserFormMessage
     frm.Typ TypWarning, "Es wurde kein Plankopf erstellt." & vbNewLine & _
-                    "öffne den Log um die Fehlenden Inhalte zu sehen.", _
-                    "Kein Plankopf erstellt", True
+                       "öffne den Log um die Fehlenden Inhalte zu sehen.", _
+            "Kein Plankopf erstellt", True
     frm.Show
     Filldata = False
     Exit Function
@@ -270,9 +270,9 @@ Private Sub GetKF()
     On Error GoTo ERR
     This.GebäudeKF = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(1).Value
     If This.GebäudeKF = vbNullString Then
-    This.GebäudeCode = vbNullString
+        This.GebäudeCode = vbNullString
     Else
-    This.GebäudeCode = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(2).Value
+        This.GebäudeCode = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(2).Value
     End If
     This.GeschossCode = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, -1).Value
     This.GeschossKF = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, 1).Value
@@ -314,7 +314,7 @@ Private Sub GetKF()
 ERR:
 Debug.Print ">>>   "; ERR.description
     writelog LogError, "Beim erstellen der Kurzformen" & vbNewLine & _
-                     ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
+                      ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
 
 End Sub
 
@@ -340,25 +340,25 @@ Private Function GetFileNames()
     ' --- Pfad
     Select Case This.Plantyp
         Case "PLA"
-        If This.Gebäude = "GES" Then
-            Select Case This.TinLineTyp
-                Case "EP"
-                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP"
-                Case "BR"
-                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR"
-                Case "TF"
-                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF"
-            End Select
-        Else ' Mehrere Gebäude
-            Select Case This.TinLineTyp
-                Case "EP"
-                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\" & This.GebäudeCode & "_" & This.GebäudeKF
-                Case "BR"
-                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR\" & This.GebäudeCode & "_" & This.GebäudeKF
-                Case "TF"
-                    This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF\" & This.GebäudeCode & "_" & This.GebäudeKF
-            End Select
-        End If
+            If This.Gebäude = "GES" Then
+                Select Case This.TinLineTyp
+                    Case "EP"
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP"
+                    Case "BR"
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR"
+                    Case "TF"
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF"
+                End Select
+            Else                                 ' Mehrere Gebäude
+                Select Case This.TinLineTyp
+                    Case "EP"
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\" & This.GebäudeCode & "_" & This.GebäudeKF
+                    Case "BR"
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR\" & This.GebäudeCode & "_" & This.GebäudeKF
+                    Case "TF"
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF\" & This.GebäudeCode & "_" & This.GebäudeKF
+                End Select
+            End If
         Case "SCH"
             This.Pfad = pProjekt.ProjektOrdnerCAD & "\02_ES" & This.LayoutName
         Case "PRI"
@@ -399,16 +399,16 @@ Private Sub GetPlanüberschrift()
         End If
     End If
     If This.Planüberschrift <> Planüberschrift And This.Planüberschrift <> vbNullString Then
-    Select Case MsgBox("Die Beschriftung: " & This.Planüberschrift & " ist nicht Standard." & vbNewLine & "Soll diese mit der Standardmässigen Überschrift ersetzt werden?" & vbNewLine & Planüberschrift, vbYesNo, "Beschriftung Überschreiben?")
-    Case vbYes
-    This.Planüberschrift = Planüberschrift
-    writelog LogInfo, "Planüberschrift erstellt: " & This.Planüberschrift
-    Case vbNo
-    writelog logwarning, "Planüberschrift nicht erstellt: " & This.Planüberschrift
-    End Select
+        Select Case MsgBox("Die Beschriftung: " & This.Planüberschrift & " ist nicht Standard." & vbNewLine & "Soll diese mit der Standardmässigen Überschrift ersetzt werden?" & vbNewLine & Planüberschrift, vbYesNo, "Beschriftung Überschreiben?")
+            Case vbYes
+                This.Planüberschrift = Planüberschrift
+                writelog LogInfo, "Planüberschrift erstellt: " & This.Planüberschrift
+            Case vbNo
+                writelog logwarning, "Planüberschrift nicht erstellt: " & This.Planüberschrift
+        End Select
     Else
-    This.Planüberschrift = Planüberschrift
-    writelog LogInfo, "Planüberschrift erstellt: " & This.Planüberschrift
+        This.Planüberschrift = Planüberschrift
+        writelog LogInfo, "Planüberschrift erstellt: " & This.Planüberschrift
     End If
 
 End Sub
@@ -442,9 +442,9 @@ Public Sub Refresh()
     'Select Case This.PlanTyp
     This.LayoutName = WorksheetFunction.TextJoin _
                       ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
+                      
     This.PDFFileName = WorksheetFunction.TextJoin _
-                       ("_", True, shPData.range("ADM_Projektnummer").Value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday) & ".PDF"
-
+                       ("_", True, shPData.range("ADM_Projektnummer").Value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
     writelog LogInfo, "Planablage-Namen aktualisiert" & This.PDFFileName
 End Sub
 

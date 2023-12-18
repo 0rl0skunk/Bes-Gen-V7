@@ -15,6 +15,11 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
+
+
 '@Folder "Plankopf"
 Option Explicit
 
@@ -60,7 +65,7 @@ Private Sub CommandButtonBeschriftungAktualisieren_Click()
     Me.TextBoxBeschriftungPlannummer.Value = pPlankopf.Plannummer
     Me.TextBoxBeschriftungDateiname.Value = pPlankopf.PDFFileName
     Me.TextBoxPlanüberschrift.Value = pPlankopf.Planüberschrift
-    
+
     Me.LabelDWGFileName.Caption = pPlankopf.DWGFileName
     Me.LabelXMLFileName.Caption = pPlankopf.XMLFileName
     Me.LabelFolderName.Caption = pPlankopf.FolderName
@@ -129,25 +134,25 @@ Private Sub EditDWG_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, B
 End Sub
 
 Private Sub MultiPageTyp_Change()
-' TODO Remove Geschoss "Gesamt" from Plan and Schema Beschriftungen
+    ' TODO Remove Geschoss "Gesamt" from Plan and Schema Beschriftungen
     Select Case Me.MultiPageTyp.Value
-    Case 0 'PLA
-        Me.ComboBoxGebäude.Enabled = True
-        Me.ComboBoxGebäudeTeil.Enabled = True
-        Me.ComboBoxGeschoss.Enabled = True
-    Case 1 'SCH
-        Me.ComboBoxGebäude.Enabled = True
-        Me.ComboBoxGebäudeTeil.Enabled = True
-        Me.ComboBoxGeschoss.Enabled = True
-    Case 2 'PRI
-        Me.ComboBoxGebäude.Value = Me.ComboBoxGebäude.List(0)
-        Me.ComboBoxGebäudeTeil.Value = Me.ComboBoxGebäudeTeil.List(0)
-        Me.ComboBoxGeschoss.Value = Me.ComboBoxGeschoss.List(0)
-        Me.ComboBoxGebäude.Enabled = False
-        Me.ComboBoxGebäudeTeil.Enabled = False
-        Me.ComboBoxGeschoss.Enabled = False
+        Case 0                                   'PLA
+            Me.ComboBoxGebäude.Enabled = True
+            Me.ComboBoxGebäudeTeil.Enabled = True
+            Me.ComboBoxGeschoss.Enabled = True
+        Case 1                                   'SCH
+            Me.ComboBoxGebäude.Enabled = True
+            Me.ComboBoxGebäudeTeil.Enabled = True
+            Me.ComboBoxGeschoss.Enabled = True
+        Case 2                                   'PRI
+            Me.ComboBoxGebäude.Value = Me.ComboBoxGebäude.List(0)
+            Me.ComboBoxGebäudeTeil.Value = Me.ComboBoxGebäudeTeil.List(0)
+            Me.ComboBoxGeschoss.Value = Me.ComboBoxGeschoss.List(0)
+            Me.ComboBoxGebäude.Enabled = False
+            Me.ComboBoxGebäudeTeil.Enabled = False
+            Me.ComboBoxGeschoss.Enabled = False
     End Select
-    
+
 End Sub
 
 '@Ignore ProcedureNotUsed
@@ -250,7 +255,7 @@ Private Sub LoadIndexes()
     With Me.ListViewIndex
         .ListItems.Clear
         .View = lvwReport
-        .CheckBoxes = True
+        .CheckBoxES = True
         .Gridlines = True
         .FullRowSelect = True
         With .ColumnHeaders
@@ -366,10 +371,10 @@ Private Function FormToPlankopf() As IPlankopf
     Dim Plantyp              As String
     Dim Gewerk               As String
     Dim UnterGewerk          As String
-    Dim ID As String
-    
+    Dim ID                   As String
+
     If Me.BesID.Caption = "ID" Then ID = getNewID(IDPlankopf)
-    
+
     Select Case Me.MultiPageTyp.Value
         Case 0
             Plantyp = "PLA"
@@ -433,10 +438,10 @@ End Sub
 
 Private Sub ComboBoxEPHGewerk_Change()
 
-    Dim Row                  As Variant
+    Dim row                  As Variant
     Dim col                  As Integer
     Dim lastrow              As Long
-Dim WS As Worksheet: Set WS = Globals.shPData
+    Dim ws                   As Worksheet: Set ws = Globals.shPData
 
 
     'If Not Dev Then On Error GoTo ErrMsg
@@ -458,26 +463,26 @@ Dim WS As Worksheet: Set WS = Globals.shPData
 
     Me.ComboBoxEPHGewerk.BackColor = SystemColorConstants.vbWindowBackground
     Dim HGewerk              As String
-    HGewerk = WLookup(Me.ComboBoxEPHGewerk.Value, WS.range("PRO_Hauptgewerk"), 2)
+    HGewerk = WLookup(Me.ComboBoxEPHGewerk.Value, ws.range("PRO_Hauptgewerk"), 2)
 
-    If Not IsError(Application.Match(HGewerk & " PLA", WS.range("10:10"), 0)) Then
-1       col = Application.Match(HGewerk & " PLA", WS.range("10:10"), 0)
-        lastrow = Application.CountA(WS.Cells(13, col).EntireColumn) + 10
+    If Not IsError(Application.Match(HGewerk & " PLA", ws.range("10:10"), 0)) Then
+1       col = Application.Match(HGewerk & " PLA", ws.range("10:10"), 0)
+        lastrow = Application.CountA(ws.Cells(13, col).EntireColumn) + 10
         Me.ComboBoxEPUGewerk.Clear
-        For Row = 13 To lastrow
-            If WS.Cells(Row, col).Value <> "" Then
-                Me.ComboBoxEPUGewerk.AddItem WS.Cells(Row, col).Value
+        For row = 13 To lastrow
+            If ws.Cells(row, col).Value <> "" Then
+                Me.ComboBoxEPUGewerk.AddItem ws.Cells(row, col).Value
             End If
-        Next Row
+        Next row
         Me.ComboBoxEPUGewerk.Value = "-- Bitte wählen --"
-2       col = Application.Match(HGewerk, WS.range("9:9"), 0)
-        lastrow = Application.CountA(WS.Cells(13, col).EntireColumn) + 10
+2       col = Application.Match(HGewerk, ws.range("9:9"), 0)
+        lastrow = Application.CountA(ws.Cells(13, col).EntireColumn) + 10
         Me.ComboBoxEPArt.Clear
-        For Row = 13 To lastrow
-            If WS.Cells(Row, col).Value <> "" Then
-                Me.ComboBoxEPArt.AddItem WS.Cells(Row, col).Value
+        For row = 13 To lastrow
+            If ws.Cells(row, col).Value <> "" Then
+                Me.ComboBoxEPArt.AddItem ws.Cells(row, col).Value
             End If
-        Next Row
+        Next row
         Me.ComboBoxEPArt.Value = "-- Bitte wählen --"
     End If
 
@@ -498,15 +503,15 @@ End Sub
 
 Private Sub ComboBoxESHGewerk_Change()
 
-    Dim Row                  As Variant
+    Dim row                  As Variant
     Dim col                  As Integer
     Dim lastrow              As Long
-    Dim WS As Worksheet: Set WS = Globals.shPData
+    Dim ws                   As Worksheet: Set ws = Globals.shPData
 
     'If Not Dev Then On Error GoTo ErrMsg
 
     Dim HGewerk              As String
-    HGewerk = WLookup(Me.ComboBoxESHGewerk.Value, WS.range("PRO_Hauptgewerk"), 2)
+    HGewerk = WLookup(Me.ComboBoxESHGewerk.Value, ws.range("PRO_Hauptgewerk"), 2)
 
     Me.ComboBoxESHGewerk.BackColor = SystemColorConstants.vbWindowBackground
     If Me.ComboBoxESHGewerk.Value = "-- Bitte Wählen --" Then
@@ -518,16 +523,16 @@ Private Sub ComboBoxESHGewerk_Change()
         Me.ComboBoxESUGewerk.Value = "-- Bitte wählen --"
         Exit Sub
     End If
-1   col = Application.WorksheetFunction.Match(HGewerk & " SCH", WS.range("10:10"), 0) 'get collumn of currently selected Gewerk
-2   lastrow = Application.WorksheetFunction.CountA(WS.Cells(13, col).EntireColumn) + 11 'get last row of said collumn
+1   col = Application.WorksheetFunction.Match(HGewerk & " SCH", ws.range("10:10"), 0) 'get collumn of currently selected Gewerk
+2   lastrow = Application.WorksheetFunction.CountA(ws.Cells(13, col).EntireColumn) + 11 'get last row of said collumn
     Me.ComboBoxESUGewerk.Clear
     Me.ComboBoxESAnlageTyp.Enabled = True
     Me.ComboBoxESUGewerk.Enabled = True
-    For Row = 13 To lastrow
-        If WS.Cells(Row, col).Value <> "" Then
-            Me.ComboBoxESUGewerk.AddItem WS.Cells(Row, col).Value
+    For row = 13 To lastrow
+        If ws.Cells(row, col).Value <> "" Then
+            Me.ComboBoxESUGewerk.AddItem ws.Cells(row, col).Value
         End If
-    Next Row
+    Next row
     Me.ComboBoxESUGewerk.Value = "-- Bitte wählen --"
 
     Me.ComboBoxESHGewerk.BackColor = SystemColorConstants.vbWindowBackground
@@ -539,9 +544,9 @@ End Sub
 Private Sub ComboBoxESUGewerk_Change()
 
     Dim col                  As Variant
-    Dim Row                  As Variant
+    Dim row                  As Variant
     Dim lastrow              As Variant
-    Dim WS As Worksheet: Set WS = Globals.shPData
+    Dim ws                   As Worksheet: Set ws = Globals.shPData
 
     Me.ComboBoxESUGewerk.BackColor = SystemColorConstants.vbWindowBackground
 
@@ -549,15 +554,15 @@ Private Sub ComboBoxESUGewerk_Change()
     If Me.ComboBoxESUGewerk.Value = "" Then Exit Sub
     Select Case Me.ComboBoxESHGewerk.Value
         Case "Elektro"
-            If Not IsError(Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.Value, WS.range("11:11"), 0)) Then
-1               col = Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.Value, WS.range("11:11"), 0)
-                lastrow = Application.WorksheetFunction.CountA(WS.Cells(13, col).EntireColumn) + 11
+            If Not IsError(Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.Value, ws.range("11:11"), 0)) Then
+1               col = Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.Value, ws.range("11:11"), 0)
+                lastrow = Application.WorksheetFunction.CountA(ws.Cells(13, col).EntireColumn) + 11
                 Me.ComboBoxESAnlageTyp.Clear
-                For Row = 12 To lastrow
-                    If WS.Cells(Row, col).Value <> "" Then
-                        Me.ComboBoxESAnlageTyp.AddItem WS.Cells(Row, col).Value
+                For row = 12 To lastrow
+                    If ws.Cells(row, col).Value <> "" Then
+                        Me.ComboBoxESAnlageTyp.AddItem ws.Cells(row, col).Value
                     End If
-                Next Row
+                Next row
                 Me.ComboBoxESAnlageTyp.Value = "-- Bitte wählen --"
             Else
                 Me.ComboBoxESAnlageTyp.Clear
@@ -575,10 +580,10 @@ End Sub
 
 Private Sub ComboBoxPRHGewerk_Change()
 
-    Dim Row                  As Variant
+    Dim row                  As Variant
     Dim col                  As Integer
     Dim lastrow              As Long
-    Dim WS As Worksheet: Set WS = Globals.shPData
+    Dim ws                   As Worksheet: Set ws = Globals.shPData
 
 
     If Not Dev Then On Error GoTo ErrMsg
@@ -593,18 +598,18 @@ Private Sub ComboBoxPRHGewerk_Change()
     End If
 
     Dim HGewerk              As String
-    HGewerk = WLookup(Me.ComboBoxPRHGewerk.Value, WS.range("PRO_Hauptgewerk"), 2)
+    HGewerk = WLookup(Me.ComboBoxPRHGewerk.Value, ws.range("PRO_Hauptgewerk"), 2)
 
-    If Not IsError(Application.WorksheetFunction.Match(HGewerk & " PRI", WS.range("10:10"), 0)) Then
-1       col = Application.WorksheetFunction.Match(HGewerk & " PRI", WS.range("10:10"), 0)
-        lastrow = Application.WorksheetFunction.CountA(WS.Cells(13, col).EntireColumn) + 10
+    If Not IsError(Application.WorksheetFunction.Match(HGewerk & " PRI", ws.range("10:10"), 0)) Then
+1       col = Application.WorksheetFunction.Match(HGewerk & " PRI", ws.range("10:10"), 0)
+        lastrow = Application.WorksheetFunction.CountA(ws.Cells(13, col).EntireColumn) + 10
         Me.ComboBoxPRUGewerk.Clear
         Me.ComboBoxPRUGewerk.Enabled = True
-        For Row = 13 To lastrow
-            If WS.Cells(Row, col).Value <> "" Then
-                Me.ComboBoxPRUGewerk.AddItem WS.Cells(Row, col).Value
+        For row = 13 To lastrow
+            If ws.Cells(row, col).Value <> "" Then
+                Me.ComboBoxPRUGewerk.AddItem ws.Cells(row, col).Value
             End If
-        Next Row
+        Next row
     Else
         Me.ComboBoxPRUGewerk.Value = "-- Bitte wählen --"
     End If
@@ -646,7 +651,7 @@ Private Sub ComboBoxGebäude_Change()
     'On Error Resume Next
     If Not IsError(Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.Value).Column) Then
 1       col = Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.Value).Column
-        lastrow = Globals.shGebäude.Cells(Globals.shGebäude.rows.Count, col).End(xlUp).Row
+        lastrow = Globals.shGebäude.Cells(Globals.shGebäude.rows.Count, col).End(xlUp).row
         Me.ComboBoxGeschoss.Clear
         Me.ComboBoxGeschoss.Enabled = True
         Set rng = Globals.shGebäude.range(Globals.shGebäude.Cells(5, col), Globals.shGebäude.Cells(lastrow, col + 1))
@@ -662,7 +667,7 @@ Private Sub ComboBoxGebäude_Change()
         ' if there is only one listitem in Gebäude
         If Not IsError(Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.Value).Column) Then
 2           col = Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.Value).Column
-            lastrow = Globals.shGebäude.Cells(Globals.shGebäude.rows.Count, col).End(xlUp).Row
+            lastrow = Globals.shGebäude.Cells(Globals.shGebäude.rows.Count, col).End(xlUp).row
             Me.ComboBoxGeschoss.Clear
             Me.ComboBoxGeschoss.Enabled = True
             Set rng = Globals.shGebäude.range(Globals.shGebäude.Cells(5, col), Globals.shGebäude.Cells(lastrow, col + 1))

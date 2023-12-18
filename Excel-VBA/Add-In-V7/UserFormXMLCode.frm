@@ -15,6 +15,11 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
+
+
 '@Folder "Plankopf"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -25,11 +30,11 @@ Private Sub CommandButtonClose_Click()
 
 End Sub
 
-Public Sub load(ByVal filePath As String, ByVal Plankopfnummer As Long)
+Public Sub load(ByVal filepath As String, ByVal Plankopfnummer As Long)
 
     Dim xmlDOMDoc            As New MSXML2.DOMDocument60
-    xmlDOMDoc.load filePath
-    Me.LabelInstructions.Caption = filePath
+    xmlDOMDoc.load filepath
+    Me.LabelInstructions.Caption = filepath
 
     Dim PKnr                 As String: PKnr = "PK" & Plankopfnummer
     Dim XMLstr               As String * 1024
@@ -40,13 +45,13 @@ Public Sub load(ByVal filePath As String, ByVal Plankopfnummer As Long)
     Dim ChildNode            As MSXML2.IXMLDOMElement
 
     For Each ChildNode In RootNode.ChildNodes
-        If ChildNode.BaseName = "PK" And ChildNode.FirstChild.Text = CStr(Plankopfnummer) Then XMLstr = XMLstr & vbNewLine & CStr(ChildNode.XML)
+        If ChildNode.BaseName = "PK" And ChildNode.FirstChild.text = CStr(Plankopfnummer) Then XMLstr = XMLstr & vbNewLine & CStr(ChildNode.xml)
         If ChildNode.HasChildNodes And ChildNode.BaseName = PKnr Then
-            XMLstr = XMLstr & vbNewLine & CStr(ChildNode.XML)
+            XMLstr = XMLstr & vbNewLine & CStr(ChildNode.xml)
         End If
     Next
 
-    Me.TextBox1.Value = xmlDOMDoc.XML
+    Me.TextBox1.Value = xmlDOMDoc.xml
     Me.TextBox1.TextAlign = fmTextAlignLeft
 
 End Sub

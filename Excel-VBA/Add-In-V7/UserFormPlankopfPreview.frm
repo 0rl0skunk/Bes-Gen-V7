@@ -15,6 +15,11 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
+
+
 '@Folder "Plankopf"
 Option Explicit
 
@@ -44,10 +49,10 @@ Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
 
 End Sub
 
-Public Sub LoadXML(ByVal filePath As String, ByVal Plankopfnummer As Long)
+Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
 
     Dim xmlDOMDoc            As New MSXML2.DOMDocument60
-    xmlDOMDoc.load filePath
+    xmlDOMDoc.load filepath
 
     pPlankopfnummer = Plankopfnummer
     Dim PKnr                 As String: PKnr = "PK" & pPlankopfnummer
@@ -61,16 +66,16 @@ Public Sub LoadXML(ByVal filePath As String, ByVal Plankopfnummer As Long)
     For Each ChildNode In ParentNode.ChildNodes
         If ChildNode.HasChildNodes And ChildNode.BaseName = PKnr Then
             For Each GrandChildNode In ChildNode.ChildNodes
-                Select Case GrandChildNode.Text
-                    Case "PA40": Me.PA40.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                    Case "PA41": Me.PA41.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                    Case "PA42": Me.PA42.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                    Case "PA43": Me.PA43.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                    Case "PA44": Me.PA44.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                    Case "PA30": Me.PA30.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                    Case "PA31": Me.PA31.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                    Case "PA32": Me.PA32.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                    Case "PA33": Me.PA33.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                Select Case GrandChildNode.text
+                    Case "PA40": Me.PA40.Caption = GrandChildNode.NextSibling.NextSibling.text
+                    Case "PA41": Me.PA41.Caption = GrandChildNode.NextSibling.NextSibling.text
+                    Case "PA42": Me.PA42.Caption = GrandChildNode.NextSibling.NextSibling.text
+                    Case "PA43": Me.PA43.Caption = GrandChildNode.NextSibling.NextSibling.text
+                    Case "PA44": Me.PA44.Caption = GrandChildNode.NextSibling.NextSibling.text
+                    Case "PA30": Me.PA30.Caption = GrandChildNode.NextSibling.NextSibling.text
+                    Case "PA31": Me.PA31.Caption = GrandChildNode.NextSibling.NextSibling.text
+                    Case "PA32": Me.PA32.Caption = GrandChildNode.NextSibling.NextSibling.text
+                    Case "PA33": Me.PA33.Caption = GrandChildNode.NextSibling.NextSibling.text
                 End Select
             Next
         End If

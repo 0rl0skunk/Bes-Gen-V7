@@ -18,6 +18,9 @@ Option Explicit
 Public Property Get Projektnummer() As String
 End Property
 
+Public Property Get ProjektXML() As String
+End Property
+
 Public Property Get Projektadresse() As IAdresse
 End Property
 

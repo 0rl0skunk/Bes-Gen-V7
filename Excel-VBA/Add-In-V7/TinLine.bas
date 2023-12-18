@@ -4,14 +4,14 @@ Option Explicit
 '@Folder("TinLine")
 '@ModuleDescription "Funktionen welche das TinLine Betreffen."
 
-Public Sub setTinProject(ByVal Path As String)
+Public Sub setTinProject(ByVal path As String)
     ' Aktuelles Projekt als aktiv setzen
     Dim Projekt()            As String
 
-    Projekt = Split(Path, "\")
+    Projekt = Split(path, "\")
     ReDim Preserve Projekt(0 To 3)
     WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "Projekte", Join(Projekt(), "\")
-    WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "Projekt", "AktivProjekt", Path
+    WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "Projekt", "AktivProjekt", path
 
 End Sub
 

@@ -30,48 +30,48 @@ End Function
 
 Public Sub AddToDatabase(Person As IPerson)
     ' erstellt eine neue Person in der Datenbank
-    Dim Row                  As Long
-    Dim WS                   As Worksheet
+    Dim row                  As Long
+    Dim ws                   As Worksheet
 
 
-    Set WS = Globals.shAdress
+    Set ws = Globals.shAdress
 
-    Row = WS.range("A" & WS.rows.Count).End(xlUp).Row + 1
-    With WS
-        .Cells(Row, 1).Value = Person.Nachname
-        .Cells(Row, 2).Value = Person.Vorname
-        .Cells(Row, 3).Value = Person.Firma
-        .Cells(Row, 4).Value = Person.Adresse.Strasse
-        .Cells(Row, 5).Value = Person.Adresse.PLZ
-        .Cells(Row, 6).Value = Person.Adresse.Ort
-        .Cells(Row, 7).Value = Person.EMail
-        .Cells(Row, 8).Value = Person.Anrede
-        .Cells(Row, 9).Value = Person.ID
+    row = ws.range("A" & ws.rows.Count).End(xlUp).row + 1
+    With ws
+        .Cells(row, 1).Value = Person.Nachname
+        .Cells(row, 2).Value = Person.Vorname
+        .Cells(row, 3).Value = Person.Firma
+        .Cells(row, 4).Value = Person.Adresse.Strasse
+        .Cells(row, 5).Value = Person.Adresse.PLZ
+        .Cells(row, 6).Value = Person.Adresse.Ort
+        .Cells(row, 7).Value = Person.EMail
+        .Cells(row, 8).Value = Person.Anrede
+        .Cells(row, 9).Value = Person.ID
     End With
 
     writelog LogInfo, "Person erfasst"
 
 End Sub
 
-Public Function LoadFromDataBase(Row As Long) As IPerson
+Public Function LoadFromDataBase(row As Long) As IPerson
     ' Lädt die Daten aus der Datenbank
-    Dim WS                   As Worksheet
+    Dim ws                   As Worksheet
     Dim NewPerson            As New IPerson
 
 
-    Set WS = Globals.shAdress
+    Set ws = Globals.shAdress
 
-    With WS
+    With ws
         Set NewPerson = Create( _
-                        Nachname:=.Cells(Row, 1).Value, _
-                        Vorname:=.Cells(Row, 2).Value, _
-                        Firma:=.Cells(Row, 3).Value, _
+                        Nachname:=.Cells(row, 1).Value, _
+                        Vorname:=.Cells(row, 2).Value, _
+                        Firma:=.Cells(row, 3).Value, _
                         Adresse:=AdressFactory.Create( _
-                                  Strasse:=.Cells(Row, 4).Value, _
-                        PLZ:=.Cells(Row, 5).Value, _
-                        Ort:=.Cells(Row, 6).Value), _
-                        EMail:=.Cells(Row, 7).Value, _
-                        Anrede:=.Cells(Row, 8).Value _
+                                  Strasse:=.Cells(row, 4).Value, _
+                        PLZ:=.Cells(row, 5).Value, _
+                        Ort:=.Cells(row, 6).Value), _
+                        EMail:=.Cells(row, 7).Value, _
+                        Anrede:=.Cells(row, 8).Value _
                                  )
     End With
 

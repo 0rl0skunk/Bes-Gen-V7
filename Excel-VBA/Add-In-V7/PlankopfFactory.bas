@@ -50,8 +50,8 @@ Public Function Create( _
        Planüberschrift:=Planüberschrift, _
        ID:=ID, _
        CustomÜberschrift:=CustomÜberschrift _
-            ) Then
-        Dim Row              As Long
+                           ) Then
+        Dim row              As Long
         Set Create = NewPlankopf
         IndexFactory.GetIndexes Create
         Exit Function
@@ -65,33 +65,33 @@ Public Function Create( _
 
 End Function
 
-Public Function LoadFromDataBase(ByVal Row As Long) As IPlankopf
+Public Function LoadFromDataBase(ByVal row As Long) As IPlankopf
 
     Dim NewPlankopf          As Plankopf:    Set NewPlankopf = New Plankopf
-    Dim WS                   As Worksheet:    Set WS = Globals.shStoreData
-    With WS
+    Dim ws                   As Worksheet:    Set ws = Globals.shStoreData
+    With ws
         If NewPlankopf.Filldata( _
            Projekt:=Projekt, _
-           ID:=.Cells(Row, 1).Value, _
-           TinLineID:=.Cells(Row, 2).Value, _
-           Gewerk:=.Cells(Row, 3).Value, _
-           UnterGewerk:=.Cells(Row, 4).Value, _
-           Planart:=.Cells(Row, 5).Value, _
-           Plantyp:=.Cells(Row, 6).Value, _
-           Gebäude:=.Cells(Row, 7).Value, _
-           Gebäudeteil:=.Cells(Row, 8).Value, _
-           Geschoss:=.Cells(Row, 9).Value, _
-           Planüberschrift:=.Cells(Row, 13).Value, _
-           Format:=.Cells(Row, 15).Value, _
-           Masstab:=.Cells(Row, 16).Value, _
-           Stand:=.Cells(Row, 17).Value, _
-           GezeichnetPerson:=.Cells(Row, 18).Value, _
-           GezeichnetDatum:=.Cells(Row, 19).Value, _
-           GeprüftPerson:=.Cells(Row, 20).Value, _
-           GeprüftDatum:=.Cells(Row, 21).Value, _
+           ID:=.Cells(row, 1).Value, _
+           TinLineID:=.Cells(row, 2).Value, _
+           Gewerk:=.Cells(row, 3).Value, _
+           UnterGewerk:=.Cells(row, 4).Value, _
+           Planart:=.Cells(row, 5).Value, _
+           Plantyp:=.Cells(row, 6).Value, _
+           Gebäude:=.Cells(row, 7).Value, _
+           Gebäudeteil:=.Cells(row, 8).Value, _
+           Geschoss:=.Cells(row, 9).Value, _
+           Planüberschrift:=.Cells(row, 13).Value, _
+           Format:=.Cells(row, 15).Value, _
+           Masstab:=.Cells(row, 16).Value, _
+           Stand:=.Cells(row, 17).Value, _
+           GezeichnetPerson:=.Cells(row, 18).Value, _
+           GezeichnetDatum:=.Cells(row, 19).Value, _
+           GeprüftPerson:=.Cells(row, 20).Value, _
+           GeprüftDatum:=.Cells(row, 21).Value, _
            SkipValidation:=False, _
-           CustomÜberschrift:=.Cells(Row, 10).Value _
-                            ) Then
+           CustomÜberschrift:=.Cells(row, 10).Value _
+                               ) Then
             Set LoadFromDataBase = NewPlankopf
             IndexFactory.GetIndexes LoadFromDataBase
             Exit Function
@@ -108,30 +108,30 @@ End Function
 
 Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
     AddToDatabase = False
-    Dim WS                   As Worksheet: Set WS = Globals.shStoreData
-    Dim Row                  As Long: Row = WS.range("A1").CurrentRegion.rows.Count + 1
-    With WS
-        .Cells(Row, 1).Value = Plankopf.ID
-        .Cells(Row, 2).Value = Plankopf.IDTinLine
-        .Cells(Row, 3).Value = Plankopf.Gewerk
-        .Cells(Row, 4).Value = Plankopf.UnterGewerk
-        .Cells(Row, 5).Value = Plankopf.Planart
-        .Cells(Row, 6).Value = Plankopf.Plantyp
-        .Cells(Row, 7).Value = Plankopf.Gebäude
-        .Cells(Row, 8).Value = Plankopf.Gebäudeteil
-        .Cells(Row, 9).Value = Plankopf.Geschoss
-        .Cells(Row, 10).Value = Plankopf.CustomPlanüberschrift
-        .Cells(Row, 11).Value = Plankopf.DWGFile
-        .Cells(Row, 13).Value = Plankopf.Planüberschrift
-        .Cells(Row, 14).Value = Plankopf.Plannummer
-        .Cells(Row, 15).Value = Plankopf.LayoutGrösse
-        .Cells(Row, 16).Value = Plankopf.LayoutMasstab
-        .Cells(Row, 17).Value = Plankopf.LayoutPlanstand
-        .Cells(Row, 18).Value = Plankopf.GezeichnetPerson
-        .Cells(Row, 19).Value = Plankopf.GezeichnetDatum
-        .Cells(Row, 20).Value = Plankopf.GeprüftPerson
-        .Cells(Row, 21).Value = Plankopf.GeprüftDatum
-        .Cells(Row, 12).Value = Plankopf.CurrentIndex.Index
+    Dim ws                   As Worksheet: Set ws = Globals.shStoreData
+    Dim row                  As Long: row = ws.range("A1").CurrentRegion.rows.Count + 1
+    With ws
+        .Cells(row, 1).Value = Plankopf.ID
+        .Cells(row, 2).Value = Plankopf.IDTinLine
+        .Cells(row, 3).Value = Plankopf.Gewerk
+        .Cells(row, 4).Value = Plankopf.UnterGewerk
+        .Cells(row, 5).Value = Plankopf.Planart
+        .Cells(row, 6).Value = Plankopf.Plantyp
+        .Cells(row, 7).Value = Plankopf.Gebäude
+        .Cells(row, 8).Value = Plankopf.Gebäudeteil
+        .Cells(row, 9).Value = Plankopf.Geschoss
+        .Cells(row, 10).Value = Plankopf.CustomPlanüberschrift
+        .Cells(row, 11).Value = Plankopf.DWGFile
+        .Cells(row, 13).Value = Plankopf.Planüberschrift
+        .Cells(row, 14).Value = Plankopf.Plannummer
+        .Cells(row, 15).Value = Plankopf.LayoutGrösse
+        .Cells(row, 16).Value = Plankopf.LayoutMasstab
+        .Cells(row, 17).Value = Plankopf.LayoutPlanstand
+        .Cells(row, 18).Value = Plankopf.GezeichnetPerson
+        .Cells(row, 19).Value = Plankopf.GezeichnetDatum
+        .Cells(row, 20).Value = Plankopf.GeprüftPerson
+        .Cells(row, 21).Value = Plankopf.GeprüftDatum
+        .Cells(row, 12).Value = Plankopf.CurrentIndex.Index
     End With
     AddToDatabase = True
     writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
@@ -141,9 +141,9 @@ End Function
 Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
     ReplaceInDatabase = False
     Dim ID                   As String: ID = Plankopf.ID
-    Dim WS                   As Worksheet: Set WS = Globals.shStoreData
-    Dim Row                  As Long: Row = WS.range("A:A").Find(ID).Row
-    With WS
+    Dim ws                   As Worksheet: Set ws = Globals.shStoreData
+    Dim row                  As Long: row = ws.range("A:A").Find(ID).row
+    With ws
         '.Cells(Row, 1).Value = Plankopf.ID
         '.Cells(Row, 2).Value = Plankopf.IDTinLine
         '.Cells(Row, 3).Value = Plankopf.Gewerk
@@ -153,29 +153,29 @@ Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
         '.Cells(Row, 7).Value = Plankopf.Gebäude
         '.Cells(Row, 8).Value = Plankopf.GebäudeTeil
         '.Cells(Row, 9).Value = Plankopf.Geschoss
-        .Cells(Row, 10).Value = Plankopf.CustomPlanüberschrift
-        .Cells(Row, 11).Value = Plankopf.DWGFile
-        .Cells(Row, 13).Value = Plankopf.Planüberschrift
+        .Cells(row, 10).Value = Plankopf.CustomPlanüberschrift
+        .Cells(row, 11).Value = Plankopf.DWGFile
+        .Cells(row, 13).Value = Plankopf.Planüberschrift
         '.Cells(Row, 14).Value = Plankopf.Plannummer
-        .Cells(Row, 15).Value = Plankopf.LayoutGrösse
-        .Cells(Row, 16).Value = Plankopf.LayoutMasstab
-        .Cells(Row, 17).Value = Plankopf.LayoutPlanstand
-        .Cells(Row, 18).Value = Plankopf.GezeichnetPerson
-        .Cells(Row, 19).Value = Plankopf.GezeichnetDatum
-        .Cells(Row, 20).Value = Plankopf.GeprüftPerson
-        .Cells(Row, 21).Value = Plankopf.GeprüftDatum
+        .Cells(row, 15).Value = Plankopf.LayoutGrösse
+        .Cells(row, 16).Value = Plankopf.LayoutMasstab
+        .Cells(row, 17).Value = Plankopf.LayoutPlanstand
+        .Cells(row, 18).Value = Plankopf.GezeichnetPerson
+        .Cells(row, 19).Value = Plankopf.GezeichnetDatum
+        .Cells(row, 20).Value = Plankopf.GeprüftPerson
+        .Cells(row, 21).Value = Plankopf.GeprüftDatum
     End With
     ReplaceInDatabase = True
     writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank aktualisiert"
 
 End Function
 
-Public Function DeleteFromDatabase(Row As Long) As Boolean
+Public Function DeleteFromDatabase(row As Long) As Boolean
     DeleteFromDatabase = False
     Dim ID                   As String
-    Dim Plannummer           As String: Plannummer = shStoreData.Cells(Row, 14).Value
-    ID = shStoreData.Cells(Row, 1).Value
-    shStoreData.Cells(Row, 1).EntireRow.Delete
+    Dim Plannummer           As String: Plannummer = shStoreData.Cells(row, 14).Value
+    ID = shStoreData.Cells(row, 1).Value
+    shStoreData.Cells(row, 1).EntireRow.Delete
     IndexFactory.DeletePlan ID
     DeleteFromDatabase = True
     writelog LogInfo, "Plankopf " & Plannummer & " aus Datenbank gelöscht"

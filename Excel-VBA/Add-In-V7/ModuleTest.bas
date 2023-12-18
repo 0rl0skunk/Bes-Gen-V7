@@ -39,7 +39,7 @@ Public Sub test2()
         Geschoss:="Erdgeschoss", _
         Erledigt:=False, _
         Priorität:=2, _
-        Text:="Lorem ipsum dolor sit amet"
+        text:="Lorem ipsum dolor sit amet"
 
     Dim frm                  As New UserFormTaskDetail
     frm.LoadClass ttask

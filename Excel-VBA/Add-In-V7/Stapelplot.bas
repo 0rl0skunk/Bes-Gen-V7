@@ -3,26 +3,25 @@ Attribute VB_Name = "Stapelplot"
 Option Explicit
 
 Private a
-Private dsd As String ' Dateiname von Stapelplott Datei
-Private OutputFolder As String
-
+Private dsd                  As String           ' Dateiname von Stapelplott Datei
+Private OutputFolder         As String
 
 Sub plotPlanliste()
 
-    Dim fs, a, i      As Integer, search As String
+    Dim fs, a, i             As Integer, search As String
     Set fs = CreateObject("Scripting.FileSystemObject")
-    Dim scr        As String
+    Dim scr                  As String
     scr = "C:\Users\Public\Documents\plotter.scr"
     Set a = fs.CreateTextFile(scr, True)
     a.WriteLine ("-PUBLISH")
     a.WriteLine (dsd)
     a.Close
 
-    Dim wsh        As Object
+    Dim wsh                  As Object
     Set wsh = VBA.CreateObject("WScript.Shell")
-    Dim waitOnReturn As Boolean: waitOnReturn = True
-    Dim windowStyle As Integer: windowStyle = 1
-    Dim errorCode  As Integer
+    Dim waitOnReturn         As Boolean: waitOnReturn = True
+    Dim windowStyle          As Integer: windowStyle = 1
+    Dim errorCode            As Integer
 
     wsh.Run """C:\Program Files\TinLine\TinLine 23-Deu\accoreconsole.exe"" /i ""H:\TinLine\01_Standards\TinBlank.dwg"" /s ""C:\Users\Public\Documents\plotter.scr"" /l EN-US", windowStyle, waitOnReturn
 
@@ -41,47 +40,47 @@ End Sub
 
 Public Function CreatePlotList(ByVal pPlanköpfe As Collection) As String
 
-    Dim folder     As String, strFolderExists As String
-    Dim outputCol  As New Collection
-    Dim plan As IPlankopf
-    
+    Dim Folder               As String, strFolderExists As String
+    Dim outputCol            As New Collection
+    Dim Plan                 As IPlankopf
+
     If Globals.shPData Is Nothing Then Globals.SetWBs
-    
-    folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
-    strFolderExists = dir(folder)
+
+    Folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
+    strFolderExists = dir(Folder)
 
     'If strFolderExists = "" Then MkDir folder
     ' Open the select folder prompt
-        With Application.FileDialog(msoFileDialogFolderPicker)
-            If .Show = -1 Then                             ' if OK is pressed
-                OutputFolder = .SelectedItems(1)
-            End If
-        End With
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        If .Show = -1 Then                       ' if OK is pressed
+            OutputFolder = .SelectedItems(1)
+        End If
+    End With
 
 
-    Dim filename As String: filename = "Stapelplot_" & Format(Now, "YYMMDDhhmmss")
-    Dim i       As Integer, search As String
-    Set a = CreateObject("Scripting.FileSystemObject").CreateTextFile(Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten\" & filename & ".dsd", True)
-    dsd = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten\" & filename & ".dsd"
+    Dim filename             As String: filename = Format(Now, "YYMMDDhhmmss")
+    Dim i                    As Integer, search As String
+    Set a = CreateObject("Scripting.FileSystemObject").CreateTextFile(Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & filename & ".dsd", True)
+    dsd = Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & filename & ".dsd"
     a.WriteLine ("[DWF6Version]")
     a.WriteLine ("Ver=1")
     a.WriteLine ("[DWF6MinorVersion]")
     a.WriteLine ("MinorVer=1")
 
-    For Each plan In pPlanköpfe
-                    Eintrag plan
-                    Next
+    For Each Plan In pPlanköpfe
+        Eintrag Plan
+    Next
 
-                
 
-    
-        a.WriteLine ( _
-                    "[Target]" & vbLf & _
-                    "Type=2" & vbLf & _
-                    "DWF=" & vbLf & _
-                    "OUT=" & OutputFolder & vbLf & _
-                    "PWD=")
-    
+
+
+    a.WriteLine ( _
+                "[Target]" & vbLf & _
+                "Type=2" & vbLf & _
+                "DWF=" & vbLf & _
+                "OUT=" & OutputFolder & vbLf & _
+                "PWD=")
+
 
     a.WriteLine ( _
                 "[PdfOptions]" & vbCrLf & _
@@ -125,14 +124,15 @@ Public Function CreatePlotList(ByVal pPlanköpfe As Collection) As String
 
 End Function
 
-Private Sub Eintrag(plan As IPlankopf)
-    a.WriteLine ("[DWF6Sheet:" & plan.PDFFileName & "]") ' PDF Ablage
-    a.WriteLine ("DWG=" & plan.DWGFile) ' DWG Ablage
-    a.WriteLine ("Layout=" & plan.LayoutName) ' Plannummer / Layoutname
+Private Sub Eintrag(Plan As IPlankopf)
+    a.WriteLine ("[DWF6Sheet:" & Plan.PDFFileName & "]") ' PDF Ablage
+    a.WriteLine ("DWG=" & Plan.DWGFile)          ' DWG Ablage
+    a.WriteLine ("Layout=" & Plan.LayoutName)    ' Plannummer / Layoutname
     a.WriteLine ("Setup=")
-    a.WriteLine ("OriginalSheetPath=" & plan.DWGFile) ' DWG Ablage
+    a.WriteLine ("OriginalSheetPath=" & Plan.DWGFile) ' DWG Ablage
     a.WriteLine ("Has Plot Port=0")
     a.WriteLine ("Has3DDWF=0")
     a.WriteLine (" ")
 End Sub
+
 

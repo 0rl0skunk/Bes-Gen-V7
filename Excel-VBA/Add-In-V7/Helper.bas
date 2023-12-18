@@ -187,27 +187,27 @@ End Function
 
 Public Sub deleteIndexesXml()
 
-    Dim fso                  As Object
+    Dim FSO                  As Object
     Dim lastrow              As Integer
-    Dim Row                  As Integer
+    Dim row                  As Integer
     Dim col                  As Integer
     Dim lastcol              As Integer
 
 
-    Set fso = CreateObject("scripting.FileSystemObject")
+    Set FSO = CreateObject("scripting.FileSystemObject")
 
-    lastrow = shGebäude.Cells(shGebäude.rows.Count, 2).End(xlUp).Row
+    lastrow = shGebäude.Cells(shGebäude.rows.Count, 2).End(xlUp).row
     lastcol = shGebäude.Cells(1, shGebäude.Columns.Count).End(xlToLeft).Column
 
     For col = 2 To lastcol Step 2
-        For Row = 6 To lastrow
-            writelog LogInfo, "> empty cell " & Row & " " & col & " " & IsEmpty(shGebäude.Cells(Row, col)) & " " & shGebäude.Cells(Row, col).Address
-            If Not IsEmpty(shGebäude.Cells(Row, col)) Then
-                writelog LogInfo, "> " & shGebäude.Cells(Row, col).Value
+        For row = 6 To lastrow
+            writelog LogInfo, "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
+            If Not IsEmpty(shGebäude.Cells(row, col)) Then
+                writelog LogInfo, "> " & shGebäude.Cells(row, col).Value
                 ' only go if there is something in the cell
-                deleteIndexXml Row, col
+                deleteIndexXml row, col
             End If
-        Next Row
+        Next row
     Next col
 
     ' ----------------------------- PRINZIPSCHEMAS
@@ -242,7 +242,7 @@ Public Sub deleteIndexesXml()
 
 End Sub
 
-Public Sub deleteIndexXml(Row As Integer, col As Integer, Optional i_xmlfile As String = vbNullString)
+Public Sub deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As String = vbNullString)
 
     Dim XMLFile              As String
     If i_xmlfile <> vbNullString Then
@@ -251,20 +251,20 @@ Public Sub deleteIndexXml(Row As Integer, col As Integer, Optional i_xmlfile As 
         XMLFile = i_xmlfile
     End If
 
-    Dim oxml                 As New MSXML2.DOMDocument60
-    oxml.load XMLFile
+    Dim oXml                 As New MSXML2.DOMDocument60
+    oXml.load XMLFile
     Dim nodes                As IXMLDOMNodeList
     Dim node                 As IXMLDOMNode
     Dim root                 As IXMLDOMNode
 
-    Set root = oxml.SelectSingleNode("//tinPlan1")
-    Set nodes = oxml.SelectNodes("//tinPlan1/*[contains(local-name(), 'IN')]")
+    Set root = oXml.SelectSingleNode("//tinPlan1")
+    Set nodes = oXml.SelectNodes("//tinPlan1/*[contains(local-name(), 'IN')]")
     For Each node In nodes
         root.RemoveChild node
     Next
     On Error Resume Next
-    oxml.save XMLFile
-    Set oxml = Nothing
+    oXml.Save XMLFile
+    Set oXml = Nothing
     On Error GoTo 0
 
 End Sub
@@ -287,10 +287,10 @@ Public Function getXML(PCol As Collection) As String
                 ' Detail
                 result = Projektpath & "\04_DE\TinPlan_DE_" & PCol(15) & ".xml"
             Else
-                GoTo plan
+                GoTo Plan
             End If
         Else
-plan:
+Plan:
             If PCol(6)(1) = "TUE" Then
                 ' --- TF
                 If buildings Then
@@ -362,9 +362,9 @@ End Function
 
 Public Sub DeleteRow(ByVal ID As String)
     ' löscht die gegebene zeile(row) im Worksheet (DATA [shstoredata])
-    Dim Row                  As Double
-    Row = Application.WorksheetFunction.Match(ID, shStoreData.range("A:A"), False)
-    shStoreData.rows(Row).EntireRow.Delete
+    Dim row                  As Double
+    row = Application.WorksheetFunction.Match(ID, shStoreData.range("A:A"), False)
+    shStoreData.rows(row).EntireRow.Delete
 
 End Sub
 
@@ -376,7 +376,7 @@ End Function
 
 Public Function getRow(PCol As Collection) As Integer
     ' get the corresponding row from the stored data
-    getRow = shStoreData.range("A:A").Find(PCol(11), LookIn:=xlValues).Row
+    getRow = shStoreData.range("A:A").Find(PCol(11), LookIn:=xlValues).row
 
 End Function
 
@@ -391,26 +391,26 @@ Public Function GetArrLength(a As Variant) As Long
 End Function
 
 Public Function getNewID(ByVal Typ As IDType) As String
- ' get a new unique ID for a PK
-    Dim length As Integer, WS As Worksheet, Region As range, IDcol As Integer
-    
+    ' get a new unique ID for a PK
+    Dim length               As Integer, ws As Worksheet, Region As range, IDcol As Integer
+
     Select Case Typ
-    Case 0 ' Plan
-        length = 6
-        Set WS = Globals.shStoreData
-        Set Region = shStoreData.range("A1").CurrentRegion
-        IDcol = 1
-    Case 1 ' Index
-        length = 4
-        Set WS = Globals.shIndex
-        Set Region = Globals.shIndex.range("A1").CurrentRegion
-        IDcol = 1
-    Case 2 ' Task
-    Case 3 ' Person
-        length = 6
-        Set WS = Globals.shAdress
-        Set Region = Globals.shAdress.range("ADR_Adressen")
-        IDcol = 9
+        Case 0                                   ' Plan
+            length = 6
+            Set ws = Globals.shStoreData
+            Set Region = shStoreData.range("A1").CurrentRegion
+            IDcol = 1
+        Case 1                                   ' Index
+            length = 4
+            Set ws = Globals.shIndex
+            Set Region = Globals.shIndex.range("A1").CurrentRegion
+            IDcol = 1
+        Case 2                                   ' Task
+        Case 3                                   ' Person
+            length = 6
+            Set ws = Globals.shAdress
+            Set Region = Globals.shAdress.range("ADR_Adressen")
+            IDcol = 9
     End Select
     Dim i                    As Integer
 
@@ -428,7 +428,7 @@ newID:
 
     For r = 2 To rows + 1
         ' check if the ID already exists
-        If getNewID = WS.Cells(r, IDcol).Value Then GoTo newID
+        If getNewID = ws.Cells(r, IDcol).Value Then GoTo newID
     Next r
 
 End Function

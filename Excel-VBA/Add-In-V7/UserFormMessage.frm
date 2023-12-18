@@ -15,6 +15,11 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
+
+
 '@Folder "Templates"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -27,26 +32,26 @@ End Enum
 Public Sub Typ(MessageType As MSGTyp, ByVal MessageText As String, Optional ByVal Title As String = "Ein Fehler ist aufgetreten!", Optional ByVal OpenLog As Boolean = False)
 
     Select Case MessageType
-    Case 0 ' Error
-    Me.TitleIcon.Picture = icons.IconError.Picture
-    Me.TitleLabel.Caption = Title
-    Me.LabelMessage.Value = MessageText
-    If OpenLog Then Me.CommandButtonLog.Visible = True
-    Case 1 ' Warning
-    Me.TitleIcon.Picture = icons.IconWarning.Picture
-    Me.TitleLabel.Caption = Title
-    Me.LabelMessage.Value = MessageText
-    If OpenLog Then Me.CommandButtonLog.Visible = True
-    Case 2 ' Info
-    Me.TitleIcon.Picture = icons.IconInfo.Picture
-    Me.TitleLabel.Caption = Title
-    Me.LabelMessage.Value = MessageText
-    If OpenLog Then Me.CommandButtonLog.Visible = True
-    Case Else
-Me.TitleIcon.Picture = icons.IconInfo.Picture
-    Me.TitleLabel.Caption = Title
-    Me.LabelMessage.Value = MessageText
-    If OpenLog Then Me.CommandButtonLog.Visible = True
+        Case 0                                   ' Error
+            Me.TitleIcon.Picture = icons.IconError.Picture
+            Me.TitleLabel.Caption = Title
+            Me.LabelMessage.Value = MessageText
+            If OpenLog Then Me.CommandButtonLog.Visible = True
+        Case 1                                   ' Warning
+            Me.TitleIcon.Picture = icons.IconWarning.Picture
+            Me.TitleLabel.Caption = Title
+            Me.LabelMessage.Value = MessageText
+            If OpenLog Then Me.CommandButtonLog.Visible = True
+        Case 2                                   ' Info
+            Me.TitleIcon.Picture = icons.IconInfo.Picture
+            Me.TitleLabel.Caption = Title
+            Me.LabelMessage.Value = MessageText
+            If OpenLog Then Me.CommandButtonLog.Visible = True
+        Case Else
+            Me.TitleIcon.Picture = icons.IconInfo.Picture
+            Me.TitleLabel.Caption = Title
+            Me.LabelMessage.Value = MessageText
+            If OpenLog Then Me.CommandButtonLog.Visible = True
     End Select
 End Sub
 

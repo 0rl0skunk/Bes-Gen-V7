@@ -7,14 +7,14 @@ Public Sub LoadListViewPlan(ByRef control As ListView)
     Dim Pla                  As IPlankopf
     Dim li                   As ListItem
 
-    Dim Row                  As Long
+    Dim row                  As Long
     Dim lastrow              As Long
 
 
     With control
         .ListItems.Clear
         .View = lvwReport
-        .CheckBoxes = True
+        .CheckBoxES = True
         .Gridlines = True
         .FullRowSelect = True
         With .ColumnHeaders
@@ -34,8 +34,8 @@ Public Sub LoadListViewPlan(ByRef control As ListView)
         End With
         If Globals.shStoreData Is Nothing Then Globals.SetWBs
         lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count
-        For Row = 3 To lastrow
-            Set Pla = PlankopfFactory.LoadFromDataBase(Row)
+        For row = 3 To lastrow
+            Set Pla = PlankopfFactory.LoadFromDataBase(row)
             'Planköpfe.Add Pla                    ', Pla.ID
             Set li = .ListItems.Add()
             li.ListSubItems.Add , , Pla.ID
@@ -49,7 +49,8 @@ Public Sub LoadListViewPlan(ByRef control As ListView)
             li.ListSubItems.Add , , Pla.Gezeichnet
             li.ListSubItems.Add , , Pla.Geprüft
             li.ListSubItems.Add , , Pla.CurrentIndex.Index
-        Next Row
+        Next row
     End With
 
 End Sub
+

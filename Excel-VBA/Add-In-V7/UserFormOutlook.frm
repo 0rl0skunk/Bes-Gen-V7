@@ -12,9 +12,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
 '@Folder("Outlook")
 '@IgnoreModule VariableNotUsed
 Option Explicit
@@ -24,18 +21,18 @@ Private pPlanköpfe           As New Collection
 Private icons                As UserFormIconLibrary
 
 Private Sub CommandButton1_Click()
-    Dim PrintPath As String
+    Dim PrintPath            As String
     Dim appOutlook           As New Outlook.Application
     Dim Mail                 As MailItem
 
     Set Mail = appOutlook.CreateItem(olMailItem)
 
     If Me.CheckBoxPlot Then
-    Dim pPlankopf As IPlankopf
-    PrintPath = CreatePlotList(pPlanköpfe)
-    For Each pPlankopf In pPlanköpfe
-    Mail.Attachments.Add PrintPath & "\" & pPlankopf.PDFFileName
-    Next
+        Dim pPlankopf        As IPlankopf
+        PrintPath = CreatePlotList(pPlanköpfe)
+        For Each pPlankopf In pPlanköpfe
+            Mail.Attachments.Add PrintPath & "\" & pPlankopf.PDFFileName & ".pdf"
+        Next
     End If
     Mail.To = MailRecepientsTO
     Mail.CC = MailRecepientsCC
@@ -91,7 +88,7 @@ Private Sub ListViewMailTo_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Set pMailTo = New Collection
     For Each li In Me.ListViewMailTo.ListItems
         If li.Checked Then
-            pMailTo.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).Row)
+            pMailTo.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).text).row)
         End If
     Next
 End Sub
@@ -101,7 +98,7 @@ Private Sub ListViewMailCC_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Set pMailCC = New Collection
     For Each li In Me.ListViewMailCC.ListItems
         If li.Checked Then
-            pMailCC.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).Row)
+            pMailCC.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).text).row)
         End If
     Next
 End Sub
@@ -111,7 +108,7 @@ Private Sub ListViewPlankopf_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Set pPlanköpfe = New Collection
     For Each li In Me.ListViewPlankopf.ListItems
         If li.Checked Then
-            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).Row)
+            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).text).row)
         End If
     Next
 End Sub
@@ -134,14 +131,14 @@ Private Sub LoadListViewMail(ByRef control As ListView)
 
     Dim li                   As ListItem
 
-    Dim Row                  As range
+    Dim row                  As range
     Dim lastrow              As Long
 
 
     With control
         .ListItems.Clear
         .View = lvwReport
-        .CheckBoxes = True
+        .CheckBoxES = True
         .Gridlines = True
         .FullRowSelect = True
         With .ColumnHeaders
@@ -152,13 +149,13 @@ Private Sub LoadListViewMail(ByRef control As ListView)
             .Add , , "Vorname"                   ' 2
             .Add , , "Nachname"                  ' 3
             .Add , , "Firma"                     ' 4
-            .Add , , "E-Mail", 0                    ' 5
+            .Add , , "E-Mail", 0                 ' 5
         End With
         If Globals.shAdress Is Nothing Then Globals.SetWBs
         lastrow = Globals.shAdress.range("ADR_Adressen").rows.Count
-        For Each Row In Globals.shAdress.range("ADR_Adressen").rows
+        For Each row In Globals.shAdress.range("ADR_Adressen").rows
             Set li = .ListItems.Add()
-            With Row.Resize(1, 1)
+            With row.Resize(1, 1)
                 li.ListSubItems.Add , , .Offset(0, 8).Value
                 li.ListSubItems.Add , , .Offset(0, 7).Value
                 li.ListSubItems.Add , , .Offset(0, 1).Value
@@ -166,7 +163,7 @@ Private Sub LoadListViewMail(ByRef control As ListView)
                 li.ListSubItems.Add , , .Offset(0, 2).Value
                 li.ListSubItems.Add , , .Offset(0, 6).Value
             End With
-        Next Row
+        Next row
     End With
 
 End Sub

@@ -15,22 +15,27 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
+
+
 '@Folder "Print"
 Option Explicit
 Private icons                As UserFormIconLibrary
-Private pPlanköpfe As Collection
+Private pPlanköpfe           As Collection
 
 Private Sub CommandButtonPrint_Click()
     Dim li                   As ListItem
     Set pPlanköpfe = New Collection
     For Each li In Me.ListViewPlankopf.ListItems
         If li.Checked Then
-            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).Row)
+            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).text).row)
         End If
     Next
-    
+
     CreatePlotList pPlanköpfe
-    
+
 End Sub
 
 Private Sub UserForm_Initialize()
@@ -46,3 +51,4 @@ Private Sub CommandButtonClose_Click()
     Unload Me
 
 End Sub
+

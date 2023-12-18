@@ -24,7 +24,7 @@ Private Type ttask
     Geschoss As String
     Erledigt As Boolean
     Priorität As Long
-    Text As String * 1024
+    text As String * 1024
     Pläne As New Collection
 End Type
 
@@ -41,7 +41,7 @@ Public Sub Filldata( _
        Geschoss As String, _
        Erledigt As Boolean, _
        Priorität As Long, _
-       Text As String _
+       text As String _
        )
 
     Inputs.ErfasstAm = ErfasstAm
@@ -53,7 +53,7 @@ Public Sub Filldata( _
     Inputs.Gebäudeteil = Gebäudeteil
     Inputs.Erledigt = Erledigt
     Inputs.Priorität = Priorität
-    Inputs.Text = Text
+    Inputs.text = text
 
     If ValidInputs Then
         This = Inputs
@@ -98,8 +98,8 @@ Public Property Get Priorität() As Long
     Priorität = This.Priorität
 End Property
 
-Public Property Get Text() As String
-    Text = This.Text
+Public Property Get text() As String
+    text = This.text
 End Property
 
 Private Function ValidInputs() As Boolean

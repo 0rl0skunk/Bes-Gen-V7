@@ -15,6 +15,11 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
+
+
 '@Folder "Plankopf"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -27,22 +32,22 @@ Private Sub CommandButtonAdd_Click()
     frm.setIcons Add
     frm.Show 1
     LoadListViewPlan Me.ListViewPlankopf
-    
+
     SetFilters
 
 End Sub
 
 Private Sub CommandButtonEdit_Click()
 
-    Dim Row                  As Long
-    Row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).Row
+    Dim row                  As Long
+    row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
     Dim frm                  As New UserFormPlankopf
-    frm.LoadClass PlankopfFactory.LoadFromDataBase(Row), Projekt
+    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt
     frm.setIcons Edit
     frm.Show 1
 
     LoadListViewPlan Me.ListViewPlankopf
-    
+
     SetFilters
 
 End Sub
@@ -104,17 +109,17 @@ End Property
 
 Private Sub CommandButtonCopy_Click()
 
-    Dim Row                  As Long
+    Dim row                  As Long
     Dim Plankopf             As IPlankopf
     If Globals.shStoreData.Cells(4, 1).Value = vbNullString Then
-        Row = 3
+        row = 3
     Else
-        Row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).Row
+        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
     End If
-    Set Plankopf = PlankopfFactory.LoadFromDataBase(Row)
+    Set Plankopf = PlankopfFactory.LoadFromDataBase(row)
     Dim frm                  As New UserFormPlankopf
     Dim answer               As Boolean
-    If IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(Row)).Count > 0 Then
+    If IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count > 0 Then
         Select Case MsgBox("Vorhandene Indexe kopieren?", vbYesNo, "Indexe kopieren?")
             Case vbYes
                 answer = True
@@ -129,29 +134,29 @@ Private Sub CommandButtonCopy_Click()
     frm.Show 1
 
     LoadListViewPlan Me.ListViewPlankopf
-    
+
     SetFilters
 
 End Sub
 
 Private Sub CommandButtonDelete_Click()
 
-    Dim Row                  As Long
+    Dim row                  As Long
     If Globals.shStoreData.Cells(4, 1).Value = vbNullString Then
-        Row = 3
+        row = 3
     Else
-        Row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).Row
+        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
     End If
     With Globals.shStoreData
-        Dim info             As String: info = vbNewLine & .Cells(Row, 14).Value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(Row)).Count & " Indexe"
+        Dim info             As String: info = vbNewLine & .Cells(row, 14).Value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Indexe"
     End With
     Select Case MsgBox("Bist du sicher dass du den Plankopf löschen willst?" & info, vbYesNo, "Plankopf löschen")
         Case vbYes
-            PlankopfFactory.DeleteFromDatabase Row
+            PlankopfFactory.DeleteFromDatabase row
             LoadListViewPlan Me.ListViewPlankopf
-            
+
             SetFilters
-            
+
         Case vbNo
             Exit Sub
     End Select
@@ -169,9 +174,9 @@ Private Sub FilterListView(ByVal Index As String, ByVal FilterValue As String)
     Dim e                    As ListItem
 StartOver:
     For Each e In Me.ListViewPlankopf.ListItems
-Debug.Print e.ListSubItems.Item(Index).Text
+Debug.Print e.ListSubItems.Item(Index).text
         If FilterValue <> "Alles" Then
-            If e.ListSubItems.Item(Index).Text <> FilterValue Then
+            If e.ListSubItems.Item(Index).text <> FilterValue Then
                 Me.ListViewPlankopf.ListItems.Remove e.Index
                 GoTo StartOver
             End If
@@ -193,14 +198,14 @@ End Sub
 
 Private Sub ListViewPlankopf_DblClick()
 
-    Dim Row                  As Long
+    Dim row                  As Long
     If Globals.shStoreData.Cells(4, 1).Value = vbNullString Then
-        Row = 3
+        row = 3
     Else
-        Row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).Row
+        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
     End If
     Dim frm                  As New UserFormPlankopf
-    frm.LoadClass PlankopfFactory.LoadFromDataBase(Row), Projekt
+    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt
     frm.setIcons Edit
     frm.Show 1
 
@@ -211,19 +216,19 @@ Private Sub UserForm_Initialize()
     LoadListViewPlan Me.ListViewPlankopf
     Filters = False
     ShowFilter
-    
+
     If Me.ListViewPlankopf.ListItems.Count < 1 Then CommandButtonAdd_Click
 
 End Sub
 
 Private Sub SetFilters()
 
-LoadFilters Me.ComboBoxFilterGebäude, "Gebäude"
-LoadFilters Me.ComboBoxFilterGebäudeteil, "Gebäudeteil"
-LoadFilters Me.ComboBoxFilterGeschoss, "Geschoss"
-LoadFilters Me.ComboBoxFilterGewerk, "Gewerk"
-LoadFilters Me.ComboBoxFilterUnterGewerk, "Untergewerk"
-LoadFilters Me.ComboBoxFilterPlanart, "Planart"
+    LoadFilters Me.ComboBoxFilterGebäude, "Gebäude"
+    LoadFilters Me.ComboBoxFilterGebäudeteil, "Gebäudeteil"
+    LoadFilters Me.ComboBoxFilterGeschoss, "Geschoss"
+    LoadFilters Me.ComboBoxFilterGewerk, "Gewerk"
+    LoadFilters Me.ComboBoxFilterUnterGewerk, "Untergewerk"
+    LoadFilters Me.ComboBoxFilterPlanart, "Planart"
 
 End Sub
 
@@ -232,7 +237,7 @@ Private Sub LoadFilters(ByRef Filter As MSForms.ComboBox, ByVal FilterText As St
     Dim e                    As range
     Dim col                  As Long
     Dim lastrow              As Long: lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count
-    Dim WS                   As Worksheet: Set WS = Globals.shStoreData
+    Dim ws                   As Worksheet: Set ws = Globals.shStoreData
 
     Select Case FilterText
         Case "Gebäude"
@@ -252,7 +257,7 @@ Private Sub LoadFilters(ByRef Filter As MSForms.ComboBox, ByVal FilterText As St
     Filter.Clear
     With CreateObject("Scripting.Dictionary")
         .Add "Alles", Nothing
-        For Each e In WS.range(WS.Cells(3, col), WS.Cells(lastrow, col))
+        For Each e In ws.range(ws.Cells(3, col), ws.Cells(lastrow, col))
             If Not .Exists(e.Value) Then
                 .Add e.Value, Nothing
             End If

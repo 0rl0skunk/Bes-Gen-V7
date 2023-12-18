@@ -37,7 +37,7 @@ End Type
 
 Private This                 As TIndex
 Private Inputs               As TIndex
-Private created As Boolean
+Private created              As Boolean
 
 Public Function Filldata( _
        ByVal IDPlan As String, _
@@ -50,7 +50,7 @@ Public Function Filldata( _
        Optional ByVal GeprüftDatum As String = vbNullString, _
        Optional ByVal SkipValidation As Boolean _
        ) As Boolean
-created = False
+    created = False
     Inputs.ID = ID
     Inputs.IDPlan = IDPlan
     Inputs.Index = Letter

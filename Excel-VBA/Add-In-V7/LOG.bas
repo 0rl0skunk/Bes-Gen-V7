@@ -68,7 +68,7 @@ End Sub
 Private Sub samples()
     'for error Logging:
     writelog LogError, "Where did the error occure?" & vbNewLine & _
-                     ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
+                      ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
 End Sub
 
 

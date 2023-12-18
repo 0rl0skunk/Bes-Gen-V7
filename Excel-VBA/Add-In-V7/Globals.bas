@@ -68,9 +68,9 @@ End Function
 Private Sub GetPlanköpfe()
 
     'TODO Create Planköpfe from Workbook / Database
-    Dim Row As range
-    For Each Row In shStoreData.range("A1").CurrentRegion
-        pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Row.Row)
+    Dim row                  As range
+    For Each row In shStoreData.range("A1").CurrentRegion
+        pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
     Next
     writelog LogInfo, "Loaded " & pPlanköpfe.Count & " Planköpfe from the Database"
 End Sub

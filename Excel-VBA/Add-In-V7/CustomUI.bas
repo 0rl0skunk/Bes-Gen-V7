@@ -30,47 +30,37 @@ Set objRibbon = Nothing
 End Function
 
 Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
-If Application.ActiveWorkbook.FileFormat <> 50 Then
-returnedVal = False
-If control.ID = "customGroupNoBesGen" Then returnedVal = True
-Else
+    If Application.ActiveWorkbook.FileFormat <> 50 Then
+        returnedVal = False
+        If control.ID = "customGroupNoBesGen" Then returnedVal = True
+    Else
         Select Case control.ID
-        Case "customGroupNoBesGen"
-        returnedVal = False
-        Case "customGroupPanels"
-        returnedVal = True
-        Case "customGroupBuildings"
-        If Globals.shPData Is Nothing Then Globals.SetWBs
-        If Globals.shPData.range("ADM_ProjektPfadCAD").Value = vbNullString Then
-        returnedVal = True
-        Else
-        returnedVal = False
-        End If
-        Case "customGroupExplorer"
-        returnedVal = True
-        Case "customGroupHelp"
-        returnedVal = True
-        Case "customGroupCreateProject"
-        If Globals.shPData.range("ADM_ProjektPfadCAD").Value = vbNullString Then
-        returnedVal = True
-        Else
-        returnedVal = False
-        End If
-        Case Else
-        returnedVal = True
-    End Select
+            Case "customGroupNoBesGen"
+                returnedVal = False
+            Case "customGroupPanels"
+                returnedVal = True
+            Case "customGroupBuildings"
+                If Globals.shPData Is Nothing Then Globals.SetWBs
+                If Globals.shPData.range("ADM_ProjektPfadCAD").Value = vbNullString Then
+                    returnedVal = True
+                Else
+                    returnedVal = False
+                End If
+            Case "customGroupExplorer"
+                returnedVal = True
+            Case "customGroupHelp"
+                returnedVal = True
+            Case "customGroupCreateProject"
+                If Globals.shPData.range("ADM_ProjektPfadCAD").Value = vbNullString Then
+                    returnedVal = True
+                Else
+                    returnedVal = False
+                End If
+            Case Else
+                returnedVal = True
+        End Select
     End If
-End Sub
-
-Sub IsButtonVisible(control As IRibbonControl, ByRef returnedVal As Variant)
-
-    Select Case control.ID
-        Case "unLockProjekt"
-            returnedVal = isUILocked
-        Case "LockProjekt"
-            returnedVal = Not isUILocked
-    End Select
-
+    
 End Sub
 
 Sub onLoad(ribbon As IRibbonUI)
@@ -112,16 +102,16 @@ Public Sub RefreshRibbon()
 RestartExcel:
     MsgBox "Please restart Excel for Ribbon UI changes to take affect", , "Ribbon UI Refresh Failed"
     writelog LogError, "trying to refresh CustomRibbon" & vbNewLine & _
-                     ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
+                      ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
 
 End Sub
 
 Sub onActionButton(control As IRibbonControl)
     writelog LogInfo, "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
-    Globals.SetWBs
+    If Globals.shPData Is Nothing Then Globals.SetWBs
     Select Case control.ID
         Case "Objektdaten"
-                ActiveWorkbook.Sheets("Gebäude").Activate
+            ActiveWorkbook.Sheets("Gebäude").Activate
         Case "Person"
             Dim frmAdresse   As New UserFormPerson
             frmAdresse.Show 1
@@ -162,8 +152,11 @@ Sub onActionButton(control As IRibbonControl)
             Dim frmOutlook   As New UserFormOutlook
             frmOutlook.Show 1
         Case "CADElektro"
+            Dim frmCreateElektro As New UserFormProjektErstellen
+            frmCreateElektro.Show 1
             'TODO Create new CAD Project for TinLine
     End Select
+    CustomUI.RefreshRibbon
 End Sub
 
 Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
@@ -175,4 +168,5 @@ Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
     End Select
     writelog LogInfo, control.ID & " is enabled = " & returnedVal
 End Sub
+
 
