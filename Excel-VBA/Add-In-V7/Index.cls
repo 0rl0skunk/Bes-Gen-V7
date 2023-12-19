@@ -76,7 +76,7 @@ Private Function validateInputs() As Boolean
 
     ' sind alle benötigten Daten gegeben und korrekt
     validateInputs = False
-    If Len(Inputs.IDPlan) = 0 Then ERR.Raise 1, "Index > ValidateInputs", "No 'Plan ID' given"
+    If Len(Inputs.IDPlan) = 0 Then err.Raise 1, "Index > ValidateInputs", "No 'Plan ID' given"
     '--- Zeichner ---
     If Len(Inputs.GezeichnetPerson) = 0 Then writelog LogError, "Index > ValidateInputs > No 'GezeichnetPerson' given": created = False
     If Len(Inputs.GezeichnetDatum) = 0 Then writelog LogError, "Index > ValidateInputs > No 'GezeichnetDatum' given": created = False
@@ -106,8 +106,8 @@ Private Property Get XMLFile() As String
     XMLFile = This.XMLFilePath & "\" & This.XMLFileName
 End Property
 
-Private Property Get DWGFile() As String
-    DWGFile = This.DWGFilePath & "\" & This.DWGFileName
+Private Property Get dwgFile() As String
+    dwgFile = This.DWGFilePath & "\" & This.DWGFileName
 End Property
 
 Private Property Get IIndex_IndexID() As String

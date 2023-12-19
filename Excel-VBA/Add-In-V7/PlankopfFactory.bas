@@ -5,6 +5,15 @@ Option Explicit
 '@Folder "Plankopf"
 '@ModuleDescription "Erstellt ein Plankopf-Objekt von welchem die daten einfach ausgelesen werden können."
 
+Private oXml                 As New MSXML2.DOMDocument60
+Private oXsl                 As New MSXML2.DOMDocument60
+
+Private NodElement           As IXMLDOMElement
+Private NodChild             As IXMLDOMElement
+Private NodGrandChild        As IXMLDOMElement
+
+Private PKNr As Long
+
 Public Function Create( _
        ByVal Projekt As IProjekt, _
        ByVal GezeichnetPerson As String, _
@@ -110,6 +119,9 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
     AddToDatabase = False
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
     Dim row                  As Long: row = ws.range("A1").CurrentRegion.rows.Count + 1
+
+    NewTinLinePlankopf Plankopf
+
     With ws
         .Cells(row, 1).value = Plankopf.ID
         .Cells(row, 2).value = Plankopf.IDTinLine
@@ -121,7 +133,7 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
         .Cells(row, 8).value = Plankopf.Gebäudeteil
         .Cells(row, 9).value = Plankopf.Geschoss
         .Cells(row, 10).value = Plankopf.CustomPlanüberschrift
-        .Cells(row, 11).value = Plankopf.DWGFile
+        .Cells(row, 11).value = Plankopf.dwgFile
         .Cells(row, 13).value = Plankopf.Planüberschrift
         .Cells(row, 14).value = Plankopf.Plannummer
         .Cells(row, 15).value = Plankopf.LayoutGrösse
@@ -135,6 +147,137 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
     End With
     AddToDatabase = True
     writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
+
+End Function
+
+Private Function NewTinLinePlankopf(ByRef Plankopf As IPlankopf) As Boolean
+    
+    oXsl.load XMLVorlage
+
+    ' Standard XML Elemente für TinLine erstellen / Einlesen
+    If Len(dir(Plankopf.XMLFile)) = 0 Then
+        oXml.LoadXML "<tinPlan1></tinPlan1>"
+    Else
+        oXml.load Plankopf.XMLFile
+    End If
+    writelog LogTrace, "XML geladen: " & Plankopf.XMLFile & vbNewLine & oXml.XML
+
+    Set NodElement = oXml.SelectSingleNode("tinPlan1")
+
+    If CheckPlankopf(Plankopf) Then
+        ' XML formatieren
+    oXml.save Plankopf.XMLFile
+    oXml.transformNodeToObject oXsl, oXml
+    oXml.save Plankopf.XMLFile
+
+    writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in TinLine geschrieben"
+    Else
+    NewTinLinePlankopf = False
+    writelog LogWarning, "Plankopf " & Plankopf.Plannummer & " nicht erstellt"
+    End If
+
+End Function
+
+Sub populate(ByVal Plankopf As IPlankopf)
+
+    Dim str                  As String
+    str = "PK" & PKNr
+
+   CreateXmlAttribute "PA40", "Plan Überschrift", Plankopf.Planüberschrift, str, NodChild, oXml, NodElement
+   CreateXmlAttribute "PA41", "Format", Plankopf.LayoutGrösse, str, NodChild, oXml, NodElement
+   CreateXmlAttribute "PA42", "Massstab", Plankopf.LayoutMasstab, str, NodChild, oXml, NodElement
+   CreateXmlAttribute "PA43", "Plannummer", Plankopf.LayoutName, str, NodChild, oXml, NodElement
+   CreateXmlAttribute "PA44", "Planstand", Plankopf.LayoutPlanstand, str, NodChild, oXml, NodElement
+   CreateXmlAttribute "PA30", "Gezeichnet", Plankopf.GezeichnetPerson, str, NodChild, oXml, NodElement
+   CreateXmlAttribute "PA31", "Datum Gezeichnet", Plankopf.GezeichnetDatum, str, NodChild, oXml, NodElement
+   CreateXmlAttribute "PA32", "Geprüft", Plankopf.GeprüftPerson, str, NodChild, oXml, NodElement
+   CreateXmlAttribute "PA33", "Datum Geprüft", Plankopf.GeprüftDatum, str, NodChild, oXml, NodElement
+
+End Sub
+
+Private Function CheckPlankopf(ByRef Plankopf As IPlankopf) As Boolean
+
+load:                                            ' load xml file
+    On Error GoTo err
+
+    Dim oSeqNodes            As IXMLDOMNodeList
+    Dim oSeqNode As IXMLDOMNode
+    Dim PKs                  As New Collection
+    ' select all PK nodes
+    Set oSeqNodes = oXml.SelectNodes("//tinPlan1/PK")
+
+    If oSeqNodes.length = 0 Then
+        GoTo err
+    End If
+
+    For Each oSeqNode In oSeqNodes
+        PKs.Add CInt(oSeqNode.SelectSingleNode("Nr").text)
+    Next
+
+    Dim arrPK()              As Variant
+    arrPK = CollectionToArray(PKs)
+    PKNr = WorksheetFunction.Max(arrPK)
+
+    'If PKNr = "" Then GoTo err
+
+    ' there is a Plankopf in the xml file
+    ' check if the Plankopf is empty
+EmptyPK:
+    Dim ChildNod As IXMLDOMNodeList
+    Dim Nod As IXMLDOMNode
+    Set ChildNod = oXml.SelectNodes("tinPlan1/PK" & CStr(PKNr))
+
+FreierPlankopf:
+    For Each Nod In ChildNod
+        If Nod.FirstChild.text = "PA40" And Not Nod.LastChild.text = "" Then
+            GoTo err
+        End If
+        NodElement.RemoveChild Nod
+    Next Nod
+
+TinLineID:
+    ' get the TinLine ID of the current PK
+    Dim TinLineID            As String
+
+    For Each oSeqNode In oSeqNodes
+        If oSeqNode.SelectSingleNode("Nr").text = PKNr Then
+            TinLineID = CStr(oSeqNode.SelectSingleNode("ID").text)
+            GoTo TinLineIDFound
+        End If
+    Next
+TinLineIDFound:
+    Plankopf.IDTinLine = TinLineID
+    writelog LogTrace, "TinLine ID in Plankopf eingesetzt " & Plankopf.IDTinLine
+    populate Plankopf
+CheckPlankopf = True
+    Exit Function
+err:
+
+    ' there s no Plankopf in the specified file
+    Dim answer
+    answer = MsgBox("Es besteht kein Leerer Plankopf in der Datei: " & vbNewLine & vbNewLine & Plankopf.XMLFile & vbNewLine & vbNewLine & "Datei im TinLine öffnen?", vbYesNo, "Kein Plankopf!")
+    writelog LogTrace, "Kein leerer Plankopf in XML " & Plankopf.XMLFile
+    If answer = vbYes Then
+        CreateObject("Shell.Application").Open (Plankopf.dwgFile)
+        answer = MsgBox("Plankopf im TinLine erstellt?", vbYesNo)
+        writelog LogTrace, "DWG Geöffnet im TinLine " & Plankopf.dwgFile
+        If answer = vbYes Then
+        writelog LogTrace, "Plankopf erstellt "
+        oXml.load Plankopf.XMLFile
+            GoTo load
+        Else
+            CheckPlankopf = False
+            writelog LogTrace, "Plankopf NICHT erstellt "
+            CheckPlankopf = False
+            Exit Function
+        End If
+
+    Else
+        CheckPlankopf = False
+        writelog LogTrace, "DWG NICHT Geöffnet im TinLine " & Plankopf.dwgFile
+        CheckPlankopf = False
+        Exit Function
+    End If
 
 End Function
 
@@ -154,7 +297,7 @@ Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
         '.Cells(Row, 8).Value = Plankopf.GebäudeTeil
         '.Cells(Row, 9).Value = Plankopf.Geschoss
         .Cells(row, 10).value = Plankopf.CustomPlanüberschrift
-        .Cells(row, 11).value = Plankopf.DWGFile
+        .Cells(row, 11).value = Plankopf.dwgFile
         .Cells(row, 13).value = Plankopf.Planüberschrift
         '.Cells(Row, 14).Value = Plankopf.Plannummer
         .Cells(row, 15).value = Plankopf.LayoutGrösse

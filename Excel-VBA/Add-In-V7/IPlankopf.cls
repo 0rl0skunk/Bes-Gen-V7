@@ -23,6 +23,9 @@ End Property
 Public Property Get IDTinLine() As String
 End Property
 
+Public Property Let IDTinLine(ByVal newID As String)
+End Property
+
 Public Property Get Plantyp() As String
 End Property
 
@@ -92,7 +95,7 @@ End Property
 Public Property Get DWGFileName() As String
 End Property
 
-Public Property Get DWGFile() As String
+Public Property Get dwgFile() As String
 End Property
 
 Public Property Get XMLFileName() As String

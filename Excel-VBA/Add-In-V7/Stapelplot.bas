@@ -125,10 +125,10 @@ End Function
 
 Private Sub Eintrag(Plan As IPlankopf)
     a.WriteLine ("[DWF6Sheet:" & Plan.PDFFileName & "]") ' PDF Ablage
-    a.WriteLine ("DWG=" & Plan.DWGFile)          ' DWG Ablage
+    a.WriteLine ("DWG=" & Plan.dwgFile)          ' DWG Ablage
     a.WriteLine ("Layout=" & Plan.LayoutName)    ' Plannummer / Layoutname
     a.WriteLine ("Setup=")
-    a.WriteLine ("OriginalSheetPath=" & Plan.DWGFile) ' DWG Ablage
+    a.WriteLine ("OriginalSheetPath=" & Plan.dwgFile) ' DWG Ablage
     a.WriteLine ("Has Plot Port=0")
     a.WriteLine ("Has3DDWF=0")
     a.WriteLine (" ")

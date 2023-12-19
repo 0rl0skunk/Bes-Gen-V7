@@ -24,7 +24,7 @@ Err1:
     ' the "SOMETHING" happened
     On Error GoTo -1                             ' reset error code from excel to create a own one
     On Error GoTo ErrHandler                     ' goto the fancy error messages
-    ERR.Raise 83, , "A good Description of what happened" & vbNewLine & _
+    err.Raise 83, , "A good Description of what happened" & vbNewLine & _
                    "maybe even on two seperate Lines"
 
 noerr1:
@@ -37,16 +37,16 @@ ErrHandler:
 
     Dim errFrm               As New UserFormMessage
 
-    Select Case ERR.Number
+    Select Case err.Number
         Case 81
             ' if it is solvable then do so and
             GoTo errSolved
         Case 82
             ' if it is NOT solvable then display the error message
-            errFrm.Typ TypWarning, ErrSource & ERR.Number & vbNewLine & "Decsription:" & vbNewLine & ERR.description
+            errFrm.Typ TypWarning, ErrSource & err.Number & vbNewLine & "Decsription:" & vbNewLine & err.description
             errFrm.Show 1
         Case Else                                'a "unhandled" error occured
-            errFrm.Typ typError, ErrSource & ERR.Number & vbNewLine & "Decsription:" & vbNewLine & ERR.description, , True
+            errFrm.Typ typError, ErrSource & err.Number & vbNewLine & "Decsription:" & vbNewLine & err.description, , True
             errFrm.Show 1
     End Select
 

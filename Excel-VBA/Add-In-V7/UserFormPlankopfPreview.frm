@@ -22,6 +22,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 '@Folder "Plankopf"
 Option Explicit
 
@@ -57,7 +59,7 @@ Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
     xmlDOMDoc.load filepath
 
     pPlankopfnummer = Plankopfnummer
-    Dim PKnr                 As String: PKnr = "PK" & pPlankopfnummer
+    Dim PKNr                 As String: PKNr = "PK" & pPlankopfnummer
 
     Dim ParentNode           As MSXML2.IXMLDOMElement
     Set ParentNode = xmlDOMDoc.DocumentElement
@@ -66,7 +68,7 @@ Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
     Dim GrandChildNode       As MSXML2.IXMLDOMElement
 
     For Each ChildNode In ParentNode.ChildNodes
-        If ChildNode.HasChildNodes And ChildNode.BaseName = PKnr Then
+        If ChildNode.HasChildNodes And ChildNode.BaseName = PKNr Then
             For Each GrandChildNode In ChildNode.ChildNodes
                 Select Case GrandChildNode.text
                     Case "PA40": Me.PA40.Caption = GrandChildNode.NextSibling.NextSibling.text

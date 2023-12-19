@@ -76,6 +76,11 @@ End Property
 Private Property Get IPlankopf_ID() As String
     IPlankopf_ID = This.ID
 End Property
+
+Private Property Let IPlankopf_IDTinLine(ByVal newID As String)
+    This.IDTinLine = newID
+End Property
+
 Private Property Let IPlankopf_ID(ByVal NewValue As String)
     This.ID = NewValue
 End Property
@@ -317,9 +322,9 @@ Private Sub GetKF()
     writelog LogInfo, "Kurzformen erstellt"
     Exit Sub
 ErrHandler:
-Debug.Print ">>>   "; ERR.description
+Debug.Print ">>>   "; err.description
     writelog LogError, "Beim erstellen der Kurzformen" & vbNewLine & _
-                      ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
+                      err.Number & vbNewLine & err.description & vbNewLine & err.source
 
 End Sub
 
@@ -419,7 +424,7 @@ Private Sub GetPlanüberschrift()
                 This.Planüberschrift = Planüberschrift
                 writelog LogInfo, "Planüberschrift erstellt: " & This.Planüberschrift
             Case vbNo
-                writelog logwarning, "Planüberschrift nicht erstellt: " & This.Planüberschrift
+                writelog LogWarning, "Planüberschrift nicht erstellt: " & This.Planüberschrift
         End Select
     Else
         This.Planüberschrift = Planüberschrift
@@ -437,12 +442,12 @@ Private Function ValidInputs() As Boolean
     ErrorSource = "Plankopf > ValidInputs > "
     If Len(Inputs.GezeichnetPerson) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GEZEICHNET PERSON' given"
     If Len(Inputs.GezeichnetDatum) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GEZEICHNET DATUM' given"
-    If Len(Inputs.GeprüftPerson) = 0 Then writelog logwarning, ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
-    If Len(Inputs.GeprüftDatum) = 0 Then writelog logwarning, ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
+    If Len(Inputs.GeprüftPerson) = 0 Then writelog LogWarning, ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
+    If Len(Inputs.GeprüftDatum) = 0 Then writelog LogWarning, ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
     If Len(Inputs.Gebäude) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GEBÄUDE' given"
     If Len(Inputs.Gebäudeteil) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GEBÄUDETEIL' given"
     If Len(Inputs.Geschoss) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GESCHOSS' given"
-    If Len(Inputs.Planüberschrift) = 0 Then writelog logwarning, ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
+    If Len(Inputs.Planüberschrift) = 0 Then writelog LogWarning, ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
     If Len(Inputs.LayoutGrösse) = 0 Then writelog LogError, ErrorSource & "no 'INPUT FORMAT' given"
     If Len(Inputs.LayoutMasstab) = 0 Then writelog LogError, ErrorSource & "no 'INPUT MASSTAB' given"
     If Len(Inputs.LayoutPlanstand) = 0 Then writelog LogError, ErrorSource & "no 'INPUT PLANSTAND' given"
@@ -462,7 +467,7 @@ Public Sub Refresh()
                       
     This.PDFFileName = WorksheetFunction.TextJoin _
                        ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
-    writelog LogInfo, "Planablage-Namen aktualisiert" & This.PDFFileName
+    writelog LogInfo, "Planablage-Namen aktualisiert: " & This.PDFFileName
 End Sub
 
 ' -------------------------------

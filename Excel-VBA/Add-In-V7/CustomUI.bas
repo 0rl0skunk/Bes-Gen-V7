@@ -102,7 +102,7 @@ Public Sub RefreshRibbon()
 RestartExcel:
     MsgBox "Please restart Excel for Ribbon UI changes to take affect", , "Ribbon UI Refresh Failed"
     writelog LogError, "trying to refresh CustomRibbon" & vbNewLine & _
-                      ERR.Number & vbNewLine & ERR.description & vbNewLine & ERR.source
+                      err.Number & vbNewLine & err.description & vbNewLine & err.source
 
 End Sub
 

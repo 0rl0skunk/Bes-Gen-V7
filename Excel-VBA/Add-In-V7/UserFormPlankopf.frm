@@ -12,16 +12,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
-
-
-
-
 '@Folder "Plankopf"
 Option Explicit
 
@@ -131,7 +121,7 @@ Private Sub EditDWG_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, B
             TinLine.setTinPrinzipBibiothek
     End Select
 
-    CreateObject("Shell.Application").Open (FormToPlankopf.DWGFile)
+    CreateObject("Shell.Application").Open (FormToPlankopf.dwgFile)
 
 End Sub
 

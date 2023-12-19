@@ -11,10 +11,11 @@ Global Const maxlen As Long = 35                 'Maximale Anzahl Zeichen der Pl
 Global Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
 Global Const XMLVorlage As String = "H:\TinLine\01_Standards\transform.xsl"
 Global Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
-Global Const LogDepth As Double = 1#
-' 3= everything > Slowest
-' 2= warnings and errors
-' 1= Errors only
+Global Const LogDepth As Double = 3
+' 3 = Trace
+' 2 = Info
+' 1 = Warnings
+' 0 = Errors
 
 
 Public WB                    As Workbook
@@ -123,49 +124,49 @@ Public Function SetWBs() As Boolean
     If WB Is Nothing Then Set WB = Application.ActiveWorkbook
     Dim i                    As Integer
     Set shAdress = WB.Sheets("Adressverzeichnis")
-    If ERR Then
+    If err Then
         Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Adressverzeichnis").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shAdress = WB.Sheets("Adressverzeichnis")
     End If
     Set shStoreData = WB.Sheets("Datenbank")
-    If ERR Then
+    If err Then
         Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Datenbank").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shStoreData = WB.Sheets("Datenbank")
     End If
     Set shIndex = WB.Sheets("Index")
-    If ERR Then
+    If err Then
         Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Index").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shIndex = WB.Sheets("Index")
     End If
     Set shPlanListe = WB.Sheets("Planlisten")
-    If ERR Then
+    If err Then
         Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Planlisten").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shPlanListe = WB.Sheets("Planlisten")
     End If
     Set shVersand = WB.Sheets("Versand")
-    If ERR Then
+    If err Then
         Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Versand").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shVersand = WB.Sheets("Versand")
     End If
     Set shGebäude = WB.Sheets("Gebäude")
-    If ERR Then
+    If err Then
         Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Gebäude").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shGebäude = WB.Sheets("Gebäude")
     End If
     Set shPData = WB.Sheets("Projektdaten")
-    If ERR Then
+    If err Then
         Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("Projektdaten").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shPData = WB.Sheets("Projektdaten")
     End If
     Set shSPSync = WB.Sheets("SharePointSync")
-    If ERR Then
+    If err Then
         Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
         xlsmPages.Sheets("SharePointSync").copy after:=WB.Sheets(WB.Sheets.Count)
         Set shPData = WB.Sheets("SharePointSync")

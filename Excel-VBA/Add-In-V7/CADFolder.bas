@@ -39,7 +39,7 @@ Private Function CreateFoldersTinLine() As Boolean
     CreateFoldersTinLine = True
     Exit Function
 ErrHandler:
-    Select Case ERR.Number
+    Select Case err.Number
     Case 75
         MsgBox "Der Ordner besteht bereits!" & vbNewLine & "Stell sicher, dass die Projektnummer korrekt eingetragen wurde." & vbNewLine & vbNewLine & "Wenn die Projektnummer etc. korrekt eingetragen wurde, melde dich beim QS-Verantwortlichen!", vbCritical, "Projekt bereits Vorhanden"
         CreateFoldersTinLine = False
@@ -91,7 +91,7 @@ Private Sub CreateFoldersPR()
            )
            MkDir Folder & "\" & iStr & "_" & Plan.UnterGewerkKF
             TinLinePrinzip Plan
-            FileCopy VorlagePRDWG, Plan.DWGFile
+            FileCopy VorlagePRDWG, Plan.dwgFile
     Next
     
 End Sub
@@ -196,9 +196,9 @@ Private Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String)
             MkDir Plan.FolderName
             
             If buildings Then
-            FileCopy VorlageEPDWGGEB, Plan.DWGFile
+            FileCopy VorlageEPDWGGEB, Plan.dwgFile
             Else
-            FileCopy VorlageEPDWG, Plan.DWGFile
+            FileCopy VorlageEPDWG, Plan.dwgFile
             End If
             
             TinLineFloorXML Plan
@@ -213,33 +213,33 @@ Private Sub TinLineFloorXML(ByRef Plan As IPlankopf)
     Dim oXsl                 As New MSXML2.DOMDocument60
     oXsl.load XMLVorlage
 
-    Dim nodElement           As IXMLDOMElement
-    Dim nodChild             As IXMLDOMElement
-    Dim nodGrandChild        As IXMLDOMElement
+    Dim NodElement           As IXMLDOMElement
+    Dim NodChild             As IXMLDOMElement
+    Dim NodGrandChild        As IXMLDOMElement
 
     ' Standard XML Elemente für TinLine erstellen
     oXml.LoadXML ("<tinPlan1></tinPlan1>")
-    Set nodElement = oXml.SelectSingleNode("//tinPlan1")
+    Set NodElement = oXml.SelectSingleNode("//tinPlan1")
 
-    Set nodChild = oXml.createElement("Attribut")
-    nodElement.appendChild nodChild
-    Set nodChild = oXml.createElement("PA")
-    nodElement.appendChild nodChild
-    Set nodGrandChild = oXml.createElement("Name")
-    nodGrandChild.text = "PA200"
-    nodChild.appendChild nodGrandChild
-    Set nodGrandChild = oXml.createElement("Bez")
-    nodGrandChild.text = "Gebäude"
-    nodChild.appendChild nodGrandChild
-    Set nodGrandChild = oXml.createElement("Wert")
-    nodGrandChild.text = Plan.Gebäude
-    nodChild.appendChild nodGrandChild
+    Set NodChild = oXml.createElement("Attribut")
+    NodElement.appendChild NodChild
+    Set NodChild = oXml.createElement("PA")
+    NodElement.appendChild NodChild
+    Set NodGrandChild = oXml.createElement("Name")
+    NodGrandChild.text = "PA200"
+    NodChild.appendChild NodGrandChild
+    Set NodGrandChild = oXml.createElement("Bez")
+    NodGrandChild.text = "Gebäude"
+    NodChild.appendChild NodGrandChild
+    Set NodGrandChild = oXml.createElement("Wert")
+    NodGrandChild.text = Plan.Gebäude
+    NodChild.appendChild NodGrandChild
 
     ' XML formatieren
     Debug.Print Plan.FolderName & "\TinFloor.xml"
-    oXml.Save Plan.FolderName & "\TinFloor.xml"
+    oXml.save Plan.FolderName & "\TinFloor.xml"
     oXml.transformNodeToObject oXsl, oXml
-    oXml.Save Plan.FolderName & "\TinFloor.xml"
+    oXml.save Plan.FolderName & "\TinFloor.xml"
 
 End Sub
 
@@ -248,22 +248,22 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     Dim oXsl                 As New MSXML2.DOMDocument60
     oXsl.load XMLVorlage
 
-    Dim nodElement           As IXMLDOMElement
-    Dim nodChild             As IXMLDOMElement
-    Dim nodGrandChild        As IXMLDOMElement
+    Dim NodElement           As IXMLDOMElement
+    Dim NodChild             As IXMLDOMElement
+    Dim NodGrandChild        As IXMLDOMElement
 
     ' Standard XML Elemente für TinLine erstellen
     oXml.LoadXML ("<tinPlan1></tinPlan1>")
-    Set nodElement = oXml.SelectSingleNode("//tinPlan1")
+    Set NodElement = oXml.SelectSingleNode("//tinPlan1")
 
-    Set nodChild = oXml.createElement("Attribut")
-    nodElement.appendChild nodChild
+    Set NodChild = oXml.createElement("Attribut")
+    NodElement.appendChild NodChild
     ' Index mit 15 Zeilen
-    Set nodChild = oXml.createElement("Index")
-    nodElement.appendChild nodChild
-    Set nodGrandChild = oXml.createElement("Zeile")
-    nodGrandChild.text = 15
-    nodChild.appendChild nodGrandChild
+    Set NodChild = oXml.createElement("Index")
+    NodElement.appendChild NodChild
+    Set NodGrandChild = oXml.createElement("Zeile")
+    NodGrandChild.text = 15
+    NodChild.appendChild NodGrandChild
     ' TODO prüfen ob diese Nodes gebraucht werden damit TinLine funktioniert.
     'Set nodChild = oXml.createElement("PA")
     'nodElement.appendChild nodChild
@@ -278,9 +278,9 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     'nodChild.appendChild nodGrandChild
     ' XML formatieren
     Debug.Print Plan.XMLFile
-    oXml.Save Plan.XMLFile
+    oXml.save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
-    oXml.Save Plan.XMLFile
+    oXml.save Plan.XMLFile
 
 End Sub
 
@@ -289,22 +289,22 @@ Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     Dim oXsl                 As New MSXML2.DOMDocument60
     oXsl.load XMLVorlage
 
-    Dim nodElement           As IXMLDOMElement
-    Dim nodChild             As IXMLDOMElement
-    Dim nodGrandChild        As IXMLDOMElement
+    Dim NodElement           As IXMLDOMElement
+    Dim NodChild             As IXMLDOMElement
+    Dim NodGrandChild        As IXMLDOMElement
 
     ' Standard XML Elemente für TinLine erstellen
     oXml.LoadXML ("<tinPlan1></tinPlan1>")
-    Set nodElement = oXml.SelectSingleNode("//tinPlan1")
+    Set NodElement = oXml.SelectSingleNode("//tinPlan1")
 
-    Set nodChild = oXml.createElement("Attribut")
-    nodElement.appendChild nodChild
+    Set NodChild = oXml.createElement("Attribut")
+    NodElement.appendChild NodChild
     ' Index mit 15 Zeilen
-    Set nodChild = oXml.createElement("Index")
-    nodElement.appendChild nodChild
-    Set nodGrandChild = oXml.createElement("Zeile")
-    nodGrandChild.text = 15
-    nodChild.appendChild nodGrandChild
+    Set NodChild = oXml.createElement("Index")
+    NodElement.appendChild NodChild
+    Set NodGrandChild = oXml.createElement("Zeile")
+    NodGrandChild.text = 15
+    NodChild.appendChild NodGrandChild
     ' TODO prüfen ob diese Nodes gebraucht werden damit TinLine funktioniert.
     'Set nodChild = oXml.createElement("PA")
     'nodElement.appendChild nodChild
@@ -319,9 +319,9 @@ Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     'nodChild.appendChild nodGrandChild
     ' XML formatieren
     Debug.Print Plan.XMLFile
-    oXml.Save Plan.XMLFile
+    oXml.save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
-    oXml.Save Plan.XMLFile
+    oXml.save Plan.XMLFile
 End Sub
 
 Private Sub TinLineProjectXML()
@@ -329,43 +329,43 @@ Private Sub TinLineProjectXML()
     Dim oXsl                 As New MSXML2.DOMDocument60
     oXsl.load XMLVorlage
 
-    Dim nodElement           As IXMLDOMElement
-    Dim nodChild             As IXMLDOMElement
-    Dim nodGrandChild        As IXMLDOMElement
+    Dim NodElement           As IXMLDOMElement
+    Dim NodChild             As IXMLDOMElement
+    Dim NodGrandChild        As IXMLDOMElement
 
     If Globals.shPData Is Nothing Then Globals.SetWBs
 
     ' Standard XML Elemente für TinLine erstellen
     oXml.LoadXML ("<tinPlan1></tinPlan1>")
-    Set nodElement = oXml.SelectSingleNode("//tinPlan1")
+    Set NodElement = oXml.SelectSingleNode("//tinPlan1")
 
-    Set nodChild = oXml.createElement("Attribut")
-    nodElement.appendChild nodChild
+    Set NodChild = oXml.createElement("Attribut")
+    NodElement.appendChild NodChild
     ' Projekt Node
-    Set nodChild = oXml.createElement("Project")
-    nodElement.appendChild nodChild
-    Set nodGrandChild = oXml.createElement("Projektnummer")
-    nodGrandChild.text = Globals.Projekt.Projektnummer
-    nodChild.appendChild nodGrandChild
-    Set nodGrandChild = oXml.createElement("Projektbeschreibung")
-    nodGrandChild.text = Globals.Projekt.ProjektBezeichnung
-    nodChild.appendChild nodGrandChild
-    Set nodGrandChild = oXml.createElement("ProjektMemo")
-    nodGrandChild.text = ""
-    nodChild.appendChild nodGrandChild
-    Set nodGrandChild = oXml.createElement("Language")
-    nodGrandChild.text = "DE"
-    nodChild.appendChild nodGrandChild
+    Set NodChild = oXml.createElement("Project")
+    NodElement.appendChild NodChild
+    Set NodGrandChild = oXml.createElement("Projektnummer")
+    NodGrandChild.text = Globals.Projekt.Projektnummer
+    NodChild.appendChild NodGrandChild
+    Set NodGrandChild = oXml.createElement("Projektbeschreibung")
+    NodGrandChild.text = Globals.Projekt.ProjektBezeichnung
+    NodChild.appendChild NodGrandChild
+    Set NodGrandChild = oXml.createElement("ProjektMemo")
+    NodGrandChild.text = ""
+    NodChild.appendChild NodGrandChild
+    Set NodGrandChild = oXml.createElement("Language")
+    NodGrandChild.text = "DE"
+    NodChild.appendChild NodGrandChild
     ' Infos für auf den Plankopf
-    CreateXmlAttribute "PA01", "Projekt Name", Globals.Projekt.ProjektBezeichnung, "PA", nodChild, oXml, nodElement
-    CreateXmlAttribute "PA02", "Projekt Adresse [Strasse]", Globals.Projekt.Projektadresse.Strasse, "PA", nodChild, oXml, nodElement
-    CreateXmlAttribute "PA03", "Projekt Adresse [PLZ]", Globals.Projekt.Projektadresse.PLZ, "PA", nodChild, oXml, nodElement
-    CreateXmlAttribute "PA04", "Projekt Adresse [Ort]", Globals.Projekt.Projektadresse.Ort, "PA", nodChild, oXml, nodElement
-    CreateXmlAttribute "PA05", "Projektnummer", Globals.Projekt.Projektnummer, "PA", nodChild, oXml, nodElement
-    CreateXmlAttribute "PA06", "Projektphase", Globals.Projekt.Projektphase, "PA", nodChild, oXml, nodElement
+    CreateXmlAttribute "PA01", "Projekt Name", Globals.Projekt.ProjektBezeichnung, "PA", NodChild, oXml, NodElement
+    CreateXmlAttribute "PA02", "Projekt Adresse [Strasse]", Globals.Projekt.Projektadresse.Strasse, "PA", NodChild, oXml, NodElement
+    CreateXmlAttribute "PA03", "Projekt Adresse [PLZ]", Globals.Projekt.Projektadresse.PLZ, "PA", NodChild, oXml, NodElement
+    CreateXmlAttribute "PA04", "Projekt Adresse [Ort]", Globals.Projekt.Projektadresse.Ort, "PA", NodChild, oXml, NodElement
+    CreateXmlAttribute "PA05", "Projektnummer", Globals.Projekt.Projektnummer, "PA", NodChild, oXml, NodElement
+    CreateXmlAttribute "PA06", "Projektphase", Globals.Projekt.Projektphase, "PA", NodChild, oXml, NodElement
     ' XML formatieren
-    oXml.Save Globals.Projekt.ProjektXML
+    oXml.save Globals.Projekt.ProjektXML
     oXml.transformNodeToObject oXsl, oXml
-    oXml.Save Globals.Projekt.ProjektXML
+    oXml.save Globals.Projekt.ProjektXML
 End Sub
 

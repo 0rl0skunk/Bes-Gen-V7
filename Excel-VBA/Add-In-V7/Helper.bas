@@ -163,9 +163,27 @@ Public Function GetUnterGewerkKF(UnterGewerk As String, Hauptgewerk As String, P
 
 End Function
 
+Public Function CollectionToArray(myCol As Collection) As Variant
+    ' convert a collection of elements to an array
+    Dim result     As Variant
+    Dim cnt        As Long
+
+    If myCol.Count = 0 Then
+        CollectionToArray = Array()
+        Exit Function
+    End If
+
+    ReDim result(myCol.Count - 1)
+    For cnt = 0 To myCol.Count - 1
+        result(cnt) = myCol(cnt + 1)
+    Next cnt
+    CollectionToArray = result
+
+End Function
+
 Public Function WLookup(Lookup As Variant, range As range, Index As Integer, Optional onError As String = "-") As String
     ' VLookup mit 'onError' wert welcher selbst zugeordnet werden kann.
-    On Error GoTo ERR
+    On Error GoTo err
 
     Lookup = CStr(Lookup)
 
@@ -178,7 +196,7 @@ Public Function WLookup(Lookup As Variant, range As range, Index As Integer, Opt
     Exit Function
     writelog LogInfo, "Wlookup Value Found " & WLookup
 
-ERR:
+err:
 
     WLookup = onError
     writelog LogError, "Wlookup Value for " & Lookup & " Not Found"
@@ -263,7 +281,7 @@ Public Sub deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As 
         root.RemoveChild node
     Next
     On Error Resume Next
-    oXml.Save XMLFile
+    oXml.save XMLFile
     Set oXml = Nothing
     On Error GoTo 0
 
@@ -461,7 +479,7 @@ End Function
 
 Public Function getRange(Region As range, Optional Off As Integer = 1) As range
     ' Auswahl der aktuell gespeicherten Daten im Worksheet (DATA [shData]) ohne überschriften
-    On Error GoTo ERR
+    On Error GoTo err
 
     Dim rng                  As range
 
@@ -477,7 +495,7 @@ Public Function getRange(Region As range, Optional Off As Integer = 1) As range
 
     Exit Function
 
-ERR:
+err:
     Set rng = Nothing
 
 End Function
