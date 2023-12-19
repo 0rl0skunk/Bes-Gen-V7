@@ -119,9 +119,10 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
     AddToDatabase = False
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
     Dim row                  As Long: row = ws.range("A1").CurrentRegion.rows.Count + 1
-
-    NewTinLinePlankopf Plankopf
-
+    
+    CopyToClipBoard Plankopf.LayoutName
+    
+    If NewTinLinePlankopf(Plankopf) Then
     With ws
         .Cells(row, 1).value = Plankopf.ID
         .Cells(row, 2).value = Plankopf.IDTinLine
@@ -147,6 +148,10 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
     End With
     AddToDatabase = True
     writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
+    Else
+    AddToDatabase = False
+    writelog Logwarning, "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
+    End If
 
 End Function
 
@@ -162,8 +167,6 @@ Private Function NewTinLinePlankopf(ByRef Plankopf As IPlankopf) As Boolean
     End If
     writelog LogTrace, "XML geladen: " & Plankopf.XMLFile & vbNewLine & oXml.XML
 
-    Set NodElement = oXml.SelectSingleNode("tinPlan1")
-
     If CheckPlankopf(Plankopf) Then
         ' XML formatieren
     oXml.save Plankopf.XMLFile
@@ -171,9 +174,10 @@ Private Function NewTinLinePlankopf(ByRef Plankopf As IPlankopf) As Boolean
     oXml.save Plankopf.XMLFile
 
     writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in TinLine geschrieben"
+    NewTinLinePlankopf = True
     Else
     NewTinLinePlankopf = False
-    writelog LogWarning, "Plankopf " & Plankopf.Plannummer & " nicht erstellt"
+    writelog Logwarning, "Plankopf " & Plankopf.Plannummer & " nicht erstellt"
     End If
 
 End Function
@@ -199,7 +203,7 @@ Private Function CheckPlankopf(ByRef Plankopf As IPlankopf) As Boolean
 
 load:                                            ' load xml file
     On Error GoTo err
-
+    Set NodElement = oXml.SelectSingleNode("tinPlan1")
     Dim oSeqNodes            As IXMLDOMNodeList
     Dim oSeqNode As IXMLDOMNode
     Dim PKs                  As New Collection
@@ -240,9 +244,14 @@ TinLineID:
     Dim TinLineID            As String
 
     For Each oSeqNode In oSeqNodes
+        If Not oSeqNode.SelectSingleNode("Name").text = Plankopf.LayoutName Then
+            writelog Logwarning, "Das Layout wurde möglicherweise nicht richtig beschriftet " & Plankopf.LayoutName
+            CopyToClipBoard Plankopf.LayoutName
+            MsgBox "Das Layout ist möglicherweise falsch bezeichnet." & vbNewLine & "Bitte das Layout :" & vbNewLine & oSeqNode.SelectSingleNode("Name").text & vbNewLine & " in " & vbNewLine & Plankopf.LayoutName & vbNewLine & " Umbenennen." & vbNewLine & vbNewLine & "Die korrekte Beschriftung ist in der Zwischenablage.", vbExclamation, "Layout Umbenennen"
+            oSeqNode.SelectSingleNode("Name").text = Plankopf.LayoutName
+        End If
         If oSeqNode.SelectSingleNode("Nr").text = PKNr Then
             TinLineID = CStr(oSeqNode.SelectSingleNode("ID").text)
-            GoTo TinLineIDFound
         End If
     Next
 TinLineIDFound:

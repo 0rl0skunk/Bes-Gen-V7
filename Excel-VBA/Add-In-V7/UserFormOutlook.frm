@@ -16,6 +16,7 @@ Attribute VB_Exposed = False
 
 
 
+
 '@Folder("Outlook")
 '@IgnoreModule VariableNotUsed
 Option Explicit

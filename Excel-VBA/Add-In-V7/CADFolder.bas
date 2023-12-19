@@ -2,10 +2,10 @@ Attribute VB_Name = "CADFolder"
 '@Folder("Projekt")
 Option Explicit
 
-Global Const OrdnerVorlage As String = "H:\TinLine\01_Standards\00_Vorlageordner" 'TODO Create Folder from Excel
-Global Const VorlageEPDWG As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg" 'TODO Create Folder from Excel
-Global Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg" 'TODO Create Folder from Excel
-Global Const VorlagePRDWG As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg" 'TODO Create Folder from Excel
+Global Const OrdnerVorlage As String = "H:\TinLine\01_Standards\00_Vorlageordner"
+Global Const VorlageEPDWG As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg"
+Global Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg"
+Global Const VorlagePRDWG As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg"
 
 Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean)
     
@@ -47,19 +47,19 @@ ErrHandler:
 End Function
 
 Private Sub CreateFoldersEP()
-    Dim Folder               As String
-    Folder = Globals.Projekt.ProjektOrdnerCAD & "\01_EP"
+    Dim folder               As String
+    folder = Globals.Projekt.ProjektOrdnerCAD & "\01_EP"
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
-    MkDir Folder
+    MkDir folder
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\04_DE"
-    GebäudeFolders Folder, "Elektro"
+    GebäudeFolders folder, "Elektro"
 End Sub
 
 Private Sub CreateFoldersPR()
-    Dim Folder               As String
+    Dim folder               As String
     Dim UGewerke()           As Variant
-    Folder = Globals.Projekt.ProjektOrdnerCAD & "\03_PR"
-    MkDir Folder
+    folder = Globals.Projekt.ProjektOrdnerCAD & "\03_PR"
+    MkDir folder
     UGewerke = getList("ELE_PRI")
     Dim i As Long
     Dim Plan As IPlankopf
@@ -89,7 +89,7 @@ Private Sub CreateFoldersPR()
            SkipValidation:=True, _
            CustomÜberschrift:=False _
            )
-           MkDir Folder & "\" & iStr & "_" & Plan.UnterGewerkKF
+           MkDir folder & "\" & iStr & "_" & Plan.UnterGewerkKF
             TinLinePrinzip Plan
             FileCopy VorlagePRDWG, Plan.dwgFile
     Next
@@ -101,20 +101,20 @@ Private Sub CreateFoldersES()
 End Sub
 
 Private Sub CreateFoldersTF()
-    Dim Folder               As String
-    Folder = Globals.Projekt.ProjektOrdnerCAD & "\05_TF"
-    MkDir Folder
-    GebäudeFolders Folder, "Türfachplanung"
+    Dim folder               As String
+    folder = Globals.Projekt.ProjektOrdnerCAD & "\05_TF"
+    MkDir folder
+    GebäudeFolders folder, "Türfachplanung"
 End Sub
 
 Private Sub CreateFoldersBR()
-    Dim Folder               As String
-    Folder = Globals.Projekt.ProjektOrdnerCAD & "\06_BR"
-    MkDir Folder
-    GebäudeFolders Folder, "Brandschutzplanung"
+    Dim folder               As String
+    folder = Globals.Projekt.ProjektOrdnerCAD & "\06_BR"
+    MkDir folder
+    GebäudeFolders folder, "Brandschutzplanung"
 End Sub
 
-Private Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String)
+Private Sub GebäudeFolders(ByVal folder As String, ByVal Gewerk As String)
     ' Folder = 01_EP etc.
     Dim Plan                 As IPlankopf
     Dim buildings            As Boolean
@@ -145,11 +145,11 @@ Private Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String)
         If ws.range("D1").value <> "" Then
             ' mehrere Gebäude, für jedes Gebäude ein Unterordner erstellen und die entsprechenden Etagen einfügen.
             buildings = True
-            Pfad = Folder & "\" & larrGeb(2) & "_" & larrGeb(1)
+            Pfad = folder & "\" & larrGeb(2) & "_" & larrGeb(1)
             MkDir Pfad
         Else
             ' nur ein Gebäude -> Kein unterordner erstellen
-            Pfad = Folder
+            Pfad = folder
             buildings = False
         End If
         ' Geschoss
@@ -193,7 +193,9 @@ Private Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String)
            CustomÜberschrift:=False _
            )
             
+            If Not CreateObject("Scripting.FileSystemObject").FolderExists(Plan.FolderName) Then
             MkDir Plan.FolderName
+            End If
             
             If buildings Then
             FileCopy VorlageEPDWGGEB, Plan.dwgFile
@@ -232,14 +234,14 @@ Private Sub TinLineFloorXML(ByRef Plan As IPlankopf)
     NodGrandChild.text = "Gebäude"
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Wert")
-    NodGrandChild.text = Plan.Gebäude
+    If Plan.Gebäude = "Gesamt" And Globals.shGebäude.range("D1").value = vbNullString Then: NodGrandChild.text = vbNullString: Else: NodGrandChild.text = Plan.Gebäude
     NodChild.appendChild NodGrandChild
 
     ' XML formatieren
-    Debug.Print Plan.FolderName & "\TinFloor.xml"
-    oXml.save Plan.FolderName & "\TinFloor.xml"
+    Debug.Print Plan.FolderName & "\TinPlanFloor.xml"
+    oXml.save Plan.FolderName & "\TinPlanFloor.xml"
     oXml.transformNodeToObject oXsl, oXml
-    oXml.save Plan.FolderName & "\TinFloor.xml"
+    oXml.save Plan.FolderName & "\TinPlanFloor.xml"
 
 End Sub
 
@@ -264,18 +266,18 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     Set NodGrandChild = oXml.createElement("Zeile")
     NodGrandChild.text = 15
     NodChild.appendChild NodGrandChild
-    ' TODO prüfen ob diese Nodes gebraucht werden damit TinLine funktioniert.
-    'Set nodChild = oXml.createElement("PA")
-    'nodElement.appendChild nodChild
-    'Set nodGrandChild = oXml.createElement("Name")
-    'nodGrandChild.text = "PA100"
-    'nodChild.appendChild nodGrandChild
-    'Set nodGrandChild = oXml.createElement("Bez")
-    'nodGrandChild.text = "NICHT VERWENDEN!!!"
-    'nodChild.appendChild nodGrandChild
-    'Set nodGrandChild = oXml.createElement("Wert")
-    'nodGrandChild.text = ""
-    'nodChild.appendChild nodGrandChild
+    ' 1 PA Node erstellen damit TinLine was zum Anzeigen hat und nicht nichts zeigt.
+    Set NodChild = oXml.createElement("PA")
+    NodElement.appendChild NodChild
+    Set NodGrandChild = oXml.createElement("Name")
+    NodGrandChild.text = "PA100"
+    NodChild.appendChild NodGrandChild
+    Set NodGrandChild = oXml.createElement("Bez")
+    NodGrandChild.text = "NICHT VERWENDEN!!!"
+    NodChild.appendChild NodGrandChild
+    Set NodGrandChild = oXml.createElement("Wert")
+    NodGrandChild.text = ""
+    NodChild.appendChild NodGrandChild
     ' XML formatieren
     Debug.Print Plan.XMLFile
     oXml.save Plan.XMLFile
@@ -305,18 +307,18 @@ Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     Set NodGrandChild = oXml.createElement("Zeile")
     NodGrandChild.text = 15
     NodChild.appendChild NodGrandChild
-    ' TODO prüfen ob diese Nodes gebraucht werden damit TinLine funktioniert.
-    'Set nodChild = oXml.createElement("PA")
-    'nodElement.appendChild nodChild
-    'Set nodGrandChild = oXml.createElement("Name")
-    'nodGrandChild.text = "PA100"
-    'nodChild.appendChild nodGrandChild
-    'Set nodGrandChild = oXml.createElement("Bez")
-    'nodGrandChild.text = "NICHT VERWENDEN!!!"
-    'nodChild.appendChild nodGrandChild
-    'Set nodGrandChild = oXml.createElement("Wert")
-    'nodGrandChild.text = ""
-    'nodChild.appendChild nodGrandChild
+    ' 1 PA Node erstellen damit TinLine was zum Anzeigen hat und nicht nichts zeigt.
+    Set NodChild = oXml.createElement("PA")
+    NodElement.appendChild NodChild
+    Set NodGrandChild = oXml.createElement("Name")
+    NodGrandChild.text = "PA100"
+    NodChild.appendChild NodGrandChild
+    Set NodGrandChild = oXml.createElement("Bez")
+    NodGrandChild.text = "NICHT VERWENDEN!!!"
+    NodChild.appendChild NodGrandChild
+    Set NodGrandChild = oXml.createElement("Wert")
+    NodGrandChild.text = ""
+    NodChild.appendChild NodGrandChild
     ' XML formatieren
     Debug.Print Plan.XMLFile
     oXml.save Plan.XMLFile

@@ -205,14 +205,14 @@ End Function
 
 Public Sub deleteIndexesXml()
 
-    Dim FSO                  As Object
+    Dim fso                  As Object
     Dim lastrow              As Integer
     Dim row                  As Integer
     Dim col                  As Integer
     Dim lastcol              As Integer
 
 
-    Set FSO = CreateObject("scripting.FileSystemObject")
+    Set fso = CreateObject("scripting.FileSystemObject")
 
     lastrow = shGebäude.Cells(shGebäude.rows.Count, 2).End(xlUp).row
     lastcol = shGebäude.Cells(1, shGebäude.Columns.Count).End(xlToLeft).Column
@@ -586,3 +586,26 @@ Public Function RemoveBlanksFromStringArray(ByRef inputArray() As Variant, Optio
 
 End Function
 
+Function CountFiles(ByVal path As String) As Long
+
+    Dim fso As Object
+    Dim folder As Object
+    Dim subfolder As Object
+    Dim amount As Long
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    Set folder = fso.GetFolder(path)
+    For Each subfolder In folder.SubFolders
+        amount = amount + CountFiles(subfolder.path)
+    Next subfolder
+    
+    amount = amount + folder.files.Count
+    
+    Set fso = Nothing
+    Set folder = Nothing
+    Set subfolder = Nothing
+    
+    CountFiles = amount
+
+End Function

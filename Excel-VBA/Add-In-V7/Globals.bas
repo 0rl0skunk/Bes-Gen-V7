@@ -11,7 +11,7 @@ Global Const maxlen As Long = 35                 'Maximale Anzahl Zeichen der Pl
 Global Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
 Global Const XMLVorlage As String = "H:\TinLine\01_Standards\transform.xsl"
 Global Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
-Global Const LogDepth As Double = 3
+Global Const LogDepth As Double = 0
 ' 3 = Trace
 ' 2 = Info
 ' 1 = Warnings
@@ -55,10 +55,10 @@ Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
     Set Projekt = pProjekt
 End Function
 
-Public Function planköpfe() As Collection
+Public Function Planköpfe() As Collection
 
     If pPlanköpfe Is Nothing Then GetPlanköpfe
-    Set planköpfe = pPlanköpfe
+    Set Planköpfe = pPlanköpfe
 
 End Function
 

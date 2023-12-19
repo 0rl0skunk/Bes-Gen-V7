@@ -1,4 +1,4 @@
-Attribute VB_Name = "LOG"
+Attribute VB_Name = "logger"
 Attribute VB_Description = "Logging Module."
 Option Explicit
 '@IgnoreModule EmptyStringLiteral
@@ -8,7 +8,7 @@ Option Explicit
 Public Const LogFile         As String = "C:\Users\Public\Documents\TinLine\Bes-Gen_V7.log"
 Public Enum ErrorLevel
     LogError = 0
-    LogWarning = 1
+    Logwarning = 1
     LogInfo = 2
     LogTrace = 3
 End Enum

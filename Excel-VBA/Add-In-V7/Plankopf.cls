@@ -220,7 +220,7 @@ Public Function Filldata( _
        Optional ByVal TinLineID As String = "NEW", _
        Optional ByVal SkipValidation As Boolean = False, _
        Optional ByVal Planüberschrift As String = "NEW", _
-       Optional ByVal ID As String = "NEW", _
+       Optional ByVal ID As String = "ID", _
        Optional ByVal CustomÜberschrift As Boolean = False _
        ) As Boolean
     ' SkipValidation ist zu debug zwecken zu gebrauchen
@@ -248,7 +248,7 @@ Public Function Filldata( _
     'On Error GoTo NotValid
     If ValidInputs Then
         This = Inputs
-        If ID = "NEW" Then
+        If ID = "ID" Then
             This.ID = getNewID(IDPlankopf)
         Else
             This.ID = ID
@@ -279,6 +279,9 @@ Private Sub GetKF()
 
     On Error GoTo ErrHandler
     This.GebäudeKF = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(1).value
+    If This.GebäudeKF = "GES" And Globals.shGebäude.range("D1").value = "" Then
+        This.GebäudeKF = vbNullString
+    End If
     If This.GebäudeKF = vbNullString Then
         This.GebäudeCode = vbNullString
     Else
@@ -354,11 +357,11 @@ Private Function GetFileNames()
             If This.Gebäude = "Gesamt" And Globals.shGebäude.range("D1").value = "" Then
                 Select Case This.TinLineTyp
                     Case "EP"
-                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP"
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\" & This.GeschossCode & "_" & This.GeschossKF
                     Case "BR"
-                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR"
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR\" & This.GeschossCode & "_" & This.GeschossKF
                     Case "TF"
-                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF"
+                        This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF\" & This.GeschossCode & "_" & This.GeschossKF
                 End Select
             Else                                 ' Mehrere Gebäude
                 Select Case This.TinLineTyp
@@ -424,7 +427,7 @@ Private Sub GetPlanüberschrift()
                 This.Planüberschrift = Planüberschrift
                 writelog LogInfo, "Planüberschrift erstellt: " & This.Planüberschrift
             Case vbNo
-                writelog LogWarning, "Planüberschrift nicht erstellt: " & This.Planüberschrift
+                writelog Logwarning, "Planüberschrift nicht erstellt: " & This.Planüberschrift
         End Select
     Else
         This.Planüberschrift = Planüberschrift
@@ -442,12 +445,12 @@ Private Function ValidInputs() As Boolean
     ErrorSource = "Plankopf > ValidInputs > "
     If Len(Inputs.GezeichnetPerson) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GEZEICHNET PERSON' given"
     If Len(Inputs.GezeichnetDatum) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GEZEICHNET DATUM' given"
-    If Len(Inputs.GeprüftPerson) = 0 Then writelog LogWarning, ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
-    If Len(Inputs.GeprüftDatum) = 0 Then writelog LogWarning, ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
+    If Len(Inputs.GeprüftPerson) = 0 Then writelog Logwarning, ErrorSource & "no 'INPUT GEPRÜFT PERSON' given"
+    If Len(Inputs.GeprüftDatum) = 0 Then writelog Logwarning, ErrorSource & "no 'INPUT GEPRÜFT DATUM' given"
     If Len(Inputs.Gebäude) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GEBÄUDE' given"
     If Len(Inputs.Gebäudeteil) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GEBÄUDETEIL' given"
     If Len(Inputs.Geschoss) = 0 Then writelog LogError, ErrorSource & "no 'INPUT GESCHOSS' given"
-    If Len(Inputs.Planüberschrift) = 0 Then writelog LogWarning, ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
+    If Len(Inputs.Planüberschrift) = 0 Then writelog Logwarning, ErrorSource & "no 'INPUT PLANÜBERSCHRIFT' given"
     If Len(Inputs.LayoutGrösse) = 0 Then writelog LogError, ErrorSource & "no 'INPUT FORMAT' given"
     If Len(Inputs.LayoutMasstab) = 0 Then writelog LogError, ErrorSource & "no 'INPUT MASSTAB' given"
     If Len(Inputs.LayoutPlanstand) = 0 Then writelog LogError, ErrorSource & "no 'INPUT PLANSTAND' given"

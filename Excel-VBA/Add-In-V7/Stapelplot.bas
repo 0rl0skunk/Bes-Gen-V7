@@ -5,6 +5,9 @@ Option Explicit
 Private a
 Private dsd                  As String           ' Dateiname von Stapelplott Datei
 Private OutputFolder         As String
+Private NewFiles As Long
+Private OldFiles As Long
+Private pPlanköpfe As Collection
 
 Sub plotPlanliste()
 
@@ -22,10 +25,23 @@ Sub plotPlanliste()
     Dim waitOnReturn         As Boolean: waitOnReturn = True
     Dim windowStyle          As Integer: windowStyle = 1
     Dim errorCode            As Integer
-
+    
+    OldFiles = CountFiles(OutputFolder)
+    
     wsh.Run """C:\Program Files\TinLine\TinLine 23-Deu\accoreconsole.exe"" /i ""H:\TinLine\01_Standards\TinBlank.dwg"" /s ""C:\Users\Public\Documents\plotter.scr"" /l EN-US", windowStyle, waitOnReturn
-
-    Select Case MsgBox("Pfad im Explorer öffnen?", vbYesNo, "Pläne erstellt")
+    
+    ' File Counting
+    If Not CountFiles(OutputFolder) = OldFiles + NewFiles Then
+    Select Case MsgBox("Es wurden nicht alle Pläne geplottet." & vbNewLine & "Soll geprüft werden welche Pläne fehlen?", vbYesNo, "Fehler beim plotten")
+    Case vbYes
+        Checkplot
+    Case vbNo
+    End Select
+    End If
+    Dim CreatedFiles
+    CreatedFiles = CountFiles(OutputFolder) - OldFiles
+    
+    Select Case MsgBox("Es wurden " & CreatedFiles & " von " & NewFiles & " Plänen erstellt." & vbNewLine & "Pfad im Explorer öffnen?", vbYesNo, "Pläne erstellt")
         Case vbYes
             ' open explorer
             Shell "explorer.exe" & " " & OutputFolder, vbNormalFocus
@@ -37,16 +53,48 @@ Sub plotPlanliste()
 
 End Sub
 
-Public Function CreatePlotList(ByVal pPlanköpfe As Collection) As String
+Public Sub Checkplot()
+    Dim fso As New FileSystemObject
+    Dim File As scripting.File
+    Dim PDFFile As IPlankopf
+    Dim i As Long
+    
+    For Each File In fso.GetFolder(OutputFolder).files
+    i = 1
+        For Each PDFFile In pPlanköpfe
+            If File.Name = PDFFile.PDFFileName & ".pdf" Then
+                pPlanköpfe.Remove i
+                Exit For
+            End If
+            i = i + 1
+        Next
+    Next
+    
+    Dim msg As String
+    msg = "Folgende Pläne müssen überprüft werden:" & vbNewLine
+    For Each PDFFile In pPlanköpfe
+    msg = msg & vbNewLine & PDFFile.dwgFile & " | " & PDFFile.LayoutName
+    Next
+    
+    MsgBox msg, vbInformation, "Fehlerhafte Pläne"
+    
+End Sub
 
-    Dim Folder               As String, strFolderExists As String
+Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
+
+    Dim folder               As String, strFolderExists As String
     Dim outputCol            As New Collection
     Dim Plan                 As IPlankopf
-
+    
+    Set pPlanköpfe = Planköpfe
+    Set Planköpfe = Nothing
+    
+    NewFiles = pPlanköpfe.Count
+    
     If Globals.shPData Is Nothing Then Globals.SetWBs
 
-    Folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
-    strFolderExists = dir(Folder)
+    folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
+    strFolderExists = dir(folder)
 
     'If strFolderExists = "" Then MkDir folder
     ' Open the select folder prompt

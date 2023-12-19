@@ -12,6 +12,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '@Folder "Plankopf"
 Option Explicit
 
@@ -43,11 +44,10 @@ End Sub
 Private Sub CommandButtonCreate_Click()
 
     If Me.CommandButtonCreate.Caption = "Update" Then
-        PlankopfFactory.ReplaceInDatabase FormToPlankopf
+        If PlankopfFactory.ReplaceInDatabase(FormToPlankopf) Then Unload Me
     Else
-        PlankopfFactory.AddToDatabase FormToPlankopf
+        If PlankopfFactory.AddToDatabase(FormToPlankopf) Then Unload Me
     End If
-    Unload Me
 
 End Sub
 
@@ -57,7 +57,7 @@ Private Sub CommandButtonBeschriftungAktualisieren_Click()
     Me.TextBoxBeschriftungPlannummer.value = pPlankopf.Plannummer
     Me.TextBoxBeschriftungDateiname.value = pPlankopf.PDFFileName
     Me.TextBoxPlanüberschrift.value = pPlankopf.Planüberschrift
-
+    Me.BesID.Caption = pPlankopf.ID
     Me.LabelDWGFileName.Caption = pPlankopf.DWGFileName
     Me.LabelXMLFileName.Caption = pPlankopf.XMLFileName
     Me.LabelFolderName.Caption = pPlankopf.FolderName

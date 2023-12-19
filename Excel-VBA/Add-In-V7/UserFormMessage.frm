@@ -24,6 +24,7 @@ Attribute VB_Exposed = False
 
 
 
+
 '@Folder "Templates"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -67,7 +68,7 @@ End Sub
 
 Private Sub CommandButtonLog_Click()
 
-    CreateObject("Shell.Application").Open (LOG.LogFile)
+    CreateObject("Shell.Application").Open (logger.LogFile)
 
 End Sub
 
