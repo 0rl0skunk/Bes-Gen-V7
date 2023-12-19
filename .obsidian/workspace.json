@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Beschriftung.md",
+                "file": "Excel-VBA/Ablagestruktur.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,8 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "6e6e8a3c1bae3c9d",
@@ -86,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Beschriftung.md",
+                "file": "Excel-VBA/Ablagestruktur.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Beschriftung.md",
+                "file": "Excel-VBA/Ablagestruktur.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Beschriftung.md"
+                "file": "Excel-VBA/Ablagestruktur.md"
               }
             }
           }
@@ -151,18 +150,20 @@
   },
   "active": "af4f4bfd3f672c46",
   "lastOpenFiles": [
-    "README.md",
+    "Excel-VBA/B74DD100",
+    "Excel-VBA/943DD100",
+    "Excel-VBA/231DD100",
+    "Excel-VBA/7967D100",
+    "Excel-VBA/36C5D100",
+    "Excel-VBA/E0C4D100",
+    "Excel-VBA/9D73B100",
+    "Excel-VBA/5A73B100",
+    "Excel-VBA/8C02B100",
+    "Excel-VBA/E731B100",
+    "Excel-VBA/1AF0B100",
     "Beschriftung.md",
-    "Excel-VBA/~$Add-In-V7.xlam",
-    "DF7A2000",
-    "2D5A2000",
-    "A9992000",
-    "82662000",
-    "4C202000",
-    "7ACE1000",
-    "6CDC1000",
-    "D42C1000",
-    "474B1000",
+    "Excel-VBA/Ablagestruktur.md",
+    "README.md",
     "CustomUI/MS-CUSTOMUI.md",
     "Icons.md",
     "Icons/PNG/windows-update.png",
