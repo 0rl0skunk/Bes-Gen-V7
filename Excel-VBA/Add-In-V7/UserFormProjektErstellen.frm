@@ -12,11 +12,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
 '@Folder("Projekt")
 Private Sub CommandButtonClose_Click()
     Unload Me
