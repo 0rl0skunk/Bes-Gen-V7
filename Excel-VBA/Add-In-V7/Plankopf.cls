@@ -39,6 +39,7 @@ Private Type TPlankopf
     '--- Layout ---
     LayoutName As String
     LayoutGrösse As String
+    LayoutGrössecm As String
     LayoutMasstab As String
     LayoutPlanstand As String
     '--- File Path ---
@@ -149,8 +150,12 @@ Private Property Get IPlankopf_PlanNummer() As String
     IPlankopf_PlanNummer = This.LayoutName
 End Property
 
-Private Property Get IPlankopf_LayoutGrösse() As String
+Private Property Get IPlankopf_LayoutGrösse(Optional ByVal Layout As Boolean = False) As String
+    If Layout Then
+    IPlankopf_LayoutGrösse = This.LayoutGrössecm
+    Else
     IPlankopf_LayoutGrösse = This.LayoutGrösse
+    End If
 End Property
 
 Private Property Get IPlankopf_LayoutMasstab() As String
@@ -257,6 +262,7 @@ Public Function Filldata( _
         GetKF
         GetFileNames
         GetPlanüberschrift
+        GetFormat
         Refresh
     End If
     On Error GoTo 0
@@ -274,6 +280,29 @@ Public Function Filldata( _
     Exit Function
 
 End Function
+
+Private Sub GetFormat()
+    Dim tmpstr()   As String
+    tmpstr = Split(This.LayoutGrösse, "H")
+    Dim breite
+    Dim höhe
+    breite = Left(tmpstr(1), Len(tmpstr(1)) - 1)
+    höhe = tmpstr(0)
+    Select Case Join(Array(breite, höhe), ",")
+    Case Join(Array(1, 1), ",")
+        This.LayoutGrössecm = "A4"
+    Case Join(Array(2, 1), ",")
+        This.LayoutGrössecm = "A3"
+    Case Join(Array(2, 2), ",")
+        This.LayoutGrössecm = "A2"
+    Case Join(Array(4, 2), ",")
+        This.LayoutGrössecm = "A1"
+    Case Join(Array(4, 4), ",")
+        This.LayoutGrössecm = "A0"
+    Case Else
+        This.LayoutGrössecm = höhe * 29.7 & "x" & breite * 21 & "cm"
+    End Select
+End Sub
 
 Private Sub GetKF()
 
@@ -323,6 +352,7 @@ Private Sub GetKF()
     End Select
 
     writelog LogInfo, "Kurzformen erstellt"
+    
     Exit Sub
 ErrHandler:
 Debug.Print ">>>   "; err.description

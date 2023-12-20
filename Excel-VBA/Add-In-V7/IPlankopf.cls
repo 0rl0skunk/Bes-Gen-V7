@@ -80,7 +80,7 @@ End Property
 Public Property Get Plannummer() As String
 End Property
 
-Public Property Get LayoutGrösse() As String
+Public Property Get LayoutGrösse(Optional ByVal Layout As Boolean = False) As String
 End Property
 
 Public Property Get LayoutMasstab() As String

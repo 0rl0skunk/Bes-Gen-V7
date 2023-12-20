@@ -12,6 +12,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '@Folder "Plankopf"
 Option Explicit
 
@@ -136,13 +137,27 @@ Private Sub MultiPageTyp_Change()
             Me.ComboBoxGebäudeTeil.Enabled = True
             Me.ComboBoxGeschoss.Enabled = True
         Case 2                                   'PRI
-            Me.ComboBoxGebäude.value = Me.ComboBoxGebäude.List(0)
-            Me.ComboBoxGebäudeTeil.value = Me.ComboBoxGebäudeTeil.List(0)
-            Me.ComboBoxGeschoss.value = Me.ComboBoxGeschoss.List(0)
+            Me.ComboBoxGebäude.value = "Gesamt"
+            Me.ComboBoxGebäudeTeil.value = "Gesamt"
+            Me.ComboBoxGeschoss.value = "Gesamt"
             Me.ComboBoxGebäude.Enabled = False
             Me.ComboBoxGebäudeTeil.Enabled = False
             Me.ComboBoxGeschoss.Enabled = False
     End Select
+    
+    If Me.ComboBoxGebäude.ListCount = 1 Then
+        Me.ComboBoxGebäude.value = Me.ComboBoxGebäude.List(0)
+        Me.ComboBoxGebäude.Enabled = False
+    Else
+        Me.ComboBoxGebäude.Enabled = True
+    End If
+    
+    If Me.ComboBoxGebäudeTeil.ListCount = 1 Then
+        Me.ComboBoxGebäudeTeil.value = Me.ComboBoxGebäudeTeil.List(0)
+        Me.ComboBoxGebäudeTeil.Enabled = False
+    Else
+        Me.ComboBoxGebäudeTeil.Enabled = True
+    End If
 
 End Sub
 
@@ -204,16 +219,6 @@ Private Sub UserForm_Initialize()
     ' Gebäude
     Me.ComboBoxGebäude.Clear
     Me.ComboBoxGebäude.List = getList("PRO_Gebäude")
-    If Me.ComboBoxGebäude.ListCount = 1 Then
-        Me.ComboBoxGebäude.value = Me.ComboBoxGebäude.List(0)
-        Me.ComboBoxGebäude.Enabled = False
-    Else
-        Me.ComboBoxGebäude.Enabled = True
-    End If
-
-    ' Geschoss
-    'Me.ComboBoxGeschoss.Clear
-    Me.ComboBoxGeschoss.Enabled = Me.ComboBoxGebäude.ListCount = 1
 
     Me.MultiPageTyp.value = 0
     ' Formate
@@ -625,12 +630,11 @@ Private Sub ComboBoxGebäude_Change()
     'get current building column
     Dim col                  As Long
     Dim lastrow              As Long
-
     Dim arr()                As Variant
     Dim tmparr()             As Variant
-
     Dim rng                  As range
-
+    Dim ws As Worksheet
+    Set ws = Globals.shGebäude
     'If Not Dev Then On Error GoTo ErrMsg
 
     If Me.ComboBoxGebäude.value = "-- Bitte wählen --" Then
@@ -639,41 +643,21 @@ Private Sub ComboBoxGebäude_Change()
         Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
         Exit Sub
     End If
-    'On Error Resume Next
-    If Not IsError(Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.value).Column) Then
-1       col = Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.value).Column
-        lastrow = Globals.shGebäude.Cells(Globals.shGebäude.rows.Count, col).End(xlUp).row
+
+    If Not IsError(ws.range("1:1").Find(Me.ComboBoxGebäude.value).Column) Then
+1       col = ws.range("1:1").Find(Me.ComboBoxGebäude.value).Column
+        lastrow = ws.Cells(ws.rows.Count, col).End(xlUp).row
         Me.ComboBoxGeschoss.Clear
         Me.ComboBoxGeschoss.Enabled = True
-        Set rng = Globals.shGebäude.range(Globals.shGebäude.Cells(5, col), Globals.shGebäude.Cells(lastrow, col + 1))
-        arr() = rng.Resize(rng.rows.Count, 1)
+        Set rng = ws.range(Globals.shGebäude.Cells(5, col), ws.Cells(lastrow, col + 1))
+        arr() = rng.Resize(rng.rows.Count, 1).Offset(1, 0)
         tmparr() = RemoveBlanksFromStringArray(arr())
         Me.ComboBoxGeschoss.List = tmparr()
         Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
     Else
         Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
     End If
-
-    If Me.ComboBoxGebäude.ListCount = 1 Then
-        ' if there is only one listitem in Gebäude
-        If Not IsError(Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.value).Column) Then
-2           col = Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.value).Column
-            lastrow = Globals.shGebäude.Cells(Globals.shGebäude.rows.Count, col).End(xlUp).row
-            Me.ComboBoxGeschoss.Clear
-            Me.ComboBoxGeschoss.Enabled = True
-            Set rng = Globals.shGebäude.range(Globals.shGebäude.Cells(5, col), Globals.shGebäude.Cells(lastrow, col + 1))
-Debug.Print rng.Address
-            arr() = rng.Resize(rng.rows.Count, 1)
-            tmparr() = RemoveBlanksFromStringArray(arr())
-            Me.ComboBoxGeschoss.List = tmparr()
-            Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
-        Else
-            Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
-        End If
-    End If
-    On Error GoTo 0
-
-    Exit Sub
+Exit Sub
 
 End Sub
 

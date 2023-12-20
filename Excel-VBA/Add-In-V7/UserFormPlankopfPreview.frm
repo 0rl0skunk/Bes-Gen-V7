@@ -12,11 +12,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '@Folder "Plankopf"
 Option Explicit
 
+Private pPlankopf As IPlankopf
 Private pPlankopfnummer      As Long
 Private icons                As UserFormIconLibrary
+Private pFileName As String
 
 Private Sub CommandButtonClose_Click()
     Unload Me
@@ -25,7 +28,7 @@ End Sub
 Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
 
     Me.PA40.Caption = Plankopf.Planüberschrift
-    Me.PA41.Caption = Plankopf.LayoutGrösse
+    Me.PA41.Caption = Plankopf.LayoutGrösse(True)
     Me.PA42.Caption = Plankopf.LayoutMasstab
     Me.PA43.Caption = Plankopf.Plannummer
     Me.PA44.Caption = Plankopf.LayoutPlanstand
@@ -42,6 +45,8 @@ Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
 End Sub
 
 Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
+
+    pFileName = filepath
 
     Dim xmlDOMDoc            As New MSXML2.DOMDocument60
     xmlDOMDoc.load filepath
@@ -75,3 +80,13 @@ Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
 
 End Sub
 
+Private Sub ShowCode_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    Dim frm As New UserFormXMLCode
+    If Not pPlankopf Is Nothing Then
+        frm.load pFileName, Plankopfnummer
+        frm.Show 1
+    Else
+        frm.load pPlankopf.XMLFile, pPlankopf.IDTinLine
+        frm.Show 1
+    End If
+End Sub
