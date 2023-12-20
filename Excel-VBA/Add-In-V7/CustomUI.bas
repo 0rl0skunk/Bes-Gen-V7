@@ -32,35 +32,45 @@ End Function
 Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
     If Application.ActiveWorkbook.FileFormat <> 50 Then
         returnedVal = False
-        If control.ID = "customGroupNoBesGen" Then returnedVal = True
+        If control.ID = "customGroupNoBesGen" Then returnedVal = True Else returnedVal = False
     Else
-        Select Case control.ID
-            Case "customGroupNoBesGen"
-                returnedVal = False
-            Case "customGroupPanels"
-                returnedVal = True
-            Case "customGroupBuildings"
-                If Globals.shPData Is Nothing Then Globals.SetWBs
-                If Globals.shPData.range("ADM_ProjektPfadCAD").value = vbNullString Then
-                    returnedVal = True
-                Else
+        If Globals.shPData Is Nothing Then Globals.SetWBs
+        If Globals.shPData.range("ADM_ProjektPfadCAD").value = vbNullString Then
+        ' Projekt nicht erstellt ---
+            Select Case control.ID
+                Case "customGroupPanels"
                     returnedVal = False
-                End If
-            Case "customGroupExplorer"
-                returnedVal = True
-            Case "customGroupHelp"
-                returnedVal = True
-            Case "customGroupCreateProject"
-                If Globals.shPData.range("ADM_ProjektPfadCAD").value = vbNullString Then
+                Case "customGroupBuildings"
                     returnedVal = True
-                Else
+                Case "customGroupExplorer"
                     returnedVal = False
-                End If
-            Case Else
-                returnedVal = True
-        End Select
+                Case "customGroupHelp"
+                    returnedVal = False
+                Case "customGroupCreateProject"
+                    returnedVal = True
+                Case "customGroupNoBesGen"
+                    returnedVal = False
+                Case Else
+                    returnedVal = False
+            End Select
+        Else
+        ' Projekt erstellt ---
+            Select Case control.ID
+                Case "customGroupPanels"
+                    returnedVal = True
+                Case "customGroupBuildings"
+                    returnedVal = False
+                Case "customGroupExplorer"
+                    returnedVal = True
+                Case "customGroupHelp"
+                    returnedVal = True
+                Case "customGroupCreateProject"
+                    returnedVal = False
+                Case "customGroupNoBesGen"
+                    returnedVal = False
+            End Select
+        End If
     End If
-    
 End Sub
 
 Sub onLoad(ribbon As IRibbonUI)
