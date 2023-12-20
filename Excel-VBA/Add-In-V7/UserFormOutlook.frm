@@ -12,6 +12,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
+
+
 '@Folder("Outlook")
 Option Explicit
 Private pMailTo              As New Collection
@@ -94,7 +98,7 @@ Private Sub ListViewMailTo_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Set pMailTo = New Collection
     For Each li In Me.ListViewMailTo.ListItems
         If li.Checked Then
-            pMailTo.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).text).row)
+            pMailTo.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).row)
         End If
     Next
 End Sub
@@ -104,7 +108,7 @@ Private Sub ListViewMailCC_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Set pMailCC = New Collection
     For Each li In Me.ListViewMailCC.ListItems
         If li.Checked Then
-            pMailCC.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).text).row)
+            pMailCC.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).row)
         End If
     Next
 End Sub
@@ -114,7 +118,7 @@ Private Sub ListViewPlankopf_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     Set pPlanköpfe = New Collection
     For Each li In Me.ListViewPlankopf.ListItems
         If li.Checked Then
-            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).text).row)
+            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).row)
         End If
     Next
 End Sub

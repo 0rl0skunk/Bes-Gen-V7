@@ -14,6 +14,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
+
+
+
+
 '@Folder "Plankopf"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -39,7 +43,7 @@ Public Sub load(ByVal filepath As String, ByVal Plankopfnummer As Long)
     Dim ChildNode            As MSXML2.IXMLDOMElement
 
     For Each ChildNode In RootNode.ChildNodes
-        If ChildNode.BaseName = "PK" And ChildNode.FirstChild.text = CStr(Plankopfnummer) Then XMLstr = XMLstr & vbNewLine & CStr(ChildNode.XML)
+        If ChildNode.BaseName = "PK" And ChildNode.FirstChild.Text = CStr(Plankopfnummer) Then XMLstr = XMLstr & vbNewLine & CStr(ChildNode.XML)
         If ChildNode.HasChildNodes And ChildNode.BaseName = PKNr Then
             XMLstr = XMLstr & vbNewLine & CStr(ChildNode.XML)
         End If

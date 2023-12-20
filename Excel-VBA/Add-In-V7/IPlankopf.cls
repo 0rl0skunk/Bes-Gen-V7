@@ -23,6 +23,12 @@ End Property
 Public Property Get IDTinLine() As String
 End Property
 
+Public Property Get TinLinePKNr() As String
+End Property
+
+Public Property Let TinLinePKNr(ByVal NewPKNr As String)
+End Property
+
 Public Property Let IDTinLine(ByVal newID As String)
 End Property
 

@@ -17,7 +17,7 @@ Implements IPlankopf
 Private Type TPlankopf
     '--- Identifiers ---
     ID As String
-    IDTinLine As String
+    IDTinLine As String: TinLinePKNr As String
     Planart As String: PlanartKF As String
     Plantyp As String
     TinLineTyp As String
@@ -77,6 +77,14 @@ End Property
 
 Private Property Get IPlankopf_ID() As String
     IPlankopf_ID = This.ID
+End Property
+
+Private Property Get IPlankopf_TinLinePKNr() As String
+    IPlankopf_TinLinePKNr = This.TinLinePKNr
+End Property
+
+Private Property Let IPlankopf_TinLinePKNr(ByVal NewPKNr As String)
+    This.TinLinePKNr = NewPKNr
 End Property
 
 Private Property Let IPlankopf_IDTinLine(ByVal newID As String)
@@ -288,6 +296,7 @@ End Function
 
 Private Sub GetFormat()
     Dim tmpstr()   As String
+    If Len(This.LayoutGrösse) < 4 Then Exit Sub
     tmpstr = Split(This.LayoutGrösse, "H")
     Dim breite
     Dim höhe
@@ -416,12 +425,12 @@ Private Function GetFileNames()
             This.XMLFilePath = This.DWGFilePath
         Case "PRI"
             Dim ind As Long
-            Dim indstr As String
+            Dim indStr As String
             ind = ArrayIndex(Array("OBJ", "STS", "SLS", "KOM", "MES", "NOT", "BRA", "EVA", "GAT", "ZUT", "SEC", "ERD", "PRO"), This.UnterGewerkKF)
-            indstr = ind
-            If Len(indstr) < 2 Then indstr = "0" & indstr
+            indStr = ind
+            If Len(indStr) < 2 Then indStr = "0" & indStr
             This.Pfad = pProjekt.ProjektOrdnerCAD & "\03_PR"
-            This.DWGFilePath = This.Pfad & "\" & indstr & "_" & This.UnterGewerkKF
+            This.DWGFilePath = This.Pfad & "\" & indStr & "_" & This.UnterGewerkKF
             This.XMLFilePath = This.DWGFilePath
     End Select
     ' --- FilePath

@@ -14,6 +14,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
+
+
+
+
 '@Folder "Plankopf"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -34,7 +38,7 @@ End Sub
 Private Sub CommandButtonEdit_Click()
 
     Dim row                  As Long
-    row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
+    row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     Dim frm                  As New UserFormPlankopf
     frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt
     frm.setIcons Edit
@@ -108,7 +112,7 @@ Private Sub CommandButtonCopy_Click()
     If Globals.shStoreData.Cells(4, 1).value = vbNullString Then
         row = 3
     Else
-        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
+        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     End If
     Set Plankopf = PlankopfFactory.LoadFromDataBase(row)
     Dim frm                  As New UserFormPlankopf
@@ -119,9 +123,11 @@ Private Sub CommandButtonCopy_Click()
                 answer = True
             Case vbNo
                 answer = False
+                Plankopf.ClearIndex
         End Select
     Else
         answer = False
+        Plankopf.ClearIndex
     End If
     Set frm.PlankopfCopyFrom = Plankopf
     frm.CopyPlankopf Plankopf, Projekt, answer
@@ -139,7 +145,7 @@ Private Sub CommandButtonDelete_Click()
     If Globals.shStoreData.Cells(4, 1).value = vbNullString Then
         row = 3
     Else
-        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
+        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     End If
     With Globals.shStoreData
         Dim info             As String: info = vbNewLine & .Cells(row, 14).value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Indexe"
@@ -168,9 +174,9 @@ Private Sub FilterListView(ByVal Index As String, ByVal FilterValue As String)
     Dim e                    As ListItem
 StartOver:
     For Each e In Me.ListViewPlankopf.ListItems
-Debug.Print e.ListSubItems.Item(Index).text
+Debug.Print e.ListSubItems.Item(Index).Text
         If FilterValue <> "Alles" Then
-            If e.ListSubItems.Item(Index).text <> FilterValue Then
+            If e.ListSubItems.Item(Index).Text <> FilterValue Then
                 Me.ListViewPlankopf.ListItems.Remove e.Index
                 GoTo StartOver
             End If
@@ -196,7 +202,7 @@ Private Sub ListViewPlankopf_DblClick()
     If Globals.shStoreData.Cells(4, 1).value = vbNullString Then
         row = 3
     Else
-        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).text).row
+        row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     End If
     Dim frm                  As New UserFormPlankopf
     frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt

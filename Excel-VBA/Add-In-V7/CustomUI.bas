@@ -134,22 +134,18 @@ Sub onActionButton(control As IRibbonControl)
             writelog LogInfo, "Opening SharePoint-Folder" & vbNewLine & folderSP
             ActiveWorkbook.FollowHyperlink Address:=folderSP
         Case "Drucken"
-            'TODO Drucken UserForm
             Dim frmPrint     As New UserFormPrint
             frmPrint.Show 1
         Case "Repair"
-            'TODO Reparieren UserForm
             Dim frmRepair    As New UserFormRepair
             frmRepair.Show 1
         Case "Übersicht"
-            'TODO Planübersicht UserForm
             Globals.shPData.Activate
             Dim frmÜbersicht As New UserFormPlankopfübersicht
             frmÜbersicht.Show
         Case "Version"
             Dim frmVersion   As New UserFormInfo
             frmVersion.Show 1
-            'TODO Übersicht Planköpfe UserForm
         Case "Chat"
             'TODO E-Mail oder Teams öffnen
         Case "Adresse"
@@ -164,7 +160,6 @@ Sub onActionButton(control As IRibbonControl)
         Case "CADElektro"
             Dim frmCreateElektro As New UserFormProjektErstellen
             frmCreateElektro.Show 1
-            'TODO Create new CAD Project for TinLine
     End Select
     CustomUI.RefreshRibbon
 End Sub

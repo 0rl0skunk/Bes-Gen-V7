@@ -609,3 +609,42 @@ Function CountFiles(ByVal path As String) As Long
     CountFiles = amount
 
 End Function
+
+Function SplitStringByLength(inputString As String, maxLength As Integer) As Variant
+    Dim inputArray() As String
+    Dim outputArray() As String
+    Dim currentLength As Integer
+    Dim currentLine As String
+    Dim wordArray() As String
+    Dim word As Variant
+    Dim i As Integer
+    
+    inputArray = Split(inputString, " ")
+    currentLength = 0
+    currentLine = ""
+    
+    ReDim outputArray(0)
+    outputArray(0) = vbNullString
+    
+    For Each word In inputArray
+        wordArray = Split(word, vbLf)
+        For i = LBound(wordArray) To UBound(wordArray)
+            If currentLength + Len(wordArray(i)) + 1 <= maxLength Then
+                currentLine = currentLine & " " & wordArray(i)
+                currentLength = currentLength + Len(wordArray(i)) + 1
+            Else
+                ReDim Preserve outputArray(UBound(outputArray) + 1)
+                outputArray(UBound(outputArray)) = Trim(currentLine)
+                currentLine = wordArray(i)
+                currentLength = Len(wordArray(i))
+            End If
+        Next i
+    Next word
+    
+    If Len(Trim(currentLine)) > 0 Then
+        ReDim Preserve outputArray(UBound(outputArray) + 1)
+        outputArray(UBound(outputArray)) = Trim(currentLine)
+    End If
+    
+    SplitStringByLength = outputArray
+End Function

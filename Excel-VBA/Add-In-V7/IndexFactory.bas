@@ -4,6 +4,15 @@ Option Explicit
 '@Folder("Index")
 '@ModuleDescription "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
 
+Private oXml                 As New MSXML2.DOMDocument60
+Private oXsl                 As New MSXML2.DOMDocument60
+
+Private NodElement           As IXMLDOMElement
+Private NodChild             As IXMLDOMElement
+Private NodGrandChild        As IXMLDOMElement
+
+Private pPlankopf As IPlankopf
+
 Public Function Create( _
        ByVal IDPlan As String, _
        ByVal GezeichnetPerson As String, _
@@ -134,4 +143,27 @@ ErrMsg:
     writelog LogInfo, "NO Indexe für Plankopf"
 End Function
 
+Public Function TinLineIndexes(ByRef Plankopf As IPlankopf, ByRef iNodChild As IXMLDOMElement, ByRef ioXml As MSXML2.DOMDocument60, ByRef iNodElement As IXMLDOMElement)
+Set oXml = ioXml
+Set NodElement = iNodElement
+Set pPlankopf = Plankopf
+On Error GoTo 0
+DeleteIndexes
+WriteIndexes
 
+End Function
+
+Private Sub DeleteIndexes()
+Dim seqNode As IXMLDOMNode
+For Each seqNode In NodElement.SelectNodes("IN" & pPlankopf.TinLinePKNr)
+    NodElement.RemoveChild seqNode
+Next
+writelog LogInfo, "Alle Indexe für Plankopf " & pPlankopf.XMLFile
+End Sub
+
+Private Sub WriteIndexes()
+Dim Index As IIndex
+For Each Index In pPlankopf.Indexes
+    CreateXmlIndexAttribute Index.Index, Index.Gezeichnet, Index.Klartext, "IN" & pPlankopf.TinLinePKNr, NodChild, oXml, NodElement
+Next
+End Sub

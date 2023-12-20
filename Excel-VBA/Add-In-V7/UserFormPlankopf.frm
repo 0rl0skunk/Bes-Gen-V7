@@ -14,6 +14,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
+
+
+
+
 '@Folder "Plankopf"
 Option Explicit
 
@@ -359,6 +363,7 @@ Public Sub CopyPlankopf(Plankopf As IPlankopf, ByVal Projekt As IProjekt, ByVal 
         Set Plankopf.Indexes = PlankopfCopyFrom.Indexes
         Set PlankopfCopyFrom = Nothing
     End If
+    
     LoadClass Plankopf, Projekt, True
 
 End Sub

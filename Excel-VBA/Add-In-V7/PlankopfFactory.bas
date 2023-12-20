@@ -70,8 +70,6 @@ Public Function Create( _
         frm.Show 1
     End If
 
-
-
 End Function
 
 Public Function LoadFromDataBase(ByVal row As Long) As IPlankopf
@@ -115,7 +113,7 @@ Public Function LoadFromDataBase(ByVal row As Long) As IPlankopf
 
 End Function
 
-Sub PopulatePlankopf(ByVal Plankopf As IPlankopf)
+Sub PopulatePlankopf(ByRef Plankopf As IPlankopf)
 ' First set NodElement to the <tinPlan1> Node in the xml
     Dim str                  As String
     str = "PK" & PKNr
@@ -129,10 +127,12 @@ Sub PopulatePlankopf(ByVal Plankopf As IPlankopf)
    CreateXmlAttribute "PA31", "Datum Gezeichnet", Plankopf.GezeichnetDatum, str, NodChild, oXml, NodElement
    CreateXmlAttribute "PA32", "Geprüft", Plankopf.GeprüftPerson, str, NodChild, oXml, NodElement
    CreateXmlAttribute "PA33", "Datum Geprüft", Plankopf.GeprüftDatum, str, NodChild, oXml, NodElement
+   
+   TinLineIndexes Plankopf, NodChild, oXml, NodElement
 
 End Sub
 
-Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
+Public Function AddToDatabase(ByVal Plankopf As IPlankopf) As Boolean
     AddToDatabase = False
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
     Dim row                  As Long: row = ws.range("A1").CurrentRegion.rows.Count + 1
@@ -211,12 +211,13 @@ load:                                            ' load xml file
     End If
 
     For Each oSeqNode In oSeqNodes
-        PKs.Add CInt(oSeqNode.SelectSingleNode("Nr").text)
+        PKs.Add CInt(oSeqNode.SelectSingleNode("Nr").Text)
     Next
 
     Dim arrPK()              As Variant
     arrPK = CollectionToArray(PKs)
     PKNr = WorksheetFunction.Max(arrPK)
+    Plankopf.TinLinePKNr = PKNr
 
     'If PKNr = "" Then GoTo err
 
@@ -229,7 +230,7 @@ EmptyPK:
 
 FreierPlankopf:
     For Each Nod In ChildNod
-        If Nod.FirstChild.text = "PA40" And Not Nod.LastChild.text = "" Then
+        If Nod.FirstChild.Text = "PA40" And Not Nod.LastChild.Text = "" Then
             GoTo err
         End If
         NodElement.RemoveChild Nod
@@ -240,14 +241,14 @@ TinLineID:
     Dim TinLineID            As String
 
     For Each oSeqNode In oSeqNodes
-        If Not oSeqNode.SelectSingleNode("Name").text = Plankopf.LayoutName Then
+        If Not oSeqNode.SelectSingleNode("Name").Text = Plankopf.LayoutName And oSeqNode.SelectSingleNode("Nr").Text = Plankopf.TinLinePKNr Then
             writelog Logwarning, "Das Layout wurde möglicherweise nicht richtig beschriftet " & Plankopf.LayoutName
             CopyToClipBoard Plankopf.LayoutName
-            MsgBox "Das Layout ist möglicherweise falsch bezeichnet." & vbNewLine & "Bitte das Layout :" & vbNewLine & oSeqNode.SelectSingleNode("Name").text & vbNewLine & " in " & vbNewLine & Plankopf.LayoutName & vbNewLine & " Umbenennen." & vbNewLine & vbNewLine & "Die korrekte Beschriftung ist in der Zwischenablage.", vbExclamation, "Layout Umbenennen"
-            oSeqNode.SelectSingleNode("Name").text = Plankopf.LayoutName
+            MsgBox "Das Layout ist möglicherweise falsch bezeichnet." & vbNewLine & "Bitte das Layout :" & vbNewLine & oSeqNode.SelectSingleNode("Name").Text & vbNewLine & " in " & vbNewLine & Plankopf.LayoutName & vbNewLine & " Umbenennen." & vbNewLine & vbNewLine & "Die korrekte Beschriftung ist in der Zwischenablage.", vbExclamation, "Layout Umbenennen"
+            oSeqNode.SelectSingleNode("Name").Text = Plankopf.LayoutName
         End If
-        If oSeqNode.SelectSingleNode("Nr").text = PKNr Then
-            TinLineID = CStr(oSeqNode.SelectSingleNode("ID").text)
+        If oSeqNode.SelectSingleNode("Nr").Text = PKNr Then
+            TinLineID = CStr(oSeqNode.SelectSingleNode("ID").Text)
         End If
     Next
 TinLineIDFound:
@@ -284,7 +285,7 @@ err:
 
 End Function
 
-Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
+Public Function ReplaceInDatabase(ByVal Plankopf As IPlankopf) As Boolean
     ReplaceInDatabase = False
     Dim ID                   As String: ID = Plankopf.ID
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
@@ -362,8 +363,9 @@ load:                                            ' load xml file
     End If
 
     For Each oSeqNode In oSeqNodes
-        If oSeqNode.SelectSingleNode("ID").text = Plankopf.IDTinLine Then
-        PKNr = oSeqNode.SelectSingleNode("Nr").text
+        If oSeqNode.SelectSingleNode("ID").Text = Plankopf.IDTinLine Then
+        PKNr = oSeqNode.SelectSingleNode("Nr").Text
+        Plankopf.TinLinePKNr = PKNr
         End If
     Next
 
@@ -410,7 +412,7 @@ err:
 
 End Function
 
-Public Function DeleteFromDatabase(row As Long) As Boolean
+Public Function DeleteFromDatabase(ByVal row As Long) As Boolean
     DeleteFromDatabase = False
     Dim ID                   As String
     Dim Plannummer           As String: Plannummer = shStoreData.Cells(row, 14).value

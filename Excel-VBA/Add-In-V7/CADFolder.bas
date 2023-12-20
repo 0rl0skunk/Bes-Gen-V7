@@ -7,8 +7,9 @@ Global Const VorlageEPDWG As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg"
 Global Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg"
 Global Const VorlagePRDWG As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg"
 
-Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean)
+Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean, ByVal SharePointLink As String)
     
+    Globals.shPData.range("ADM_ProjektPfadSharePoint").value = SharePointLink
     Globals.Projekt True
     If Globals.shGebäude Is Nothing Then Globals.SetWBs
     If Not CreateFoldersTinLine Then Exit Sub
@@ -228,13 +229,13 @@ Private Sub TinLineFloorXML(ByRef Plan As IPlankopf)
     Set NodChild = oXml.createElement("PA")
     NodElement.appendChild NodChild
     Set NodGrandChild = oXml.createElement("Name")
-    NodGrandChild.text = "PA200"
+    NodGrandChild.Text = "PA200"
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Bez")
-    NodGrandChild.text = "Gebäude"
+    NodGrandChild.Text = "Gebäude"
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Wert")
-    If Plan.Gebäude = "Gesamt" And Globals.shGebäude.range("D1").value = vbNullString Then: NodGrandChild.text = vbNullString: Else: NodGrandChild.text = Plan.Gebäude
+    If Plan.Gebäude = "Gesamt" And Globals.shGebäude.range("D1").value = vbNullString Then: NodGrandChild.Text = vbNullString: Else: NodGrandChild.Text = Plan.Gebäude
     NodChild.appendChild NodGrandChild
 
     ' XML formatieren
@@ -264,19 +265,19 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     Set NodChild = oXml.createElement("Index")
     NodElement.appendChild NodChild
     Set NodGrandChild = oXml.createElement("Zeile")
-    NodGrandChild.text = 15
+    NodGrandChild.Text = 15
     NodChild.appendChild NodGrandChild
     ' 1 PA Node erstellen damit TinLine was zum Anzeigen hat und nicht nichts zeigt.
     Set NodChild = oXml.createElement("PA")
     NodElement.appendChild NodChild
     Set NodGrandChild = oXml.createElement("Name")
-    NodGrandChild.text = "PA100"
+    NodGrandChild.Text = "PA100"
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Bez")
-    NodGrandChild.text = "NICHT VERWENDEN!!!"
+    NodGrandChild.Text = "NICHT VERWENDEN!!!"
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Wert")
-    NodGrandChild.text = ""
+    NodGrandChild.Text = ""
     NodChild.appendChild NodGrandChild
     ' XML formatieren
     Debug.Print Plan.XMLFile
@@ -305,19 +306,19 @@ Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     Set NodChild = oXml.createElement("Index")
     NodElement.appendChild NodChild
     Set NodGrandChild = oXml.createElement("Zeile")
-    NodGrandChild.text = 15
+    NodGrandChild.Text = 15
     NodChild.appendChild NodGrandChild
     ' 1 PA Node erstellen damit TinLine was zum Anzeigen hat und nicht nichts zeigt.
     Set NodChild = oXml.createElement("PA")
     NodElement.appendChild NodChild
     Set NodGrandChild = oXml.createElement("Name")
-    NodGrandChild.text = "PA100"
+    NodGrandChild.Text = "PA100"
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Bez")
-    NodGrandChild.text = "NICHT VERWENDEN!!!"
+    NodGrandChild.Text = "NICHT VERWENDEN!!!"
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Wert")
-    NodGrandChild.text = ""
+    NodGrandChild.Text = ""
     NodChild.appendChild NodGrandChild
     ' XML formatieren
     Debug.Print Plan.XMLFile
@@ -347,16 +348,16 @@ Private Sub TinLineProjectXML()
     Set NodChild = oXml.createElement("Project")
     NodElement.appendChild NodChild
     Set NodGrandChild = oXml.createElement("Projektnummer")
-    NodGrandChild.text = Globals.Projekt.Projektnummer
+    NodGrandChild.Text = Globals.Projekt.Projektnummer
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Projektbeschreibung")
-    NodGrandChild.text = Globals.Projekt.ProjektBezeichnung
+    NodGrandChild.Text = Globals.Projekt.ProjektBezeichnung
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("ProjektMemo")
-    NodGrandChild.text = ""
+    NodGrandChild.Text = ""
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Language")
-    NodGrandChild.text = "DE"
+    NodGrandChild.Text = "DE"
     NodChild.appendChild NodGrandChild
     ' Infos für auf den Plankopf
     CreateXmlAttribute "PA01", "Projekt Name", Globals.Projekt.ProjektBezeichnung, "PA", NodChild, oXml, NodElement
