@@ -13,6 +13,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
 '@Folder("Tasks")
 Option Explicit
 Private pTask                As Task

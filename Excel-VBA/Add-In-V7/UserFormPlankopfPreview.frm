@@ -13,6 +13,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
 '@Folder "Plankopf"
 Option Explicit
 
@@ -78,15 +79,4 @@ Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
         End If
     Next
 
-End Sub
-
-Private Sub ShowCode_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-    Dim frm As New UserFormXMLCode
-    If Not pPlankopf Is Nothing Then
-        frm.load pFileName, Plankopfnummer
-        frm.Show 1
-    Else
-        frm.load pPlankopf.XMLFile, pPlankopf.IDTinLine
-        frm.Show 1
-    End If
 End Sub

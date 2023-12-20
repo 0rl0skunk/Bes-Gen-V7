@@ -139,7 +139,7 @@ Public Function AddToDatabase(Plankopf As IPlankopf) As Boolean
     
     CopyToClipBoard Plankopf.LayoutName
     
-    If Plankopf.Gewerk = "Elektro" Then NewTinLinePlankopf (Plankopf)
+    If Plankopf.Gewerk = "Elektro" Then NewTinLinePlankopf Plankopf
     With ws
         .Cells(row, 1).value = Plankopf.ID
         .Cells(row, 2).value = Plankopf.IDTinLine
@@ -314,7 +314,7 @@ Public Function ReplaceInDatabase(Plankopf As IPlankopf) As Boolean
     ReplaceInDatabase = True
     writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank aktualisiert"
     
-    If Plankopf.Gewerk = "Elektro" Then ChangeTinLinePlankopf (Plankopf)
+    If Plankopf.Gewerk = "Elektro" Then ChangeTinLinePlankopf Plankopf
     writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " im TinLine aktualisiert"
 
 End Function

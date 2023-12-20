@@ -35,6 +35,7 @@ Private Type TPlankopf
     UnterGewerk As String: UnterGewerkKF As String
     '--- Planbezeichnung ---
     Planüberschrift As String
+    PlanBeschrieb As String
     CustomPlanüberschrift As Boolean
     '--- Layout ---
     LayoutName As String
@@ -136,6 +137,10 @@ End Property
 
 Private Property Get IPlankopf_Planüberschrift() As String
     IPlankopf_Planüberschrift = This.Planüberschrift
+End Property
+
+Private Property Get IPlankopf_PlanBeschrieb() As String
+    IPlankopf_PlanBeschrieb = This.PlanBeschrieb
 End Property
 
 Private Property Get IPlankopf_CustomPlanüberschrift() As Boolean
@@ -429,6 +434,7 @@ Private Sub GetPlanüberschrift()
     If This.Plantyp = "PLA" Then
         ' Überschrift für Elektropläne
         Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschoss, This.Gebäudeteil)
+        This.PlanBeschrieb = Planüberschrift
         If Len(Planüberschrift) > Globals.maxlen Then
             Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.GeschossKF, This.Gebäudeteil)
             If Len(Planüberschrift) > maxlen Then
@@ -444,6 +450,7 @@ Private Sub GetPlanüberschrift()
     Else
         ' Überschrift für Schemas
         Planüberschrift = "Prinzipschema " & This.UnterGewerk
+        This.PlanBeschrieb = Planüberschrift
         If Len(Planüberschrift) > Globals.maxlen Then
             Planüberschrift = "Prinzipschema " & This.UnterGewerk
             If Len(Planüberschrift) > maxlen Then

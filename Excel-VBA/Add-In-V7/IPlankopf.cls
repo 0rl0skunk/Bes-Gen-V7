@@ -71,6 +71,9 @@ End Property
 Public Property Get Planüberschrift() As String
 End Property
 
+Public Property Get PlanBeschrieb() As String
+End Property
+
 Public Property Get CustomPlanüberschrift() As Boolean
 End Property
 
