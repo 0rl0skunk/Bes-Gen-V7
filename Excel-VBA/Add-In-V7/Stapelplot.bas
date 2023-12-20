@@ -9,6 +9,10 @@ Private NewFiles As Long
 Private OldFiles As Long
 Private pPlanköpfe As Collection
 
+Public Property Get Planliste() As Collection
+Set Planliste = pPlanköpfe
+End Property
+
 Sub plotPlanliste()
 
     Dim fs, a, i             As Integer, search As String

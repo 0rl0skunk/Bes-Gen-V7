@@ -12,9 +12,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 '@Folder("Outlook")
-'@IgnoreModule VariableNotUsed
 Option Explicit
 Private pMailTo              As New Collection
 Private pMailCC              As New Collection
@@ -31,7 +29,7 @@ Private Sub CommandButton1_Click()
     If Me.CheckBoxPlot Then
         Dim pPlankopf        As IPlankopf
         PrintPath = CreatePlotList(pPlanköpfe)
-        For Each pPlankopf In pPlanköpfe
+        For Each pPlankopf In Stapelplot.Planliste
             Mail.Attachments.Add PrintPath & "\" & pPlankopf.PDFFileName & ".pdf"
         Next
     End If
@@ -40,30 +38,37 @@ Private Sub CommandButton1_Click()
     Mail.Subject = Me.TextBoxBetreff.value
     Mail.Body = Anrede & vbNewLine & vbNewLine & Me.TextBoxFreitext.value & vbNewLine & Planliste
     Mail.Display 0
+    
+    Unload Me
 End Sub
 
 Private Function Planliste() As String
     Dim e                    As IPlankopf
     For Each e In pPlanköpfe
-        Planliste = Planliste & e.Plannummer & vbNewLine
+        Planliste = Planliste & "- " & e.Plannummer & vbTab & e.PlanBeschrieb & vbNewLine
     Next
     Planliste = "Im Anhang finden sie Folgende Pläne: " & vbNewLine & Planliste
 End Function
 
 Private Function Anrede() As String
+    On Error GoTo ErrHandler
     If pMailTo.Count > 1 Then
         Anrede = "Hallo Zusammen"
     Else
         If pMailTo.Item(1).Anrede = "Du" Then
             Anrede = "Hallo " & pMailTo.Item(1).Vorname
         Else
-            Anrede = "Guten Tag " & pMailTo.Item(1).Anrede & " " & pMailTo.Item(1).Nachname
+            Anrede = "Guten Tag " & pMailTo.Item(1).Anrede & " " & pMailTo.Item(1).Nachname & ","
         End If
     End If
+    Exit Function
+ErrHandler:
+    Anrede = vbNullString
+    
 End Function
 
 Private Function MailRecepientsTO() As String
-
+    MailRecepientsTO = vbNullString
     Dim Person               As IPerson
     For Each Person In pMailTo
         MailRecepientsTO = MailRecepientsTO & " ; " & Person.EMail
@@ -72,7 +77,7 @@ Private Function MailRecepientsTO() As String
 End Function
 
 Private Function MailRecepientsCC() As String
-
+    MailRecepientsCC = vbNullString
     Dim Person               As IPerson
     For Each Person In pMailCC
         MailRecepientsCC = MailRecepientsCC & " ; " & Person.EMail
