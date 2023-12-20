@@ -139,5 +139,3 @@ End Property
 Private Property Let IIndex_PlanID(ByVal NewValue As String)
     This.IDPlan = NewValue
 End Property
-
-

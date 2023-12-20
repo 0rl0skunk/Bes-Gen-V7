@@ -15,6 +15,8 @@ Attribute VB_Exposed = False
 Attribute VB_Description = "Wird als Bibliothek für Icons missbraucht."
 
 
+
+
 '@Folder "Templates"
 '@ModuleDescription "Wird als Bibliothek für Icons missbraucht."
 ' Die Icons können über 'icons."iconname".picture' geladen werden

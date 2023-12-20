@@ -14,6 +14,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
+
+
 '@Folder "Print"
 Option Explicit
 Private icons                As UserFormIconLibrary
@@ -24,7 +26,7 @@ Private Sub CommandButtonPrint_Click()
     Set pPlanköpfe = New Collection
     For Each li In Me.ListViewPlankopf.ListItems
         If li.Checked Then
-            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).text).row)
+            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).row)
         End If
     Next
 
