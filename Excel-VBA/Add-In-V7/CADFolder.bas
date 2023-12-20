@@ -7,8 +7,9 @@ Global Const VorlageEPDWG As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg"
 Global Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg"
 Global Const VorlagePRDWG As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg"
 
-Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean)
+Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean, ByVal SharePointLink As String)
     
+    Globals.shPData.range("ADM_ProjektPfadSharePoint").value = SharePointLink
     Globals.Projekt True
     If Globals.shGebäude Is Nothing Then Globals.SetWBs
     If Not CreateFoldersTinLine Then Exit Sub
