@@ -58,12 +58,12 @@ Sub plotPlanliste()
 End Sub
 
 Public Sub Checkplot()
-    Dim fso As New FileSystemObject
+    Dim FSO As New FileSystemObject
     Dim File As scripting.File
     Dim PDFFile As IPlankopf
     Dim i As Long
     
-    For Each File In fso.GetFolder(OutputFolder).files
+    For Each File In FSO.GetFolder(OutputFolder).files
     i = 1
         For Each PDFFile In pPlanköpfe
             If File.Name = PDFFile.PDFFileName & ".pdf" Then
@@ -86,7 +86,7 @@ End Sub
 
 Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
 
-    Dim folder               As String, strFolderExists As String
+    Dim Folder               As String, strFolderExists As String
     Dim outputCol            As New Collection
     Dim Plan                 As IPlankopf
     
@@ -97,8 +97,8 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
     
     If Globals.shPData Is Nothing Then Globals.SetWBs
 
-    folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
-    strFolderExists = dir(folder)
+    Folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
+    strFolderExists = dir(Folder)
 
     'If strFolderExists = "" Then MkDir folder
     ' Open the select folder prompt
@@ -109,10 +109,10 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
     End With
 
 
-    Dim filename             As String: filename = Format(Now, "YYMMDDhhmmss")
+    Dim FileName             As String: FileName = Format(Now, "YYMMDDhhmmss")
     Dim i                    As Integer, search As String
-    Set a = CreateObject("Scripting.FileSystemObject").CreateTextFile(Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & filename & ".dsd", True)
-    dsd = Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & filename & ".dsd"
+    Set a = CreateObject("Scripting.FileSystemObject").CreateTextFile(Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & FileName & ".dsd", True)
+    dsd = Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & FileName & ".dsd"
     a.WriteLine ("[DWF6Version]")
     a.WriteLine ("Ver=1")
     a.WriteLine ("[DWF6MinorVersion]")

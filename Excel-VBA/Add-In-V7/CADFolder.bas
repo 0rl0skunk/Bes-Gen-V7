@@ -12,6 +12,11 @@ Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz 
     Globals.shPData.range("ADM_ProjektPfadSharePoint").value = SharePointLink
     Globals.Projekt True
     If Globals.shGebäude Is Nothing Then Globals.SetWBs
+    Globals.shProjekt.range("A1").value = False
+    Globals.shProjekt.range("A2").value = False
+    Globals.shProjekt.range("A3").value = False
+    Globals.shProjekt.range("A4").value = False
+    Globals.shProjekt.range("A5").value = False
     If Not CreateFoldersTinLine Then Exit Sub
     If Pläne Then CreateFoldersEP
     If Prinzip Then CreateFoldersPR
@@ -48,19 +53,21 @@ ErrHandler:
 End Function
 
 Private Sub CreateFoldersEP()
-    Dim folder               As String
-    folder = Globals.Projekt.ProjektOrdnerCAD & "\01_EP"
+    Globals.shProjekt.range("A1").value = True
+    Dim Folder               As String
+    Folder = Globals.Projekt.ProjektOrdnerCAD & "\01_EP"
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
-    MkDir folder
+    MkDir Folder
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\04_DE"
-    GebäudeFolders folder, "Elektro"
+    GebäudeFolders Folder, "Elektro"
 End Sub
 
 Private Sub CreateFoldersPR()
-    Dim folder               As String
+    Globals.shProjekt.range("A2").value = True
+    Dim Folder               As String
     Dim UGewerke()           As Variant
-    folder = Globals.Projekt.ProjektOrdnerCAD & "\03_PR"
-    MkDir folder
+    Folder = Globals.Projekt.ProjektOrdnerCAD & "\03_PR"
+    MkDir Folder
     UGewerke = getList("ELE_PRI")
     Dim i As Long
     Dim Plan As IPlankopf
@@ -90,7 +97,7 @@ Private Sub CreateFoldersPR()
            SkipValidation:=True, _
            CustomÜberschrift:=False _
            )
-           MkDir folder & "\" & iStr & "_" & Plan.UnterGewerkKF
+           MkDir Folder & "\" & iStr & "_" & Plan.UnterGewerkKF
             TinLinePrinzip Plan
             FileCopy VorlagePRDWG, Plan.dwgFile
     Next
@@ -98,24 +105,27 @@ Private Sub CreateFoldersPR()
 End Sub
 
 Private Sub CreateFoldersES()
+    Globals.shProjekt.range("A3").value = True
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\02_ES"
 End Sub
 
 Private Sub CreateFoldersTF()
-    Dim folder               As String
-    folder = Globals.Projekt.ProjektOrdnerCAD & "\05_TF"
-    MkDir folder
-    GebäudeFolders folder, "Türfachplanung"
+    Globals.shProjekt.range("A4").value = True
+    Dim Folder               As String
+    Folder = Globals.Projekt.ProjektOrdnerCAD & "\05_TF"
+    MkDir Folder
+    GebäudeFolders Folder, "Türfachplanung"
 End Sub
 
 Private Sub CreateFoldersBR()
-    Dim folder               As String
-    folder = Globals.Projekt.ProjektOrdnerCAD & "\06_BR"
-    MkDir folder
-    GebäudeFolders folder, "Brandschutzplanung"
+    Globals.shProjekt.range("A5").value = True
+    Dim Folder               As String
+    Folder = Globals.Projekt.ProjektOrdnerCAD & "\06_BR"
+    MkDir Folder
+    GebäudeFolders Folder, "Brandschutzplanung"
 End Sub
 
-Private Sub GebäudeFolders(ByVal folder As String, ByVal Gewerk As String)
+Public Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String, Optional ByVal MakeDir As Boolean = True)
     ' Folder = 01_EP etc.
     Dim Plan                 As IPlankopf
     Dim buildings            As Boolean
@@ -146,11 +156,11 @@ Private Sub GebäudeFolders(ByVal folder As String, ByVal Gewerk As String)
         If ws.range("D1").value <> "" Then
             ' mehrere Gebäude, für jedes Gebäude ein Unterordner erstellen und die entsprechenden Etagen einfügen.
             buildings = True
-            Pfad = folder & "\" & larrGeb(2) & "_" & larrGeb(1)
-            MkDir Pfad
+            Pfad = Folder & "\" & larrGeb(2) & "_" & larrGeb(1)
+            If MakeDir Then MkDir Pfad
         Else
             ' nur ein Gebäude -> Kein unterordner erstellen
-            Pfad = folder
+            Pfad = Folder
             buildings = False
         End If
         ' Geschoss
@@ -194,14 +204,16 @@ Private Sub GebäudeFolders(ByVal folder As String, ByVal Gewerk As String)
            CustomÜberschrift:=False _
            )
             
-            If Not CreateObject("Scripting.FileSystemObject").FolderExists(Plan.FolderName) Then
-            MkDir Plan.FolderName
-            End If
-            
-            If buildings Then
-            FileCopy VorlageEPDWGGEB, Plan.dwgFile
-            Else
-            FileCopy VorlageEPDWG, Plan.dwgFile
+            If MakeDir Then
+                If Not CreateObject("Scripting.FileSystemObject").FolderExists(Plan.FolderName) Then
+                MkDir Plan.FolderName
+                End If
+                
+                If buildings Then
+                FileCopy VorlageEPDWGGEB, Plan.dwgFile
+                Else
+                FileCopy VorlageEPDWG, Plan.dwgFile
+                End If
             End If
             
             TinLineFloorXML Plan
@@ -240,9 +252,9 @@ Private Sub TinLineFloorXML(ByRef Plan As IPlankopf)
 
     ' XML formatieren
     Debug.Print Plan.FolderName & "\TinPlanFloor.xml"
-    oXml.save Plan.FolderName & "\TinPlanFloor.xml"
+    oXml.Save Plan.FolderName & "\TinPlanFloor.xml"
     oXml.transformNodeToObject oXsl, oXml
-    oXml.save Plan.FolderName & "\TinPlanFloor.xml"
+    oXml.Save Plan.FolderName & "\TinPlanFloor.xml"
 
 End Sub
 
@@ -257,7 +269,7 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
 
     ' Standard XML Elemente für TinLine erstellen
     oXml.LoadXML ("<tinPlan1></tinPlan1>")
-    Set NodElement = oXml.SelectSingleNode("//tinPlan1")
+    Set NodElement = oXml.SelectSingleNode("tinPlan1")
 
     Set NodChild = oXml.createElement("Attribut")
     NodElement.appendChild NodChild
@@ -281,9 +293,9 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     NodChild.appendChild NodGrandChild
     ' XML formatieren
     Debug.Print Plan.XMLFile
-    oXml.save Plan.XMLFile
+    oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
-    oXml.save Plan.XMLFile
+    oXml.Save Plan.XMLFile
 
 End Sub
 
@@ -322,9 +334,9 @@ Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     NodChild.appendChild NodGrandChild
     ' XML formatieren
     Debug.Print Plan.XMLFile
-    oXml.save Plan.XMLFile
+    oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
-    oXml.save Plan.XMLFile
+    oXml.Save Plan.XMLFile
 End Sub
 
 Private Sub TinLineProjectXML()
@@ -367,8 +379,8 @@ Private Sub TinLineProjectXML()
     CreateXmlAttribute "PA05", "Projektnummer", Globals.Projekt.Projektnummer, "PA", NodChild, oXml, NodElement
     CreateXmlAttribute "PA06", "Projektphase", Globals.Projekt.Projektphase, "PA", NodChild, oXml, NodElement
     ' XML formatieren
-    oXml.save Globals.Projekt.ProjektXML
+    oXml.Save Globals.Projekt.ProjektXML
     oXml.transformNodeToObject oXsl, oXml
-    oXml.save Globals.Projekt.ProjektXML
+    oXml.Save Globals.Projekt.ProjektXML
 End Sub
 

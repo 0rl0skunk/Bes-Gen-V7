@@ -12,20 +12,24 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
 '@Folder("Info Version")
 Option Explicit
 Private icons                As UserFormIconLibrary
+
+Private Sub CommandButtonClear_Click()
+LogClear
+End Sub
 
 Private Sub UserForm_Initialize()
 
     Set icons = New UserFormIconLibrary
     Me.TitleIcon.Picture = icons.IconInfo.Picture
+
+    Dim FSO As New FileSystemObject
+    Dim strText As TextStream
+    Set strText = FSO.OpenTextFile(logger.LogFile, ForReading)
+    Me.TextBoxLOG.value = strText.ReadAll
+    strText.Close
 
 End Sub
 

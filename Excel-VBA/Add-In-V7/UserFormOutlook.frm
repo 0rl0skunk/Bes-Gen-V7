@@ -16,6 +16,9 @@ Attribute VB_Exposed = False
 
 
 
+
+
+
 '@Folder("Outlook")
 Option Explicit
 Private pMailTo              As New Collection

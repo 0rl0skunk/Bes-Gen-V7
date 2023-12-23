@@ -13,35 +13,44 @@ Public Enum ErrorLevel
     LogTrace = 3
 End Enum
 
+Const LogDepth = 3
+' 3 = Trace
+' 2 = Info
+' 1 = Warnings
+' 0 = Errors
+
 Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
     ' prepare date
     Dim l_StringDateTimeNow  As String
     Dim l_StringToday        As String
     Dim l_StringLogStatement As String
-
+    Dim l_StringSource       As String
     Dim Typstr               As String
+    
+    l_StringSource = "  ADD-IN  "
+    
     Select Case Typ
         Case 0
-            If Globals.LogDepth >= 0 Then
-                Typstr = ">> ERROR   "
+            If LogDepth >= 0 Then
+                Typstr = "ERROR  "
             Else
                 Exit Sub
             End If
         Case 1
-            If Globals.LogDepth >= 1 Then
-                Typstr = ">> WARNING "
+            If LogDepth >= 1 Then
+                Typstr = "WARNING"
             Else
                 Exit Sub
             End If
         Case 2
-            If Globals.LogDepth >= 2 Then
-                Typstr = ">> INFO    "
+            If LogDepth >= 2 Then
+                Typstr = "INFO   "
             Else
                 Exit Sub
             End If
         Case 3
-            If Globals.LogDepth >= 3 Then
-                Typstr = ">> TRACE   "
+            If LogDepth >= 3 Then
+                Typstr = "TRACE  "
             Else
                 Exit Sub
             End If
@@ -49,7 +58,7 @@ Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
     l_StringDateTimeNow = Now
     l_StringToday = Format$(l_StringDateTimeNow, "YYYY-MM-DD hh:mm:ss")
     ' concatenate date and what the user wants logged
-    l_StringLogStatement = l_StringToday & " " & Typstr & a_stringLogThis
+    l_StringLogStatement = Join(Array(l_StringToday, l_StringSource, Typstr, a_stringLogThis), " | ")
     ' send to TTY
 Debug.Print (l_StringLogStatement)
     ' append (not write) to disk
@@ -70,5 +79,7 @@ Private Sub samples()
     writelog LogError, "Where did the error occure?" & vbNewLine & _
                       err.Number & vbNewLine & err.description & vbNewLine & err.source
 End Sub
+
+
 
 

@@ -205,14 +205,14 @@ End Function
 
 Public Sub deleteIndexesXml()
 
-    Dim fso                  As Object
+    Dim FSO                  As Object
     Dim lastrow              As Integer
     Dim row                  As Integer
     Dim col                  As Integer
     Dim lastcol              As Integer
 
 
-    Set fso = CreateObject("scripting.FileSystemObject")
+    Set FSO = CreateObject("scripting.FileSystemObject")
 
     lastrow = shGebäude.Cells(shGebäude.rows.Count, 2).End(xlUp).row
     lastcol = shGebäude.Cells(1, shGebäude.Columns.Count).End(xlToLeft).Column
@@ -231,7 +231,7 @@ Public Sub deleteIndexesXml()
     ' ----------------------------- PRINZIPSCHEMAS
     Dim j                    As Integer
     Dim i                    As Integer
-    Dim filename             As String
+    Dim FileName             As String
     Dim TinLine              As String
     Dim Projektname          As String
     Dim Projektpfad          As String
@@ -281,7 +281,7 @@ Public Sub deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As 
         root.RemoveChild node
     Next
     On Error Resume Next
-    oXml.save XMLFile
+    oXml.Save XMLFile
     Set oXml = Nothing
     On Error GoTo 0
 
@@ -588,22 +588,22 @@ End Function
 
 Function CountFiles(ByVal path As String) As Long
 
-    Dim fso As Object
-    Dim folder As Object
+    Dim FSO As Object
+    Dim Folder As Object
     Dim subfolder As Object
     Dim amount As Long
     
-    Set fso = CreateObject("Scripting.FileSystemObject")
+    Set FSO = CreateObject("Scripting.FileSystemObject")
     
-    Set folder = fso.GetFolder(path)
-    For Each subfolder In folder.SubFolders
+    Set Folder = FSO.GetFolder(path)
+    For Each subfolder In Folder.SubFolders
         amount = amount + CountFiles(subfolder.path)
     Next subfolder
     
-    amount = amount + folder.files.Count
+    amount = amount + Folder.files.Count
     
-    Set fso = Nothing
-    Set folder = Nothing
+    Set FSO = Nothing
+    Set Folder = Nothing
     Set subfolder = Nothing
     
     CountFiles = amount

@@ -26,27 +26,27 @@ Option Explicit
 
 '// INI CONTROLLING PROCEDURES
 'reads an Ini string
-Public Function ReadIni(filename As String, Section As String, Key As String) As String
+Public Function ReadIni(FileName As String, Section As String, Key As String) As String
     Dim RetVal               As String * 1024, v As Long
-    v = GetPrivateProfileString(Section, Key, vbNullString, RetVal, 1024, filename)
+    v = GetPrivateProfileString(Section, Key, vbNullString, RetVal, 1024, FileName)
     ReadIni = Left(RetVal, v)
 End Function
 
 'reads an Ini section
-Public Function ReadIniSection(filename As String, Section As String) As String
+Public Function ReadIniSection(FileName As String, Section As String) As String
     Dim RetVal               As String * 1024, v As Long
-    v = GetPrivateProfileSection(Section, RetVal, 1024, filename)
+    v = GetPrivateProfileSection(Section, RetVal, 1024, FileName)
     ReadIniSection = Left(RetVal, v)
 End Function
 
 'writes an Ini string
-Public Sub WriteIni(filename As String, Section As String, Key As String, value As String)
-    WritePrivateProfileString Section, Key, value, filename
+Public Sub WriteIni(FileName As String, Section As String, Key As String, value As String)
+    WritePrivateProfileString Section, Key, value, FileName
 End Sub
 
 'writes an Ini section
-Public Sub WriteIniSection(filename As String, Section As String, value As String)
-    WritePrivateProfileSection Section, value, filename
+Public Sub WriteIniSection(FileName As String, Section As String, value As String)
+    WritePrivateProfileSection Section, value, FileName
 End Sub
 
 
