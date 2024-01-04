@@ -54,6 +54,9 @@ Private Type TPlankopf
     CurrentIndex As IIndex
     Indexes As New Collection
     SkipValidation As Boolean
+    '--- Schema / Verteilung ---
+    AnlageTyp As String: AnlageTypKF As String
+    AnlageNummer As String
 End Type
 
 Private This                 As TPlankopf
@@ -214,6 +217,12 @@ End Property
 Private Property Set IPlankopf_Indexes(ByVal NewIndexes As Collection)
     Set This.Indexes = NewIndexes
 End Property
+Private Property Get IPlankopf_Anlagetyp() As String
+ IPlankopf_Anlagetyp = This.AnlageTyp
+End Property
+Private Property Get IPlankopf_AnlageNummer() As String
+ IPlankopf_AnlageNummer = This.AnlageNummer
+End Property
 
 ' -------------------------------
 ' --- Functions
@@ -239,7 +248,9 @@ Public Function Filldata( _
        Optional ByVal SkipValidation As Boolean = False, _
        Optional ByVal Planüberschrift As String = "NEW", _
        Optional ByVal ID As String = "ID", _
-       Optional ByVal CustomÜberschrift As Boolean = False _
+       Optional ByVal CustomÜberschrift As Boolean = False, _
+        Optional ByVal AnlageTyp As String, _
+        Optional ByVal AnlageNummer As String _
        ) As Boolean
     ' SkipValidation ist zu debug zwecken zu gebrauchen
     With Inputs
@@ -261,6 +272,8 @@ Public Function Filldata( _
         .Plantyp = Plantyp
         .CustomPlanüberschrift = CustomÜberschrift
         .SkipValidation = SkipValidation
+        .AnlageNummer = AnlageNummer
+        .AnlageTyp = AnlageTyp
     End With
     Set pProjekt = Projekt
     'On Error GoTo NotValid
@@ -354,9 +367,10 @@ Private Sub GetKF()
         Case "SCH"
 3           col = Application.Match(This.GewerkKF & " SCH", Globals.shPData.range("10:10"), 0)
             This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
-4           col = Application.Match(This.GewerkKF, Globals.shPData.range("9:9"), 0)
-            This.PlanartKF = Globals.shPData.Columns(col).Find(This.Planart).Offset(0, 1).value
             This.TinLineTyp = vbNullString
+            ' Kurzform für Anlagetyp
+            col = Application.Match("Anlagetyp " & This.UnterGewerk, Globals.shPData.range("12:12"), 0)
+            This.AnlageTypKF = Globals.shPData.Columns(col).Find(This.AnlageTyp).Offset(0, 1).value
         Case "PRI"
 5           col = Application.Match(This.GewerkKF & " PRI", Globals.shPData.range("10:10"), 0)
             This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
@@ -369,9 +383,9 @@ Private Sub GetKF()
     
     Exit Sub
 ErrHandler:
-Debug.Print ">>>   "; err.description
+Debug.Print ">>>   "; err.Description
     writelog LogError, "Beim erstellen der Kurzformen" & vbNewLine & _
-                      err.Number & vbNewLine & err.description & vbNewLine & err.source
+                      err.Number & vbNewLine & err.Description & vbNewLine & err.source
 
 End Sub
 
@@ -440,7 +454,8 @@ Private Sub GetPlanüberschrift()
 
     Dim Planüberschrift      As String
     If This.CustomPlanüberschrift Then Exit Sub
-    If This.Plantyp = "PLA" Then
+    Select Case This.Plantyp
+    Case "PLA"
         ' Überschrift für Elektropläne
         Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschoss, This.Gebäudeteil)
         This.PlanBeschrieb = Planüberschrift
@@ -456,8 +471,8 @@ Private Sub GetPlanüberschrift()
                 End If
             End If
         End If
-    Else
-        ' Überschrift für Schemas
+    Case "PRI"
+        ' Überschrift für Prinzipschemas
         Planüberschrift = "Prinzipschema " & This.UnterGewerk
         This.PlanBeschrieb = Planüberschrift
         If Len(Planüberschrift) > Globals.maxlen Then
@@ -466,7 +481,12 @@ Private Sub GetPlanüberschrift()
                 Planüberschrift = "PR " & This.UnterGewerk
             End If
         End If
-    End If
+    
+    Case "SCH"
+        ' Überschrift für Schemas
+        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Gewerk, This.AnlageTyp, This.Gebäude, This.Geschoss, This.Gebäudeteil, "Anlagenummer:", This.AnlageNummer)
+    End Select
+    
     If This.Planüberschrift <> Planüberschrift And This.Planüberschrift <> vbNullString Then
         Select Case MsgBox("Die Beschriftung: " & This.Planüberschrift & " ist nicht Standard." & vbNewLine & "Soll diese mit der Standardmässigen Überschrift ersetzt werden?" & vbNewLine & Planüberschrift, vbYesNo, "Beschriftung Überschreiben?")
             Case vbYes
@@ -510,12 +530,32 @@ Public Sub Refresh()
 
     Dim dateToday            As String
     dateToday = Format(Now(), "yymmdd")
-    'Select Case This.PlanTyp
+    Select Case This.Plantyp
+    Case "PLA"
     This.LayoutName = WorksheetFunction.TextJoin _
                       ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
                       
     This.PDFFileName = WorksheetFunction.TextJoin _
                        ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
+    Case "SCH"
+    This.LayoutName = WorksheetFunction.TextJoin _
+                      ("-", True, This.GewerkKF, This.AnlageTypKF, This.GebäudeCode, This.GeschossCode, This.AnlageNummer)
+                      
+    This.PDFFileName = WorksheetFunction.TextJoin _
+                       ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
+    Case "PRI"
+    This.LayoutName = WorksheetFunction.TextJoin _
+                      ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
+                      
+    This.PDFFileName = WorksheetFunction.TextJoin _
+                       ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
+    Case Else
+    This.LayoutName = WorksheetFunction.TextJoin _
+                      ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
+                      
+    This.PDFFileName = WorksheetFunction.TextJoin _
+                       ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
+    End Select
     writelog LogInfo, "Planablage-Namen aktualisiert: " & This.PDFFileName
 End Sub
 

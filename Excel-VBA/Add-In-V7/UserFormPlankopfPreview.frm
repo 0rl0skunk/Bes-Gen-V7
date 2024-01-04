@@ -15,13 +15,9 @@ Attribute VB_Exposed = False
 
 
 
-
-
-
-
-
-
 '@Folder "Plankopf"
+'@ModuleDescription "Zeigt eine Vorschau des erstellten Plankopfes an. Dies dient zur überprüfung, ob ein Plankopf richtig ausgefüllt wurde und zur Fehlerfindung."
+
 Option Explicit
 
 Private pPlankopf As IPlankopf
@@ -30,10 +26,13 @@ Private icons                As UserFormIconLibrary
 Private pFileName As String
 
 Private Sub CommandButtonClose_Click()
+
     Unload Me
+
 End Sub
 
 Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
+' zeigt die Eingaben gemäss Plankopf-Objekt klasse an
 
     Me.PA40.Caption = Plankopf.Planüberschrift
     Me.PA41.Caption = Plankopf.LayoutGrösse(True)
@@ -44,6 +43,7 @@ Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
     Me.PA31.Caption = Split(Plankopf.Gezeichnet, " ; ")(1)
     Me.PA32.Caption = Split(Plankopf.Geprüft, " ; ")(0)
     Me.PA33.Caption = Split(Plankopf.Geprüft, " ; ")(1)
+
     '--- Projektaddresse
     Me.LabelProjektAdresse.Caption = Projekt.ProjektBezeichnung & vbNewLine & Projekt.Projektadresse.Komplett
     Me.Projektnummer.Caption = Projekt.Projektnummer
@@ -53,21 +53,18 @@ Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
 End Sub
 
 Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
-
+' Zeigt die Felder aus einer XML-Datei an.
     pFileName = filepath
-
     Dim xmlDOMDoc            As New MSXML2.DOMDocument60
     xmlDOMDoc.load filepath
-
     pPlankopfnummer = Plankopfnummer
     Dim PKNr                 As String: PKNr = "PK" & pPlankopfnummer
-
     Dim ParentNode           As MSXML2.IXMLDOMElement
     Set ParentNode = xmlDOMDoc.DocumentElement
-
     Dim ChildNode            As MSXML2.IXMLDOMElement
     Dim GrandChildNode       As MSXML2.IXMLDOMElement
-
+    
+' Füllt die Felder aus gemäss den Attributen von TinLine
     For Each ChildNode In ParentNode.ChildNodes
         If ChildNode.HasChildNodes And ChildNode.BaseName = PKNr Then
             For Each GrandChildNode In ChildNode.ChildNodes

@@ -34,7 +34,9 @@ Public Function Create( _
        Optional ByVal SkipValidation As Boolean = False, _
        Optional ByVal Planüberschrift As String = "NEW", _
        Optional ByVal ID As String = "NEW", _
-       Optional ByVal CustomÜberschrift As Boolean = False _
+       Optional ByVal CustomÜberschrift As Boolean = False, _
+        Optional ByVal AnlageTyp As String, _
+        Optional ByVal AnlageNummer As String _
        ) As IPlankopf
 
     Dim NewPlankopf          As New Plankopf
@@ -58,7 +60,9 @@ Public Function Create( _
        SkipValidation:=SkipValidation, _
        Planüberschrift:=Planüberschrift, _
        ID:=ID, _
-       CustomÜberschrift:=CustomÜberschrift _
+       CustomÜberschrift:=CustomÜberschrift, _
+       AnlageTyp:=AnlageTyp, _
+       AnlageNummer:=AnlageNummer _
                            ) Then
         Dim row              As Long
         Set Create = NewPlankopf
@@ -97,7 +101,9 @@ Public Function LoadFromDataBase(ByVal row As Long) As IPlankopf
            GeprüftPerson:=.Cells(row, 20).value, _
            GeprüftDatum:=.Cells(row, 21).value, _
            SkipValidation:=False, _
-           CustomÜberschrift:=.Cells(row, 10).value _
+           CustomÜberschrift:=.Cells(row, 10).value, _
+           AnlageTyp:=.Cells(row, 23).value, _
+           AnlageNummer:=.Cells(row, 24).value _
                                ) Then
             Set LoadFromDataBase = NewPlankopf
             LoadFromDataBase.TinLinePKNr = .Cells(row, 22).value
@@ -167,6 +173,8 @@ Public Function AddToDatabase(ByVal Plankopf As IPlankopf) As Boolean
         .Cells(row, 21).value = Replace(Plankopf.GeprüftDatum, ".", "/")
         .Cells(row, 12).value = Plankopf.CurrentIndex.Index
         .Cells(row, 22).value = Plankopf.TinLinePKNr
+        .Cells(row, 23).value = Plankopf.AnlageTyp
+        .Cells(row, 24).value = Plankopf.AnlageNummer
     End With
     AddToDatabase = True
     writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
@@ -316,12 +324,14 @@ Public Function ReplaceInDatabase(ByVal Plankopf As IPlankopf) As Boolean
         .Cells(row, 19).value = Replace(Plankopf.GezeichnetDatum, ".", "/")
         .Cells(row, 20).value = Plankopf.GeprüftPerson
         .Cells(row, 21).value = Replace(Plankopf.GeprüftDatum, ".", "/")
+        .Cells(row, 23).value = Plankopf.AnlageTyp
+        .Cells(row, 24).value = Plankopf.AnlageNummer
     End With
     ReplaceInDatabase = True
     writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank aktualisiert"
     
-    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A1").value Then ChangeTinLinePlankopf Plankopf ' Elektroplan
-    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A2").value Then ChangeTinLinePlankopf Plankopf ' Elektro Prinzipschema
+    If Plankopf.Gewerk = "Elektro" And Plankopf.Plantyp = "PLA" And Globals.shProjekt.range("A1").value Then ChangeTinLinePlankopf Plankopf ' Elektroplan
+    If Plankopf.Gewerk = "Elektro" And Plankopf.Plantyp = "PRI" And Globals.shProjekt.range("A2").value Then ChangeTinLinePlankopf Plankopf ' Elektro Prinzipschema
     If Plankopf.Gewerk = "Türfachplanung" And Globals.shProjekt.range("A4").value Then ChangeTinLinePlankopf Plankopf ' Türfachplanung
     If Plankopf.Gewerk = "Brandschutzplanung" And Globals.shProjekt.range("A5").value Then ChangeTinLinePlankopf Plankopf ' Brandschutzplanung
     

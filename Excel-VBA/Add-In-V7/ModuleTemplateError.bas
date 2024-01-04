@@ -43,10 +43,10 @@ ErrHandler:
             GoTo errSolved
         Case 82
             ' if it is NOT solvable then display the error message
-            errFrm.Typ TypWarning, ErrSource & err.Number & vbNewLine & "Decsription:" & vbNewLine & err.description
+            errFrm.Typ TypWarning, ErrSource & err.Number & vbNewLine & "Decsription:" & vbNewLine & err.Description
             errFrm.Show 1
         Case Else                                'a "unhandled" error occured
-            errFrm.Typ typError, ErrSource & err.Number & vbNewLine & "Decsription:" & vbNewLine & err.description, , True
+            errFrm.Typ typError, ErrSource & err.Number & vbNewLine & "Decsription:" & vbNewLine & err.Description, , True
             errFrm.Show 1
     End Select
 

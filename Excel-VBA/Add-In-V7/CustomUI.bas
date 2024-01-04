@@ -112,7 +112,7 @@ Public Sub RefreshRibbon()
 RestartExcel:
     MsgBox "Please restart Excel for Ribbon UI changes to take affect", , "Ribbon UI Refresh Failed"
     writelog LogError, "trying to refresh CustomRibbon" & vbNewLine & _
-                      err.Number & vbNewLine & err.description & vbNewLine & err.source
+                      err.Number & vbNewLine & err.Description & vbNewLine & err.source
 
 End Sub
 
@@ -132,7 +132,12 @@ Sub onActionButton(control As IRibbonControl)
         Case "SharePoint"
             Dim folderSP     As String: folderSP = Globals.Projekt.ProjektOrdnerSharePoint
             writelog LogInfo, "Opening SharePoint-Folder" & vbNewLine & folderSP
+            If folderSP <> vbNullString Then
             ActiveWorkbook.FollowHyperlink Address:=folderSP
+            Else
+            MsgBox "Es ist kein SharePoint Pfad beim erstellen des Projektes eingefügt worden." & vbNewLine & _
+                   "Dieser Kann nachträglich in der Zelle 'D8' im Blatt 'Projektdaten' eingefügt werden", vbInformation, "Kein SharePoint Ordner"
+            End If
         Case "Drucken"
             Dim frmPrint     As New UserFormPrint
             frmPrint.Show 1
@@ -160,6 +165,11 @@ Sub onActionButton(control As IRibbonControl)
         Case "CADElektro"
             Dim frmCreateElektro As New UserFormProjektErstellen
             frmCreateElektro.Show 1
+        Case "Upgrade"
+            Dim frmUpgrade As New UserFormUpgrade
+            frmUpgrade.Show 1
+        Case "OneNote"
+            ActiveWorkbook.FollowHyperlink Address:="https://rebsamennet.sharepoint.com/sites/restricted/_layouts/15/Doc.aspx?sourcedoc=%2Fsites%2Frestricted%2FDokumente%2F01%5FElektroplan%2F03%5FPublic%2F00%20Projekte%2FINTERNE%20PROJEKTE%2F00%20Notizbuch%2F00004%20QS&action=edit&wd=target%28%F0%9F%93%9A%20F%C3%BCr%20Mitarbeiter%2Eone%7C5CB90997%2DE469%2D430F%2DA383%2D4160B937172D%2F%29&CT=1704405224505&OR=OWA%2DNT&CID=ffb82227%2Dcc39%2D098b%2D03fd%2D3f7a2f63e99e"
     End Select
     CustomUI.RefreshRibbon
 End Sub

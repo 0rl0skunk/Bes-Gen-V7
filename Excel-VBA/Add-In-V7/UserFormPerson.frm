@@ -15,29 +15,33 @@ Attribute VB_Exposed = False
 
 
 
-
-
-
-
-
-
 '@Folder("Person")
+'@ModuleDescription "Einfaches Auswählen und definieren eines Layouts für Plan und Prinzip Planköpfe."
+
 Option Explicit
+
 Private icons                As UserFormIconLibrary
 
 Private Sub ComboBoxPersonFirma_Change()
+
     LoadAdress Me.ComboBoxPersonFirma.value
+
 End Sub
 
 Private Sub CommandButtonClose_Click()
+
     Unload Me
+
 End Sub
 
 Private Sub CommandButtonCreate_Click()
+
     PersonFactory.AddToDatabase FormToPerson
+
 End Sub
 
 Private Function FormToPerson() As IPerson
+
     Dim NewPerson            As New IPerson
     Set NewPerson = PersonFactory.Create( _
                     Vorname:=Me.TextBoxPersonVorname.value, _
@@ -51,9 +55,16 @@ Private Function FormToPerson() As IPerson
                     EMail:=Me.TextBoxPersonEMail.value _
                             )
     Set FormToPerson = NewPerson
+
 End Function
 
 Private Sub UserForm_Initialize()
+    
+    Set icons = New UserFormIconLibrary
+    Me.TitleIcon.Picture = icons.IconAddressBook.Picture
+    Me.TitleLabel.Caption = "Adresse / Person erfassen"
+    Me.LabelInstructions.Caption = "Neue Adresse oder Person für E-Mail Versand erfassen"
+    
     Me.ComboBoxPersonAnrede.List = Array("Herr", "Frau", "Du")
 
     Dim e                    As range
@@ -70,6 +81,7 @@ Private Sub UserForm_Initialize()
 End Sub
 
 Private Sub LoadAdress(ByVal Firma As String)
+' Adresse in Userform anzeigen
     Dim e                    As range
     For Each e In Globals.shAdress.range("ADM_Firmen")
         If e.value = Firma Then
@@ -78,6 +90,7 @@ Private Sub LoadAdress(ByVal Firma As String)
             Me.TextBoxADROrt.value = e.Offset(0, 3).value
         End If
     Next
+
 End Sub
 
 

@@ -15,23 +15,22 @@ Attribute VB_Exposed = False
 
 
 
-
-
-
-
-
-
 '@Folder "Plankopf"
+'@ModuleDescription "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
+
 Option Explicit
+
 Private icons                As UserFormIconLibrary
 Private Planköpfe            As New Collection
 Private Filters              As Boolean
 
 Private Sub CommandButtonAdd_Click()
-
+' neuer Plankopf erstellen
     Dim frm                  As New UserFormPlankopf
     frm.setIcons Add
     frm.Show 1
+
+' nach dem schliessen die Planliste aktualisieren
     LoadListViewPlan Me.ListViewPlankopf
 
     SetFilters
@@ -39,14 +38,15 @@ Private Sub CommandButtonAdd_Click()
 End Sub
 
 Private Sub CommandButtonEdit_Click()
-
+' ausgewählten Plankopf bearbeiten
     Dim row                  As Long
-    row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
+    row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row ' die zu ladende Reihe aus der Datenbank finden
     Dim frm                  As New UserFormPlankopf
-    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt
+    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt ' ein Plankopf-Objekt aus der Reihe erstellen und im UserForm laden
     frm.setIcons Edit
     frm.Show 1
 
+' nach dem schliessen die Planliste aktualisieren
     LoadListViewPlan Me.ListViewPlankopf
 
     SetFilters
@@ -60,7 +60,7 @@ Private Sub CommandButtonFilters_Click()
 End Sub
 
 Private Sub ShowFilter()
-
+' Filter anzeigen oder verstecken
     If Filters Then
         Me.CommandButtonFilters.Caption = "< Filter"
         Me.CommandButtonFilters.Left = 708
@@ -84,13 +84,13 @@ Private Sub CommandButtonClose_Click()
 End Sub
 
 Public Property Let Title(value As String)
-
+' titel setzen
     Me.TitleLabel.Caption = value
 
 End Property
 
 Public Property Let icon(value As String)
-
+' Icons setzen
     Set icons = New UserFormIconLibrary
     Dim icon                 As MSForms.control
 
@@ -103,7 +103,7 @@ Public Property Let icon(value As String)
 End Property
 
 Public Property Let Instruction(value As String)
-
+' Kurzbeschrieb setzen
     Me.LabelInstructions.Caption = value
 
 End Property
@@ -112,15 +112,21 @@ Private Sub CommandButtonCopy_Click()
 
     Dim row                  As Long
     Dim Plankopf             As IPlankopf
+   
     If Globals.shStoreData.Cells(4, 1).value = vbNullString Then
+    ' wenn nur ein Plankopf erstellt wurde funktioniert die match funktion nicht richtig deshalb hier eine spezielle condtion.
         row = 3
     Else
+    ' ansonsten die Reihe mit der Match Funktion finden
         row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     End If
+   
     Set Plankopf = PlankopfFactory.LoadFromDataBase(row)
     Dim frm                  As New UserFormPlankopf
     Dim answer               As Boolean
+
     If IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count > 0 Then
+    ' Wenn der zu kopierende Plan Indexe hat soll man diese nach bedarf kopieren können oder nicht.
         Select Case MsgBox("Vorhandene Indexe kopieren?", vbYesNo, "Indexe kopieren?")
             Case vbYes
                 answer = True
@@ -132,10 +138,12 @@ Private Sub CommandButtonCopy_Click()
         answer = False
         Plankopf.ClearIndex
     End If
+
     Set frm.PlankopfCopyFrom = Plankopf
     frm.CopyPlankopf Plankopf, Projekt, answer
     frm.Show 1
 
+' nach dem schliessen die Planliste aktualisieren
     LoadListViewPlan Me.ListViewPlankopf
 
     SetFilters
@@ -143,19 +151,27 @@ Private Sub CommandButtonCopy_Click()
 End Sub
 
 Private Sub CommandButtonDelete_Click()
-
+' Plankopf löschen
     Dim row                  As Long
     If Globals.shStoreData.Cells(4, 1).value = vbNullString Then
+    ' wenn nur ein Plankopf erstellt wurde funktioniert die match funktion nicht richtig deshalb hier eine spezielle condtion.
         row = 3
     Else
+    ' ansonsten die Reihe mit der Match Funktion finden
         row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row
     End If
+
     With Globals.shStoreData
-        Dim info             As String: info = vbNewLine & .Cells(row, 14).value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Indexe"
+        Dim info             As String
+        info = vbNewLine & .Cells(row, 14).value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Indexe"
     End With
+
     Select Case MsgBox("Bist du sicher dass du den Plankopf löschen willst?" & info, vbYesNo, "Plankopf löschen")
+    ' zusätzliche bestätigung um versehentliche löschungen zu vermeiden.
         Case vbYes
             PlankopfFactory.DeleteFromDatabase row
+
+            ' nach dem schliessen die Planliste aktualisieren
             LoadListViewPlan Me.ListViewPlankopf
 
             SetFilters
@@ -173,7 +189,7 @@ Private Sub CommandButtonFilterReset_Click()
 End Sub
 
 Private Sub FilterListView(ByVal Index As String, ByVal FilterValue As String)
-
+' Filter sind immernoch Work In Progress (WIP)
     Dim e                    As ListItem
 StartOver:
     For Each e In Me.ListViewPlankopf.ListItems
@@ -219,6 +235,9 @@ Private Sub UserForm_Initialize()
     LoadListViewPlan Me.ListViewPlankopf
     Filters = False
     ShowFilter
+    
+    Me.TitleLabel.Caption = "Plankopfübersicht"
+    Me.LabelInstructions.Caption = "Planköpfe erstellen, bearbeiten und löschen"
 
     If Me.ListViewPlankopf.ListItems.Count < 1 Then CommandButtonAdd_Click
 

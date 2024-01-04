@@ -15,26 +15,26 @@ Attribute VB_Exposed = False
 
 
 
-
-
-
-
-
-
 '@Folder "Print"
+'@ModuleDescription "Planköpfe als PDF publizieren. Momentan nur für TinLine Pläne / Elektro"
+
 Option Explicit
+
 Private icons                As UserFormIconLibrary
 Private pPlanköpfe           As Collection
 
 Private Sub CommandButtonPrint_Click()
+' alle ausgewählten Planköpfe publizieren
     Dim li                   As ListItem
     Set pPlanköpfe = New Collection
     For Each li In Me.ListViewPlankopf.ListItems
         If li.Checked Then
+        ' für alle publizierbaren Planköpfe schauen ob diese ausgewählt sind, wenn ja zu der collection hinzufügen und sonst überspringen
             pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).row)
         End If
     Next
 
+' *.dsd Datei erstellen und publizieren
     CreatePlotList pPlanköpfe
 
 End Sub
@@ -43,6 +43,9 @@ Private Sub UserForm_Initialize()
 
     Set icons = New UserFormIconLibrary
     Me.TitleIcon.Picture = icons.IconPrint.Picture
+    Me.TitleLabel.Caption = "Pläne Publizieren"
+    Me.LabelInstructions.Caption = "Planköpfe vom TinLine in PDFs publizieren"
+    
     LoadListViewPlan Me.ListViewPlankopf
 
 End Sub

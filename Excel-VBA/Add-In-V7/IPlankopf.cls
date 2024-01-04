@@ -130,3 +130,7 @@ End Sub
 Public Sub ClearIndex()
 End Sub
 
+Public Property Get AnlageTyp() As String
+End Property
+Public Property Get AnlageNummer() As String
+End Property

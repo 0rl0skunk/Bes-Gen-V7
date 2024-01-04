@@ -15,20 +15,17 @@ Attribute VB_Exposed = False
 
 
 
-
-
-
-
-
-
 '@Folder "Plankopf"
+'@ModuleDescription "Einfaches Auswählen und definieren eines Layouts für Plan und Prinzip Planköpfe."
+
 Option Explicit
+
 Private pMasstab             As Integer
 Private MultiPageType        As Integer
 Private icons                As UserFormIconLibrary
 
 Public Sub load(ByVal Format As String, ByVal Masstab As String, ByVal mpType As Integer)
-
+' Vorhandenes Layout laden
     Me.TextBoxFormatH.value = Split(Format, "H")(0)
     Me.TextBoxFormatB.value = Split(Split(Format, "H")(1), "B")(0)
     MultiPageType = mpType
@@ -42,8 +39,8 @@ Public Sub load(ByVal Format As String, ByVal Masstab As String, ByVal mpType As
 End Sub
 
 Private Sub ChangeFormat()
-
-    ' --- change displayed Layout based on new inputs
+    ' Anzeige gemäss neuen Eingaben anpassen
+    
     Dim paper                As control
     Dim border               As control
     Dim Plankopf             As control
@@ -72,19 +69,19 @@ Private Sub ChangeFormat()
     H = CInt(Me.TextBoxFormatH.value)
     B = CInt(Me.TextBoxFormatB.value)
 
-    ' --- get height
+    ' get height
     height = H * 29.7
     tHeight = height
-    ' --- get width
+    ' get width
     width = B * 21
     tWidth = width
 
-    ' --- side Ratio H/W
+    ' side Ratio H/W
 
     ratio = height / width
 
     If ratio > 1 Then
-        ' --- Vertikal
+        ' Vertikal
         tWidth = 1 / ratio * maxHeight
         tHeight = maxHeight
 
@@ -93,7 +90,7 @@ Private Sub ChangeFormat()
             tHeight = ratio * maxWidth
         End If
     Else
-        ' --- Horizontal
+        ' Horizontal
         tWidth = maxWidth
         tHeight = ratio * maxWidth
 
@@ -115,7 +112,7 @@ Private Sub ChangeFormat()
     Plankopf.Left = (tWidth / B) * (B - 1)
 
     legende.Top = 0
-
+' Auswahl für die korrekte darstellung von Plankopf und Legenden
     Select Case H
         Case 1
             Select Case B
@@ -198,6 +195,7 @@ Private Sub ChangeFormat()
             End Select
     End Select
 
+' Beschriftung für die Vorlage und welche Grösse ca. in dieses Layout passt.
     Me.TextBoxLayout.value = "Höhe:" & H & "H" & vbLf & _
                              "Beite:" & B & "B" & vbLf & _
                              height & "x" & width & "cm"
@@ -232,9 +230,10 @@ Private Sub CommandButton2_Click()
 End Sub
 
 Private Sub CommandButton3_Click()
-    pMasstab = CInt(Me.TextBoxMasstab.value)
 
+    pMasstab = CInt(Me.TextBoxMasstab.value)
     ChangeFormat
+
 End Sub
 
 Private Sub CommandButtonClose_Click()
@@ -244,31 +243,39 @@ Private Sub CommandButtonClose_Click()
 End Sub
 
 Private Sub SpinButtonFormatB_SpinDown()
+' Spinbutton Breite
     If CInt(Me.TextBoxFormatB.value) - 1 <= 0 Then Exit Sub
     Me.TextBoxFormatB.value = Me.TextBoxFormatB.value - 1
     ChangeFormat
+
 End Sub
 
 Private Sub SpinButtonFormatB_SpinUp()
+' Spinbutton Breite
     If CInt(Me.TextBoxFormatB.value) + 1 > 20 Then Exit Sub
     Me.TextBoxFormatB.value = Me.TextBoxFormatB.value + 1
     ChangeFormat
+
 End Sub
 
 Private Sub SpinButtonFormatH_SpinDown()
+' Spinbutton Höhe
     If CInt(Me.TextBoxFormatH.value) - 1 <= 0 Then Exit Sub
     Me.TextBoxFormatH.value = Me.TextBoxFormatH.value - 1
     ChangeFormat
+
 End Sub
 
 Private Sub SpinButtonFormatH_SpinUp()
+' Spinbutton Höhe
     If CInt(Me.TextBoxFormatH.value) + 1 > 3 Then Exit Sub
     Me.TextBoxFormatH.value = Me.TextBoxFormatH.value + 1
     ChangeFormat
+
 End Sub
 
 Private Sub UserForm_Initialize()
-
+' Initialisierung mit Texten und Icons.
     Set icons = New UserFormIconLibrary
     Me.TitleIcon.Picture = icons.IconLayout.Picture
 
