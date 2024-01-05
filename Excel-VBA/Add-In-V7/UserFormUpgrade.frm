@@ -15,22 +15,23 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 '@Folder("Upgrade")
+'@Version "Release V1.0.0"
 
 Option Explicit
 
 Private icons                As UserFormIconLibrary
 Private WBOldVersion         As Workbook
 
-                                
 Private Sub CommandButtonClose_Click()
     Unload Me
 End Sub
 
-                                
 Private Sub CommandButtonLoadOldVersion_Click()
-    Dim fDialog              As FileDialog, result As Integer
+    Dim fDialog              As FileDialog
+    Dim result               As Long
+
     Set fDialog = Application.FileDialog(msoFileDialogFilePicker)
-    
+
     'Optional: FileDialog properties
     fDialog.AllowMultiSelect = False
     fDialog.Title = "Alte Version vom Beschriftungsgenerator auswählen"
@@ -40,21 +41,21 @@ Private Sub CommandButtonLoadOldVersion_Click()
     fDialog.Filters.Add "Excel files", "*.xlsx"
     fDialog.Filters.Add "Excel files", "*.xlsm"
     fDialog.Filters.Add "All files", "*.*"
-    
+
     'Show the dialog. -1 means success!
     If fDialog.Show = -1 Then
         writelog LogInfo, fDialog.SelectedItems(1)
         Me.TextBox1.value = fDialog.SelectedItems(1)
         Set WBOldVersion = Application.Workbooks.Open(FileName:=Me.TextBox1.value, ReadOnly:=True)
     End If
-    
+
     If Not WBOldVersion Is Nothing Then
         ' something was loaded
         ' try to automatically get the version
-        Select Case Left(WBOldVersion.Sheets("Projektdaten").range("B4").value, 1)
+        Select Case Left$(WBOldVersion.Sheets("Projektdaten").range("B4").value, 1)
         Case 1
             Me.OptionButton1.value = True
-        Case ""
+        Case vbNullString
             Me.OptionButton1.value = True
         Case 2
             Me.OptionButton2.value = True
@@ -65,17 +66,15 @@ Private Sub CommandButtonLoadOldVersion_Click()
         Case Else
         End Select
     End If
-    
+
 End Sub
 
-                                
 Private Sub CommandButtonUpgrade_Click()
-    
+
     Upgrade
-    
+
 End Sub
 
-                                
 Private Sub UserForm_Initialize()
     Set icons = New UserFormIconLibrary
     Me.TitleIcon.Picture = icons.IconWindowsupdate.Picture
@@ -83,19 +82,18 @@ Private Sub UserForm_Initialize()
     Me.LabelInstructions.Caption = "vorherige Versionen auf V7 upgraden"
 End Sub
 
-                                
 Private Sub Upgrade()
-    
+
     Dim FromVersion          As String
     If Me.OptionButton1.value Then FromVersion = 1
     If Me.OptionButton2.value Then FromVersion = 2
     If Me.OptionButton3.value Then FromVersion = 3
     If Me.OptionButton4.value Then FromVersion = 4
-    
+
     Dim PLANTYP              As String
     Dim row                  As Long
     Dim lastrow              As Long
-    
+
     ' --- oldWorksheets ------------------------------------------------------------------------
     On Error Resume Next
     Dim shPDataOld           As Worksheet: Set shPDataOld = WBOldVersion.Sheets("Projektdaten")
@@ -103,9 +101,9 @@ Private Sub Upgrade()
     Dim shStoreDataOld       As Worksheet: Set shStoreDataOld = WBOldVersion.Sheets("Datenbank")
     Dim shGebäudeOld         As Worksheet: Set shGebäudeOld = WBOldVersion.Sheets("Gebäude")
     Dim shAdresseOld         As Worksheet: Set shAdresseOld = WBOldVersion.Sheets("Adressverzeichnis")
-    
+    On Error GoTo 0
     ' --- check old Worksheets -----------------------------------------------------------------
-    
+
     Select Case FromVersion
     Case 3
         ' for each row in shStoreData transpose it to the new order
@@ -444,7 +442,6 @@ Private Sub Upgrade()
             Next row
         End With
     End Select
-    
+
 End Sub
 
-                                

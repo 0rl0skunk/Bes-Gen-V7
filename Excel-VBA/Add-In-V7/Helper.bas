@@ -1,7 +1,12 @@
 Attribute VB_Name = "Helper"
 Attribute VB_Description = "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
+
 '@IgnoreModule VariableNotUsed
+'@ModuleDescription "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
+'@Version "Release V1.0.0"
+
 Option Explicit
+
 Public Enum IDType
     IDPlankopf = 0
     IDIndex = 1
@@ -9,12 +14,10 @@ Public Enum IDType
     IDPerson = 3
 End Enum
 
-                                
-'@ModuleDescription "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
-Public Function GetPlanartNamedRange(Planart As String, Hauptgewerk As String) As String
+Public Function GetPlanartNamedRange(ByVal Planart As String, ByVal Hauptgewerk As String) As String
     ' Gibt die Range der verschiedenen Planarten des aktuellen Hauptgewerkes zurück
     Dim result               As String
-    
+
     Select Case Hauptgewerk
     Case "Elektro"
         result = "ELE_Planart"
@@ -41,13 +44,12 @@ Public Function GetPlanartNamedRange(Planart As String, Hauptgewerk As String) A
     Case "Brandschutzplanung"
         result = "BRA_Planart"
     End Select
-    
+
     GetPlanartNamedRange = result
-    
+
 End Function
 
-                                
-Public Function GetUnterGewerkKF(UnterGewerk As String, Hauptgewerk As String, Planart As String) As String
+Public Function GetUnterGewerkKF(UnterGewerk As String, ByVal Hauptgewerk As String, ByVal Planart As String) As String
     ' Gibt die Kurzform des Untergewerke zurück
     Dim result               As String
     Select Case Hauptgewerk
@@ -160,68 +162,65 @@ Public Function GetUnterGewerkKF(UnterGewerk As String, Hauptgewerk As String, P
             result = "BRA" & "_PRI"
         End Select
     End Select
-    
+
     GetUnterGewerkKF = WLookup(UnterGewerk, shPData.range(result), 2)
-    
+
 End Function
 
-                                
-Public Function CollectionToArray(myCol As Collection) As Variant
+Public Function CollectionToArray(ByVal myCol As Collection) As Variant
     ' convert a collection of elements to an array
     Dim result               As Variant
     Dim cnt                  As Long
-    
+
     If myCol.Count = 0 Then
         CollectionToArray = Array()
         Exit Function
     End If
-    
+
     ReDim result(myCol.Count - 1)
     For cnt = 0 To myCol.Count - 1
         result(cnt) = myCol(cnt + 1)
     Next cnt
     CollectionToArray = result
-    
+
 End Function
 
-                                
-Public Function WLookup(Lookup As Variant, range As range, Index As Integer, Optional onError As String = "-") As String
+Public Function WLookup(Lookup As Variant, range As range, Index As Long, Optional ByVal onError As String = "-") As String
     ' VLookup mit 'onError' wert welcher selbst zugeordnet werden kann.
     On Error GoTo err
-    
+
     Lookup = CStr(Lookup)
-    
+
     If IsError(Application.VLookup(Lookup, range, Index, False)) Then
         WLookup = onError
     Else
         WLookup = Application.VLookup(Lookup, range, Index, False)
     End If
-    
+
     Exit Function
     writelog LogInfo, "Wlookup Value Found " & WLookup
-    
+
 err:
-    
+
     WLookup = onError
     writelog LogError, "Wlookup Value for " & Lookup & " Not Found"
-    
+
 End Function
 
-                                
 Public Sub deleteIndexesXml()
-    
+
     Dim FSO                  As Object
-    Dim lastrow              As Integer
-    Dim row                  As Integer
-    Dim col                  As Integer
-    Dim lastcol              As Integer
-    
-    
+    Dim lastrow              As Long
+    Dim row                  As Long
+    Dim col                  As Long
+    Dim lastcol              As Long
+
+
     Set FSO = CreateObject("scripting.FileSystemObject")
-    
+
     lastrow = shGebäude.Cells(shGebäude.rows.Count, 2).End(xlUp).row
     lastcol = shGebäude.Cells(1, shGebäude.Columns.Count).End(xlToLeft).Column
-    
+
     For col = 2 To lastcol Step 2
         For row = 6 To lastrow
             writelog LogInfo, "> empty cell " & row & " " & col & " " & IsEmpty(shGebäude.Cells(row, col)) & " " & shGebäude.Cells(row, col).Address
@@ -232,10 +231,10 @@ Public Sub deleteIndexesXml()
             End If
         Next row
     Next col
-    
+
     ' ----------------------------- PRINZIPSCHEMAS
-    Dim j                    As Integer
-    Dim i                    As Integer
+    Dim j                    As Long
+    Dim i                    As Long
     Dim FileName             As String
     Dim TinLine              As String
     Dim Projektname          As String
@@ -246,14 +245,14 @@ Public Sub deleteIndexesXml()
     Dim rng                  As range
     Dim arr()                As Variant
     Dim tmparr()             As Variant
-    
-    
+
+
     Set rng = shPData.range("ELE_PRI")
     arr() = rng.Resize(rng.rows.Count, 1)
     tmparr() = RemoveBlanksFromStringArray(arr())
-    
+
     Projektname = shPData.range("ADM_Projektnummer") & "_" & shPData.range("ADM_Projektbezeichnung")
-    
+
     For i = LBound(tmparr) To UBound(tmparr)                              ' for every Prinzipschema
         Gewerk = rng.Find(tmparr(i)).Offset(0, 1).value
         GewerkNr = rng.Find(tmparr(i)).Offset(0, 2).value
@@ -262,25 +261,24 @@ Public Sub deleteIndexesXml()
         End If
         deleteIndexXml 0, 0, shPData.range("ADM_ProjektpfadCAD").value & "\03_PR\" & GewerkNr & "_" & Gewerk & "\TinPlan_PR_" & Gewerk & ".xml"
     Next i
-    
+
 End Sub
 
-                                
-Public Sub deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As String = vbNullString)
-    
+Public Sub deleteIndexXml(ByVal row As Long, ByVal col As Long, Optional ByVal i_xmlfile As String = vbNullString)
+
     Dim XMLFile              As String
     If i_xmlfile <> vbNullString Then
         XMLFile = i_xmlfile
     Else
         XMLFile = i_xmlfile
     End If
-    
+
     Dim oXml                 As New MSXML2.DOMDocument60
     oXml.load XMLFile
     Dim nodes                As IXMLDOMNodeList
     Dim node                 As IXMLDOMNode
     Dim root                 As IXMLDOMNode
-    
+
     Set root = oXml.SelectSingleNode("//tinPlan1")
     Set nodes = oXml.SelectNodes("//tinPlan1/*[contains(local-name(), 'IN')]")
     For Each node In nodes
@@ -290,16 +288,15 @@ Public Sub deleteIndexXml(row As Integer, col As Integer, Optional i_xmlfile As 
     oXml.Save XMLFile
     Set oXml = Nothing
     On Error GoTo 0
-    
+
 End Sub
 
-                                
-Public Function getXML(PCol As Collection) As String
+Public Function getXML(ByVal PCol As Collection) As String
     ' get the xml file path for the genearted PK
-    
+
     Dim Projektpath          As String
     Dim result               As String
-    
+
     On Error GoTo ErrHandler
     Projektpath = shPData.range("ADM_ProjektpfadCAD")
     'On Error Resume Next
@@ -319,16 +316,16 @@ Plan:
             If PCol(6)(1) = "TUE" Then
                 ' --- TF
                 If buildings Then
-                    result = Projektpath & "\05_TF\" & PCol(3)(0)(2) & "_" & PCol(3)(0)(1) & "\" & Right(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_TF_" & PCol(3)(1)(1) & ".xml"
+                    result = Projektpath & "\05_TF\" & PCol(3)(0)(2) & "_" & PCol(3)(0)(1) & "\" & Right$(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_TF_" & PCol(3)(1)(1) & ".xml"
                 Else
-                    result = Projektpath & "\05_TF\" & Right(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_TF_" & PCol(3)(1)(1) & ".xml"
+                    result = Projektpath & "\05_TF\" & Right$(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_TF_" & PCol(3)(1)(1) & ".xml"
                 End If
             Else
                 ' --- EP
                 If buildings Then
-                    result = Projektpath & "\01_EP\" & PCol(3)(0)(2) & "_" & PCol(3)(0)(1) & "\" & Right(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_EP_" & PCol(3)(1)(1) & ".xml"
+                    result = Projektpath & "\01_EP\" & PCol(3)(0)(2) & "_" & PCol(3)(0)(1) & "\" & Right$(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_EP_" & PCol(3)(1)(1) & ".xml"
                 Else
-                    result = Projektpath & "\01_EP\" & Right(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_EP_" & PCol(3)(1)(1) & ".xml"
+                    result = Projektpath & "\01_EP\" & Right$(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_EP_" & PCol(3)(1)(1) & ".xml"
                 End If
             End If
         End If
@@ -336,33 +333,32 @@ Plan:
         ' Prinzip
         result = Projektpath & "\03_PR\" & PCol(6)(2) & "_" & PCol(6)(1) & "\TinPlan_PR_" & PCol(6)(1) & ".xml"
     End If
-    
+
     getXML = result
-    
+
     Exit Function
-    
+
 ErrHandler:
     If PCol.Count < 6 Then
         If buildings Then
-            result = Projektpath & "\01_EP\" & PCol(3)(0)(2) & "_" & PCol(3)(0)(1) & "\" & Right(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_EP_" & PCol(3)(1)(1) & ".xml"
+            result = Projektpath & "\01_EP\" & PCol(3)(0)(2) & "_" & PCol(3)(0)(1) & "\" & Right$(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_EP_" & PCol(3)(1)(1) & ".xml"
         Else
-            result = Projektpath & "\01_EP\" & Right(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_EP_" & PCol(3)(1)(1) & ".xml"
+            result = Projektpath & "\01_EP\" & Right$(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\TinPlan_EP_" & PCol(3)(1)(1) & ".xml"
         End If
     End If
     getXML = result
-    
-    
+
+
 End Function
 
-                                
-Public Function getDWG(PCol As Collection) As String
+Public Function getDWG(ByVal PCol As Collection) As String
     ' get the dwg file path for the genearted PK
     Dim Projektpath          As String
     Dim result               As String
-    
-    
+
+
     Projektpath = shPData.range("ADM_ProjektpfadCAD")
-    
+
     Dim buildings            As Boolean
     buildings = Not (shGebäude.range("D1").value = vbNullString)
     If PCol(1) = 0 Then
@@ -372,44 +368,40 @@ Public Function getDWG(PCol As Collection) As String
             result = Projektpath & "\04_DE\DE_" & PCol(15) & ".dwg"
         Else
             If buildings Then
-                result = Projektpath & "\01_EP\" & PCol(3)(0)(2) & "_" & PCol(3)(0)(1) & "\" & Right(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\EP_" & PCol(3)(1)(1) & ".dwg"
+                result = Projektpath & "\01_EP\" & PCol(3)(0)(2) & "_" & PCol(3)(0)(1) & "\" & Right$(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\EP_" & PCol(3)(1)(1) & ".dwg"
             Else
-                result = Projektpath & "\01_EP\" & Right(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\EP_" & PCol(3)(1)(1) & ".dwg"
+                result = Projektpath & "\01_EP\" & Right$(PCol(3)(1)(2), 2) & "_" & PCol(3)(1)(1) & "\EP_" & PCol(3)(1)(1) & ".dwg"
             End If
         End If
     Else
         ' Prinzip
         result = Projektpath & "\03_PR\" & PCol(6)(2) & "_" & PCol(6)(1) & "\PR_" & PCol(6)(1) & ".dwg"
     End If
-    
+
     getDWG = result
-    
+
 End Function
 
-                                
 Public Sub DeleteRow(ByVal ID As String)
     ' löscht die gegebene zeile(row) im Worksheet (DATA [shstoredata])
     Dim row                  As Double
     row = Application.WorksheetFunction.Match(ID, shStoreData.range("A:A"), False)
     shStoreData.rows(row).EntireRow.Delete
-    
+
 End Sub
 
-                                
 Public Function getNewRow() As Long
     ' get the next free row in the store sheet
     getNewRow = shStoreData.range("A1").CurrentRegion.rows.Count + 1
-    
+
 End Function
 
-                                
-Public Function getRow(PCol As Collection) As Integer
+Public Function getRow(ByVal PCol As Collection) As Long
     ' get the corresponding row from the stored data
     getRow = shStoreData.range("A:A").Find(PCol(11), LookIn:=xlValues).row
-    
+
 End Function
 
-                                
 Public Function GetArrLength(a As Variant) As Long
     ' get the length of an 1D array
     If IsEmpty(a) Then
@@ -417,14 +409,17 @@ Public Function GetArrLength(a As Variant) As Long
     Else
         GetArrLength = UBound(a) - LBound(a) + 1
     End If
-    
+
 End Function
 
-                                
 Public Function getNewID(ByVal Typ As IDType) As String
     ' get a new unique ID for a PK
-    Dim length               As Integer, ws As Worksheet, Region As range, IDcol As Integer
-    
+    Dim length               As Long
+    Dim ws                   As Worksheet
+    Dim Region               As range
+    Dim IDcol                As Long
+
+
     Select Case Typ
     Case 0                                                                ' Plan
         length = 6
@@ -443,33 +438,32 @@ Public Function getNewID(ByVal Typ As IDType) As String
         Set Region = Globals.shAdress.range("ADR_Adressen")
         IDcol = 9
     End Select
-    Dim i                    As Integer
-    
+    Dim i                    As Long
+
     Dim rg                   As range
     Set rg = getRange(Region)
-    Dim rows                 As Integer
-    Dim r                    As Integer
-    
+    Dim rows                 As Long
+    Dim r                    As Long
+
     rows = rg.rows.Count
-    
+
     i = 4 * length
     Randomize
 newID:
-    getNewID = Hex(Int(2 ^ i * Rnd(Rnd)))
-    
+    getNewID = Hex$(Int(2 ^ i * Rnd(Rnd)))
+
     For r = 2 To rows + 1
         ' check if the ID already exists
         If getNewID = ws.Cells(r, IDcol).value Then GoTo newID
     Next r
-    
+
 End Function
 
-                                
-Public Function getList(RangeName As String) As Variant()
-    
+Public Function getList(ByVal RangeName As String) As Variant()
+
     Dim arr()                As Variant
     Dim tmparr()             As Variant
-    
+
     Dim tmprng               As range
     Globals.SetWBs
     Select Case RangeName
@@ -486,18 +480,17 @@ Public Function getList(RangeName As String) As Variant()
         arr() = tmprng.Resize(tmprng.rows.Count, 1)
         tmparr() = RemoveBlanksFromStringArray(arr())
     End Select
-    
+
     getList = tmparr()
-    
+
 End Function
 
-                                
-Public Function getRange(Region As range, Optional Off As Integer = 1) As range
+Public Function getRange(ByVal Region As range, Optional ByVal Off As Long = 1) As range
     ' Auswahl der aktuell gespeicherten Daten im Worksheet (DATA [shData]) ohne überschriften
     On Error GoTo err
-    
+
     Dim rng                  As range
-    
+
     If Region.CurrentRegion.rows.Count = Off Then
         ' move one down outside of headers
         Set rng = Region.CurrentRegion.Offset(Off)
@@ -505,33 +498,31 @@ Public Function getRange(Region As range, Optional Off As Integer = 1) As range
         ' remove the headers
         Set rng = Region.CurrentRegion.Offset(Off).Resize(Region.CurrentRegion.rows.Count - Off)
     End If
-    
+
     Set getRange = rng
-    
+
     Exit Function
-    
+
 err:
     Set rng = Nothing
-    
+
 End Function
 
-                                
 Public Function getUserName() As String
-    
+
     Dim arrUsername()        As String
     Dim UserName             As String
-    
+
     UserName = Application.UserName
-    
+
     'arrUsername = Split(UserName, " ")
-    
+
     'getUserName = Left(arrUsername(1), 2) & Left(arrUsername(0), 2)
-    
+
     getUserName = UserName
-    
+
 End Function
 
-                                
 Function ArrayIndex(ByVal arr As Variant, ByVal value As Variant) As Long
     Dim i                    As Long
     If IsArray(arr) Then
@@ -542,8 +533,7 @@ Function ArrayIndex(ByVal arr As Variant, ByVal value As Variant) As Long
     ArrayIndex = -1
 End Function
 
-                                
-Function IsInArray(stringToBeFound As String, arr() As String) As Boolean
+Function IsInArray(ByVal stringToBeFound As String, arr() As String) As Boolean
     Dim i                    As Variant
     If IsArray(arr) Then
         For i = LBound(arr) To UBound(arr)
@@ -556,19 +546,18 @@ Function IsInArray(stringToBeFound As String, arr() As String) As Boolean
     IsInArray = False
 End Function
 
-                                
-Public Function RemoveBlanksFromStringArray(ByRef inputArray() As Variant, Optional cols As Boolean = False) As Variant()
-    
+Public Function RemoveBlanksFromStringArray(ByRef inputArray() As Variant, Optional ByVal cols As Boolean = False) As Variant()
+
     Dim base                 As Long
     base = LBound(inputArray)
-    
+
     Dim result()             As Variant
-    
-    
+
+
     Dim countOfNonBlanks     As Long
     Dim i                    As Long
     Dim myElement            As Variant
-    
+
     If cols Then
         ReDim result(base To UBound(inputArray, 2))
         For i = base To UBound(inputArray, 2)
@@ -598,53 +587,51 @@ Public Function RemoveBlanksFromStringArray(ByRef inputArray() As Variant, Optio
             ReDim Preserve result(base To base + countOfNonBlanks - 1)
         End If
     End If
-    
+
     RemoveBlanksFromStringArray = result
-    
+
 End Function
 
-                                
 Function CountFiles(ByVal path As String) As Long
-    
+
     Dim FSO                  As Object
     Dim Folder               As Object
     Dim subfolder            As Object
     Dim amount               As Long
-    
+
     Set FSO = CreateObject("Scripting.FileSystemObject")
-    
+
     Set Folder = FSO.GetFolder(path)
     For Each subfolder In Folder.SubFolders
         amount = amount + CountFiles(subfolder.path)
     Next subfolder
-    
+
     amount = amount + Folder.files.Count
-    
+
     Set FSO = Nothing
     Set Folder = Nothing
     Set subfolder = Nothing
-    
+
     CountFiles = amount
-    
+
 End Function
 
-                                
-Function SplitStringByLength(inputString As String, maxLength As Integer) As Variant
+Function SplitStringByLength(ByVal inputString As String, ByVal maxLength As Long) As Variant
     Dim inputArray()         As String
     Dim outputArray()        As String
-    Dim currentLength        As Integer
+    Dim currentLength        As Long
     Dim currentLine          As String
     Dim wordArray()          As String
     Dim word                 As Variant
-    Dim i                    As Integer
-    
+    Dim i                    As Long
+
     inputArray = Split(inputString, " ")
     currentLength = 0
-    currentLine = ""
-    
+    currentLine = vbNullString
+
     ReDim outputArray(0)
     outputArray(0) = vbNullString
-    
+
     For Each word In inputArray
         wordArray = Split(word, vbLf)
         For i = LBound(wordArray) To UBound(wordArray)
@@ -653,19 +640,18 @@ Function SplitStringByLength(inputString As String, maxLength As Integer) As Var
                 currentLength = currentLength + Len(wordArray(i)) + 1
             Else
                 ReDim Preserve outputArray(UBound(outputArray) + 1)
-                outputArray(UBound(outputArray)) = Trim(currentLine)
+                outputArray(UBound(outputArray)) = Trim$(currentLine)
                 currentLine = wordArray(i)
                 currentLength = Len(wordArray(i))
             End If
         Next i
     Next word
-    
-    If Len(Trim(currentLine)) > 0 Then
+
+    If Len(Trim$(currentLine)) > 0 Then
         ReDim Preserve outputArray(UBound(outputArray) + 1)
-        outputArray(UBound(outputArray)) = Trim(currentLine)
+        outputArray(UBound(outputArray)) = Trim$(currentLine)
     End If
-    
+
     SplitStringByLength = outputArray
 End Function
 
-                                

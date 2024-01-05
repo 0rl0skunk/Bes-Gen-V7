@@ -8,10 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Index Objekt für einfacheres Management von Indexen."
-Option Explicit
-'@IgnoreModule VariableNotUsed, EmptyStringLiteral
+
 '@Folder("Index")
+'@IgnoreModule VariableNotUsed, EmptyStringLiteral
 '@ModuleDescription "Index Objekt für einfacheres Management von Indexen."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Implements IIndex
 
@@ -35,12 +38,10 @@ Private Type TIndex
     SkipValidation As Boolean
 End Type
 
-                                
 Private This                 As TIndex
 Private Inputs               As TIndex
 Private created              As Boolean
 
-                                
 Public Function Filldata( _
        ByVal IDPlan As String, _
        ByVal GezeichnetPerson As String, _
@@ -62,21 +63,20 @@ Public Function Filldata( _
     Inputs.GeprüftDatum = GeprüftDatum
     Inputs.Klartext = Klartext
     Inputs.SkipValidation = SkipValidation
-    
+
     If validateInputs Then
         This = Inputs
         created = True
     End If
-    
+
     writelog LogInfo, "Index erstellt"
-    
+
 End Function
 
-                                
 Private Function validateInputs() As Boolean
-    
+
     If Inputs.SkipValidation Then: validateInputs = True: Exit Function
-    
+
     ' sind alle benötigten Daten gegeben und korrekt
     validateInputs = False
     If Len(Inputs.IDPlan) = 0 Then err.Raise 1, "Index > ValidateInputs", "No 'Plan ID' given"
@@ -85,65 +85,57 @@ Private Function validateInputs() As Boolean
     If Len(Inputs.GezeichnetDatum) = 0 Then writelog LogError, "Index > ValidateInputs > No 'GezeichnetDatum' given": created = False
     If Inputs.GeprüftPerson = "NONE" Then Inputs.GeprüftPerson = vbNullString
     If Inputs.GeprüftDatum = "NONE" Then Inputs.GeprüftDatum = vbNullString
-    
+
     '--- Planbezeichnung ---
     If Len(Inputs.Klartext) = 0 Then writelog LogError, "Index > ValidateInputs > No 'Klartext' given"
     validateInputs = True
-    
+
     If This.ID = vbNullString Then This.ID = getNewID(IDIndex)
-    
+
     If This.Index = vbNullString Then
         Dim Indexes(1 To 26) As String
         Dim LastIndex        As String
-        
-        Dim i                As Integer
+
+        Dim i                As Long
         'For i = 65 To 90
         '    indexes(i - 64) = Chr(i)
         'Next
     Else
     End If
-    
+
 End Function
 
-                                
 Private Property Get XMLFile() As String
     XMLFile = This.XMLFilePath & "\" & This.XMLFileName
 End Property
 
-                                
 Private Property Get dwgFile() As String
     dwgFile = This.DWGFilePath & "\" & This.DWGFileName
 End Property
 
-                                
 Private Property Get IIndex_IndexID() As String
     IIndex_IndexID = This.ID
 End Property
 
-                                
 Private Property Get IIndex_Index() As String
     IIndex_Index = This.Index
 End Property
-Private Property Let IIndex_Index(NewValue As String)
+Private Property Let IIndex_Index(ByVal NewValue As String)
     This.Index = NewValue
 End Property
 
-                                
 Private Property Get IIndex_Gezeichnet() As String
     IIndex_Gezeichnet = This.GezeichnetPerson & " ; " & This.GezeichnetDatum
 End Property
 
-                                
 Private Property Get IIndex_Geprüft() As String
     IIndex_Geprüft = This.GeprüftPerson & " ; " & This.GeprüftDatum
 End Property
 
-                                
 Private Property Get IIndex_Klartext() As String
     IIndex_Klartext = This.Klartext
 End Property
 
-                                
 Private Property Get IIndex_PlanID() As String
     IIndex_PlanID = This.IDPlan
 End Property
@@ -151,5 +143,4 @@ Private Property Let IIndex_PlanID(ByVal NewValue As String)
     This.IDPlan = NewValue
 End Property
 
-                                
 

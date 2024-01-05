@@ -1,15 +1,18 @@
 Attribute VB_Name = "Globals"
 Attribute VB_Description = "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
-'@IgnoreModule VariableNotUsed
-Option Explicit
 '@Folder "Excel-Items"
+'@IgnoreModule VariableNotUsed
 '@ModuleDescription "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
+'@Version "Release V1.0.0"
 
-Global Const Version As Double = 7#
-Global Const maxlen As Long = 35                                          'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
-Global Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
-Global Const XMLVorlage As String = "H:\TinLine\01_Standards\transform.xsl"
-Global Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
+Option Explicit
+
+Public Const Version         As Double = 7#
+Public Const maxlen          As Long = 35                                 'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
+Public Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
+Public Const XMLVorlage      As String = "H:\TinLine\01_Standards\transform.xsl"
+Public Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
+
 Public WB                    As Workbook
 Public shPData               As Worksheet
 Public shStoreData           As Worksheet
@@ -25,7 +28,6 @@ Public CopyrightSTR          As String
 Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection
 
-                                
 Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
     With Application.ActiveWorkbook.Sheets("Projektdaten")
         If pProjekt Is Nothing Or ForceNew Then
@@ -47,13 +49,11 @@ Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
     Set Projekt = pProjekt
 End Function
 
-                                
 Public Function Planköpfe() As Collection
     If pPlanköpfe Is Nothing Then GetPlanköpfe
     Set Planköpfe = pPlanköpfe
 End Function
 
-                                
 Public Function GetPlanköpfe(Optional ByVal Gewerk As String = vbNullString, Optional ByVal Planart As String = vbNullString) As Collection
     'TODO Create Planköpfe from Workbook / Database
     Set pPlanköpfe = New Collection
@@ -84,12 +84,11 @@ Loaded:
     writelog LogInfo, "Loaded " & pPlanköpfe.Count & " Planköpfe from the Database"
 End Function
 
-                                
 Public Function SetWBs() As Boolean
     ' Setzt alle Workbooks und Worksheets welche vom Add-In verwendet werden.
     SetWBs = False
     If WB Is Nothing Then Set WB = Application.ActiveWorkbook
-    Dim i                    As Integer
+    Dim i                    As Long
     Set shAdress = WB.Sheets("Adressverzeichnis")
     Set shStoreData = WB.Sheets("Datenbank")
     Set shIndex = WB.Sheets("Index")
@@ -99,11 +98,10 @@ Public Function SetWBs() As Boolean
     Set shPData = WB.Sheets("Projektdaten")
     Set shSPSync = WB.Sheets("SharePointSync")
     Set shProjekt = WB.Sheets("Projekterstellen")
-    
+
     Globals.Projekt
     SetWBs = True
     writelog LogInfo, "Loaded all Workbooks in Globals Module"
 End Function
 
-                                
 

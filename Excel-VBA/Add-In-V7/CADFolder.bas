@@ -1,15 +1,17 @@
 Attribute VB_Name = "CADFolder"
+
 '@Folder("Projekt")
+'@Version "Release V1.0.0"
+
 Option Explicit
 
-Global Const OrdnerVorlage As String = "H:\TinLine\01_Standards\00_Vorlageordner"
-Global Const VorlageEPDWG As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg"
-Global Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg"
-Global Const VorlagePRDWG As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg"
+Public Const OrdnerVorlage   As String = "H:\TinLine\01_Standards\00_Vorlageordner"
+Public Const VorlageEPDWG    As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg"
+Public Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg"
+Public Const VorlagePRDWG    As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg"
 
-                                
 Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean, ByVal SharePointLink As String)
-    
+
     Globals.shPData.range("ADM_ProjektPfadSharePoint").value = SharePointLink
     Globals.Projekt True
     If Globals.shGebäude Is Nothing Then Globals.SetWBs
@@ -35,13 +37,12 @@ Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz 
     End Select
 End Sub
 
-                                
 Private Function CreateFoldersTinLine() As Boolean
     On Error GoTo ErrHandler
     MkDir Globals.Projekt.ProjektOrdnerCAD
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\99 TinConfiguration"
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten"
-    
+
     TinLineProjectXML
     Globals.shPData.range("ADM_ProjektPfadCAD").value = Globals.Projekt.ProjektOrdnerCAD
     CreateFoldersTinLine = True
@@ -54,7 +55,6 @@ ErrHandler:
     End Select
 End Function
 
-                                
 Private Sub CreateFoldersEP()
     Globals.shProjekt.range("A1").value = True
     Dim Folder               As String
@@ -65,7 +65,6 @@ Private Sub CreateFoldersEP()
     GebäudeFolders Folder, "Elektro"
 End Sub
 
-                                
 Private Sub CreateFoldersPR()
     Globals.shProjekt.range("A2").value = True
     Dim Folder               As String
@@ -79,7 +78,7 @@ Private Sub CreateFoldersPR()
     For i = LBound(UGewerke) To UBound(UGewerke)
         iStr = i - 1
         If Len(iStr) < 2 Then iStr = "0" & iStr
-        
+
         Set Plan = PlankopfFactory.Create(Projekt:=Projekt, _
                                           ID:=vbNullString, _
                                           TinLineID:=vbNullString, _
@@ -105,16 +104,14 @@ Private Sub CreateFoldersPR()
         TinLinePrinzip Plan
         FileCopy VorlagePRDWG, Plan.dwgFile
     Next
-    
+
 End Sub
 
-                                
 Private Sub CreateFoldersES()
     Globals.shProjekt.range("A3").value = True
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\02_ES"
 End Sub
 
-                                
 Private Sub CreateFoldersTF()
     Globals.shProjekt.range("A4").value = True
     Dim Folder               As String
@@ -123,7 +120,6 @@ Private Sub CreateFoldersTF()
     GebäudeFolders Folder, "Türfachplanung"
 End Sub
 
-                                
 Private Sub CreateFoldersBR()
     Globals.shProjekt.range("A5").value = True
     Dim Folder               As String
@@ -132,7 +128,6 @@ Private Sub CreateFoldersBR()
     GebäudeFolders Folder, "Brandschutzplanung"
 End Sub
 
-                                
 Public Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String, Optional ByVal MakeDir As Boolean = True)
     ' Folder = 01_EP etc.
     Dim Plan                 As IPlankopf
@@ -141,7 +136,7 @@ Public Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String, Option
     Dim larrGeb(2)           As Variant
     Dim arrGes()             As Variant
     Dim larrGes(2)           As Variant
-    Dim col
+    Dim col                  As Long
     Dim rng                  As range
     Dim arr()                As Variant
     Dim tmparr()             As Variant
@@ -150,7 +145,7 @@ Public Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String, Option
     Dim ii                   As Long
     Dim lastrow              As Long
     Dim Pfad                 As String
-    
+
     Set ws = Globals.shGebäude
     arrGeb() = getList("PRO_Gebäude")
     For i = LBound(arrGeb) To UBound(arrGeb)
@@ -160,8 +155,8 @@ Public Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String, Option
         Set rng = rng.Resize(1, rng.Columns.Count)
         larrGeb(1) = Application.WorksheetFunction.XLookup(larrGeb(0), rng, rng.Offset(1), "-")
         larrGeb(2) = Application.WorksheetFunction.XLookup(larrGeb(0), rng, rng.Offset(2), "-")
-        
-        If ws.range("D1").value <> "" Then
+
+        If ws.range("D1").value <> vbNullString Then
             ' mehrere Gebäude, für jedes Gebäude ein Unterordner erstellen und die entsprechenden Etagen einfügen.
             buildings = True
             Pfad = Folder & "\" & larrGeb(2) & "_" & larrGeb(1)
@@ -172,24 +167,24 @@ Public Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String, Option
             buildings = False
         End If
         ' Geschoss
-        
+
         col = Application.WorksheetFunction.Match(arrGeb(i), ws.range("1:1"), 0)
-        lastrow = ws.Cells(rows.Count, col).End(xlUp).row
+        lastrow = ws.Cells(ws.rows.Count, col).End(xlUp).row
         Set rng = ws.range(ws.Cells(6, col), ws.Cells(lastrow, col + 1))
         arr() = rng.Resize(rng.rows.Count, 1)
         tmparr() = RemoveBlanksFromStringArray(arr())
-        
+
         For ii = LBound(tmparr) To UBound(tmparr)
             larrGes(0) = tmparr(ii)
-            Dim tmpcol
-            Dim tmplastrow
+            Dim tmpcol       As Long
+            Dim tmplastrow   As Long
             tmpcol = Application.WorksheetFunction.Match(larrGeb(0), ws.range("1:1"), 0)
-            tmplastrow = ws.Cells(rows.Count, tmpcol).End(xlUp).row
+            tmplastrow = ws.Cells(ws.rows.Count, tmpcol).End(xlUp).row
             Set rng = ws.range(ws.Cells(5, tmpcol), ws.Cells(tmplastrow, tmpcol + 1))
             Set rng = rng.Resize(rng.rows.Count, 1)
             larrGes(1) = Application.WorksheetFunction.XLookup(larrGes(0), rng, rng.Offset(0, 1), , 0)
             larrGes(2) = ws.Cells(rng.Find(larrGes(0)).row, 1).value
-            
+
             Set Plan = PlankopfFactory.Create(Projekt:=Projekt, _
                                               ID:=vbNullString, _
                                               TinLineID:=vbNullString, _
@@ -211,40 +206,39 @@ Public Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String, Option
                                               SkipValidation:=True, _
                                               CustomÜberschrift:=False _
                                                                   )
-            
+
             If MakeDir Then
                 If Not CreateObject("Scripting.FileSystemObject").FolderExists(Plan.FolderName) Then
                     MkDir Plan.FolderName
                 End If
-                
+
                 If buildings Then
                     FileCopy VorlageEPDWGGEB, Plan.dwgFile
                 Else
                     FileCopy VorlageEPDWG, Plan.dwgFile
                 End If
             End If
-            
+
             TinLineFloorXML Plan
             TinLinePlan Plan
         Next ii
     Next i
-    
+
 End Sub
 
-                                
-Private Sub TinLineFloorXML(ByRef Plan As IPlankopf)
+Private Sub TinLineFloorXML(ByVal Plan As IPlankopf)
     Dim oXml                 As New MSXML2.DOMDocument60
     Dim oXsl                 As New MSXML2.DOMDocument60
     oXsl.load XMLVorlage
-    
+
     Dim NodElement           As IXMLDOMElement
     Dim NodChild             As IXMLDOMElement
     Dim NodGrandChild        As IXMLDOMElement
-    
+
     ' Standard XML Elemente für TinLine erstellen
     oXml.LoadXML ("<tinPlan1></tinPlan1>")
     Set NodElement = oXml.SelectSingleNode("//tinPlan1")
-    
+
     Set NodChild = oXml.createElement("Attribut")
     NodElement.appendChild NodChild
     Set NodChild = oXml.createElement("PA")
@@ -258,29 +252,28 @@ Private Sub TinLineFloorXML(ByRef Plan As IPlankopf)
     Set NodGrandChild = oXml.createElement("Wert")
     If Plan.Gebäude = "Gesamt" And Globals.shGebäude.range("D1").value = vbNullString Then: NodGrandChild.Text = vbNullString: Else: NodGrandChild.Text = Plan.Gebäude
         NodChild.appendChild NodGrandChild
-        
+
         ' XML formatieren
-        Debug.Print Plan.FolderName & "\TinPlanFloor.xml"
+Debug.Print Plan.FolderName & "\TinPlanFloor.xml"
         oXml.Save Plan.FolderName & "\TinPlanFloor.xml"
         oXml.transformNodeToObject oXsl, oXml
         oXml.Save Plan.FolderName & "\TinPlanFloor.xml"
-        
+
     End Sub
 
-                                
 Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     Dim oXml                 As New MSXML2.DOMDocument60
     Dim oXsl                 As New MSXML2.DOMDocument60
     oXsl.load XMLVorlage
-    
+
     Dim NodElement           As IXMLDOMElement
     Dim NodChild             As IXMLDOMElement
     Dim NodGrandChild        As IXMLDOMElement
-    
+
     ' Standard XML Elemente für TinLine erstellen
     oXml.LoadXML ("<tinPlan1></tinPlan1>")
     Set NodElement = oXml.SelectSingleNode("tinPlan1")
-    
+
     Set NodChild = oXml.createElement("Attribut")
     NodElement.appendChild NodChild
     ' Index mit 15 Zeilen
@@ -299,30 +292,29 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     NodGrandChild.Text = "NICHT VERWENDEN!!!"
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Wert")
-    NodGrandChild.Text = ""
+    NodGrandChild.Text = vbNullString
     NodChild.appendChild NodGrandChild
     ' XML formatieren
-    Debug.Print Plan.XMLFile
+Debug.Print Plan.XMLFile
     oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
     oXml.Save Plan.XMLFile
-    
+
 End Sub
 
-                                
 Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     Dim oXml                 As New MSXML2.DOMDocument60
     Dim oXsl                 As New MSXML2.DOMDocument60
     oXsl.load XMLVorlage
-    
+
     Dim NodElement           As IXMLDOMElement
     Dim NodChild             As IXMLDOMElement
     Dim NodGrandChild        As IXMLDOMElement
-    
+
     ' Standard XML Elemente für TinLine erstellen
     oXml.LoadXML ("<tinPlan1></tinPlan1>")
     Set NodElement = oXml.SelectSingleNode("//tinPlan1")
-    
+
     Set NodChild = oXml.createElement("Attribut")
     NodElement.appendChild NodChild
     ' Index mit 15 Zeilen
@@ -341,31 +333,30 @@ Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     NodGrandChild.Text = "NICHT VERWENDEN!!!"
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Wert")
-    NodGrandChild.Text = ""
+    NodGrandChild.Text = vbNullString
     NodChild.appendChild NodGrandChild
     ' XML formatieren
-    Debug.Print Plan.XMLFile
+Debug.Print Plan.XMLFile
     oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
     oXml.Save Plan.XMLFile
 End Sub
 
-                                
 Private Sub TinLineProjectXML()
     Dim oXml                 As New MSXML2.DOMDocument60
     Dim oXsl                 As New MSXML2.DOMDocument60
     oXsl.load XMLVorlage
-    
+
     Dim NodElement           As IXMLDOMElement
     Dim NodChild             As IXMLDOMElement
     Dim NodGrandChild        As IXMLDOMElement
-    
+
     If Globals.shPData Is Nothing Then Globals.SetWBs
-    
+
     ' Standard XML Elemente für TinLine erstellen
     oXml.LoadXML ("<tinPlan1></tinPlan1>")
     Set NodElement = oXml.SelectSingleNode("//tinPlan1")
-    
+
     Set NodChild = oXml.createElement("Attribut")
     NodElement.appendChild NodChild
     ' Projekt Node
@@ -378,7 +369,7 @@ Private Sub TinLineProjectXML()
     NodGrandChild.Text = Globals.Projekt.ProjektBezeichnung
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("ProjektMemo")
-    NodGrandChild.Text = ""
+    NodGrandChild.Text = vbNullString
     NodChild.appendChild NodGrandChild
     Set NodGrandChild = oXml.createElement("Language")
     NodGrandChild.Text = "DE"
@@ -396,5 +387,4 @@ Private Sub TinLineProjectXML()
     oXml.Save Globals.Projekt.ProjektXML
 End Sub
 
-                                
 

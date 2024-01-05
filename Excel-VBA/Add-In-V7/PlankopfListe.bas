@@ -1,17 +1,19 @@
 Attribute VB_Name = "PlankopfListe"
+
 '@Folder("Plankopf")
+'@Version "Release V1.0.0"
+
 Option Explicit
 
-                                
 Public Sub LoadListViewPlan(ByRef control As ListView)
-    
+
     Dim Pla                  As IPlankopf
     Dim li                   As ListItem
-    
+
     Dim row                  As Long
     Dim lastrow              As Long
-    
-    
+
+
     With control
         .ListItems.Clear
         .View = lvwReport
@@ -52,7 +54,6 @@ Public Sub LoadListViewPlan(ByRef control As ListView)
             li.ListSubItems.Add , , Pla.CurrentIndex.Index
         Next row
     End With
-    
+
 End Sub
 
-                                

@@ -8,11 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Task Objekt für einfacheres Management von Tasks im Projekt."
-'@IgnoreModule VariableNotUsed
-Option Explicit
-'@Folder "Tasks"
-'@ModuleDescription "Task Objekt für einfacheres Management von Tasks im Projekt."
 
+'@Folder "Tasks"
+'@IgnoreModule VariableNotUsed
+'@ModuleDescription "Task Objekt für einfacheres Management von Tasks im Projekt."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Private Type ttask
     ErfasstAm As String
@@ -28,24 +30,22 @@ Private Type ttask
     Pläne As New Collection
 End Type
 
-                                
 Private This                 As ttask
 Private Inputs               As ttask
 
-                                
 Public Sub Filldata( _
-       ErfasstAm As String, _
-       ErfasstVon As String, _
-       FälligAm As String, _
-       Gewerk As String, _
-       Gebäude As String, _
-       Gebäudeteil As String, _
-       Geschoss As String, _
-       Erledigt As Boolean, _
-       Priorität As Long, _
-       Text As String _
+       ByVal ErfasstAm As String, _
+       ByVal ErfasstVon As String, _
+       ByVal FälligAm As String, _
+       ByVal Gewerk As String, _
+       ByVal Gebäude As String, _
+       ByVal Gebäudeteil As String, _
+       ByVal Geschoss As String, _
+       ByVal Erledigt As Boolean, _
+       ByVal Priorität As Long, _
+       ByVal Text As String _
        )
-    
+
     Inputs.ErfasstAm = ErfasstAm
     Inputs.ErfasstVon = ErfasstVon
     Inputs.FälligAm = FälligAm
@@ -56,79 +56,67 @@ Public Sub Filldata( _
     Inputs.Erledigt = Erledigt
     Inputs.Priorität = Priorität
     Inputs.Text = Text
-    
+
     If ValidInputs Then
         This = Inputs
         'Set Inputs.Pläne = GetPläne
     End If
-    
+
 End Sub
 
-                                
 Public Property Get ErfasstAm() As String
     ErfasstAm = This.ErfasstAm
 End Property
 
-                                
 Public Property Get ErfasstVon() As String
     ErfasstVon = This.ErfasstVon
 End Property
 
-                                
 Public Property Get FälligAm() As String
     FälligAm = This.FälligAm
 End Property
 
-                                
 Public Property Get Gewerk() As String
     Gewerk = This.Gewerk
 End Property
 
-                                
 Public Property Get Gebäude() As String
     Gebäude = This.Gebäude
 End Property
 
-                                
 Public Property Get Gebäudeteil() As String
     Gebäudeteil = This.Gebäudeteil
 End Property
 
-                                
 Public Property Get Geschoss() As String
     Geschoss = This.Geschoss
 End Property
 
-                                
 Public Property Get Erledigt() As Boolean
     Erledigt = This.Erledigt
 End Property
 
-                                
 Public Property Get Priorität() As Long
     Priorität = This.Priorität
 End Property
 
-                                
 Public Property Get Text() As String
     Text = This.Text
 End Property
 
-                                
 Private Function ValidInputs() As Boolean
-    
+
     ValidInputs = False
-    
+
     ValidInputs = True
-    
+
 End Function
 
-                                
 Private Function GetPläne() As Collection
-    
+
     Dim lCol                 As New Collection
     Dim lPlankopf            As IPlankopf
-    
+
     'TODO implement Gewerk to Plankopf
     'For Each lPlankopf In Planköpfe
     '    If _
@@ -140,8 +128,7 @@ Private Function GetPläne() As Collection
     '        lCol.Add lPlankopf
     '    End If
     'Next
-    
+
 End Function
 
-                                
 

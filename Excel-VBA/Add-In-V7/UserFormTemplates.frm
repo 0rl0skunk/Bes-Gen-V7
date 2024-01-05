@@ -13,16 +13,15 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-
-
-
 '@Folder "Templates"
+'@Version "Release V1.0.0"
+
 Option Explicit
+
 Private icons                As UserFormIconLibrary
 
-                                
 Private Sub CheckBox1_Enter()
-    
+
     Me.LabelToolTip.Caption = " >> CheckBox <<" & vbNewLine & _
                               vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
@@ -31,12 +30,11 @@ Private Sub CheckBox1_Enter()
                               "The ChecBox is shortened with 'CBX' followed by one or two words." & vbNewLine & _
                               "> example" & vbNewLine & _
                               "  CBXObjectSnapping > shows the current Value for Object Snapping."
-    
+
 End Sub
 
-                                
 Private Sub ComboBox1_Enter()
-    
+
     Me.LabelToolTip.Caption = " >> ComboBox <<" & vbNewLine & _
                               vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
@@ -45,12 +43,11 @@ Private Sub ComboBox1_Enter()
                               "The Combobox is shortened with 'CBB' followed by one or two words." & vbNewLine & _
                               "> example" & vbNewLine & _
                               "  CBBProjectState > Shows a Combobox with the available Project States (52 Ausführung etc.)"
-    
+
 End Sub
 
-                                
 Private Sub CommandButton1_Enter()
-    
+
     Me.LabelToolTip.Caption = " >> CommabdButton <<" & vbNewLine & _
                               vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
@@ -59,19 +56,17 @@ Private Sub CommandButton1_Enter()
                               "The Combobox is shortened with 'CB' followed by one or two words." & vbNewLine & _
                               "> example" & vbNewLine & _
                               "  CBClose > This CommandButton is used tho close a UserForm."
-    
+
 End Sub
 
-                                
 Private Sub CommandButtonClose_Click()
-    
+
     Unload Me
-    
+
 End Sub
 
-                                
 Private Sub LabelToolTip_Click()
-    
+
     Me.LabelToolTip.Caption = " >> ToolTip 'LabelControl' <<" & vbNewLine & _
                               vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
@@ -80,12 +75,11 @@ Private Sub LabelToolTip_Click()
                               "LabelToolTip. Thst is the whole Name it alwaays has!" & vbNewLine & _
                               "> example" & vbNewLine & _
                               "  CBClose > This CommandButton is used tho close a UserForm."
-    
+
 End Sub
 
-                                
 Private Sub OptionButton1_Enter()
-    
+
     Me.LabelToolTip.Caption = " >> OptionButton <<" & vbNewLine & _
                               vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
@@ -94,12 +88,11 @@ Private Sub OptionButton1_Enter()
                               "The OptionButton is shortened with 'OB' followed by one or two words." & vbNewLine & _
                               "> example" & vbNewLine & _
                               "  OBFormatHorizontal / OBFormatVertical [FRFormat] > shows 2 Option Buttons to select between Horizontal and Vertical options."
-    
+
 End Sub
 
-                                
 Private Sub TextBox1_Enter()
-    
+
     Me.LabelToolTip.Caption = " >> Textbox <<" & vbNewLine & _
                               vbNullString & vbNewLine & _
                               "> Use Case" & vbNewLine & _
@@ -108,8 +101,7 @@ Private Sub TextBox1_Enter()
                               "The Textbox Name is shortened with 'TB' followed by an O for Output or an I for Input. Following this is one or two words describing the Input or Output of the TextBox." & vbNewLine & _
                               "> example" & vbNewLine & _
                               "  TBOLayoutName > Outputs the Layout Name to the user"
-    
+
 End Sub
 
-                                
 

@@ -1,16 +1,17 @@
 Attribute VB_Name = "ModuleTest"
 Attribute VB_Description = "Modul mit Test funktionen."
+
 '@IgnoreModule EmptyStringLiteral
 '@Folder "Objektdaten"
 '@ModuleDescription "Modul mit Test funktionen."
+'@Version "Release V1.0.0"
 
 Option Explicit
 
-                                
 Public Sub testProjekt()
-    
+
     Dim proj                 As IProjekt
-    
+
     Set proj = ProjektFactory.Create( _
                "220033", _
                AdressFactory.Create( _
@@ -22,14 +23,13 @@ Public Sub testProjekt()
                "Ausführung", _
                "https://rebsamennet.sharepoint.com/:f:/r/sites/PZM-ZH/03_Pub/00_Projekte/Auft.2022/220033_LU?csf=1&web=1&e=HHSqga" _
                )
-    
-    Debug.Print proj.ProjektBezeichnung
-    
+
+Debug.Print proj.ProjektBezeichnung
+
 End Sub
 
-                                
 Public Sub test2()
-    
+
     Dim ttask                As New Task
     ttask.Filldata _
         ErfasstAm:="24.11.2023", _
@@ -42,21 +42,19 @@ Public Sub test2()
         Erledigt:=False, _
         Priorität:=2, _
         Text:="Lorem ipsum dolor sit amet"
-    
+
     Dim frm                  As New UserFormTaskDetail
     frm.LoadClass ttask
     frm.Show 1
-    
-    
+
+
 End Sub
 
-                                
 Sub test3()
-    
+
     Application.ActiveWorkbook.Names.Add "BesGenVersion"
     Application.ActiveWorkbook.Names("BesGenVersion").value = "V7"
-    
+
 End Sub
 
-                                
 

@@ -1,6 +1,11 @@
 Attribute VB_Name = "ClipboardWindowsAPI"
+Attribute VB_Description = "Handle 64-bit and 32-bit Office"
+
 '@Folder "Excel-Items"
-'Handle 64-bit and 32-bit Office
+'@Version "Release V1.0.0"
+'@ModuleDescription "Handle 64-bit and 32-bit Office"
+
+Option Explicit
 
 #If VBA7 Then
 Private Declare PtrSafe Function GlobalUnlock Lib "kernel32" (ByVal hMem As LongPtr) As LongPtr
@@ -32,52 +37,54 @@ Const GHND = &H42
 Const CF_TEXT = 1
 Const MAXSIZE = 4096
 
-                                
 Function CopyToClipBoard(MyString As String)
     'PURPOSE: API function to copy text to clipboard
     'SOURCE: www.msdn.microsoft.com/en-us/library/office/ff192913.aspx
-    
-    #If VBA7 Then
-    Dim hGlobalMemory        As LongPtr, lpGlobalMemory As LongPtr
-    Dim hClipMemory          As LongPtr, X As LongPtr
-    #Else
+
+#If VBA7 Then
+    Dim hGlobalMemory        As LongPtr
+    Dim lpGlobalMemory       As LongPtr
+
+    Dim hClipMemory          As LongPtr
+    Dim X                    As LongPtr
+
+#Else
     Dim hGlobalMemory        As Long, lpGlobalMemory As Long
     Dim hClipMemory          As Long, X As Long
-    #End If
-    
+#End If
+
     'Allocate moveable global memory
     hGlobalMemory = GlobalAlloc(GHND, Len(MyString) + 1)
-    
+
     'Lock the block to get a far pointer to this memory.
     lpGlobalMemory = GlobalLock(hGlobalMemory)
-    
+
     'Copy the string to this global memory.
     lpGlobalMemory = lstrcpy(lpGlobalMemory, MyString)
-    
+
     'Unlock the memory.
     If GlobalUnlock(hGlobalMemory) <> 0 Then
         MsgBox "Could not unlock memory location. Copy aborted."
         GoTo OutOfHere2
     End If
-    
+
     'Open the Clipboard to copy data to.
     If OpenClipboard(0&) = 0 Then
         MsgBox "Could not open the Clipboard. Copy aborted."
         Exit Function
     End If
-    
+
     'Clear the Clipboard.
     X = EmptyClipboard()
-    
+
     'Copy the data to the Clipboard.
     hClipMemory = SetClipboardData(CF_TEXT, hGlobalMemory)
-    
+
 OutOfHere2:
     If CloseClipboard() = 0 Then
         MsgBox "Could not close Clipboard."
     End If
-    
+
 End Function
 
-                                
 

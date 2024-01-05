@@ -14,12 +14,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "E-Mails direkt vom Beschriftungsgenerator erstellen und versenden."
 
-
-
-
-
 '@Folder("Outlook")
 '@ModuleDescription "E-Mails direkt vom Beschriftungsgenerator erstellen und versenden."
+'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -28,14 +25,13 @@ Private pMailCC              As New Collection
 Private pPlanköpfe           As New Collection
 Private icons                As UserFormIconLibrary
 
-                                
 Private Sub CommandButton1_Click()
-    
+
     Dim PrintPath            As String
     Dim appOutlook           As New Outlook.Application
     Dim Mail                 As MailItem
     Set Mail = appOutlook.CreateItem(olMailItem)
-    
+
     If Me.CheckBoxPlot Then
         ' wenn die Pläne neu geplottet werden sollen
         Dim pPlankopf        As IPlankopf
@@ -49,25 +45,23 @@ Private Sub CommandButton1_Click()
     Mail.Subject = Me.TextBoxBetreff.value
     Mail.Body = Anrede & vbNewLine & vbNewLine & Me.TextBoxFreitext.value & vbNewLine & Planliste
     Mail.Display 0
-    
+
     Unload Me
-    
+
 End Sub
 
-                                
 Private Function Planliste() As String
-    
+
     Dim e                    As IPlankopf
     For Each e In pPlanköpfe
         Planliste = Planliste & "- " & e.Plannummer & vbTab & e.PlanBeschrieb & vbNewLine
     Next
     Planliste = "Im Anhang finden sie Folgende Pläne: " & vbNewLine & Planliste
-    
+
 End Function
 
-                                
 Private Function Anrede() As String
-    
+
     On Error GoTo ErrHandler
     If pMailTo.Count > 1 Then
         Anrede = "Hallo Zusammen"
@@ -79,13 +73,12 @@ Private Function Anrede() As String
         End If
     End If
     Exit Function
-    
+
 ErrHandler:
     Anrede = vbNullString
-    
+
 End Function
 
-                                
 Private Function MailRecepientsTO() As String
     ' Formatiert die Personen im Format welches von Outlook verwendet wird.
     MailRecepientsTO = vbNullString
@@ -93,10 +86,9 @@ Private Function MailRecepientsTO() As String
     For Each Person In pMailTo
         MailRecepientsTO = MailRecepientsTO & " ; " & Person.EMail
     Next
-    
+
 End Function
 
-                                
 Private Function MailRecepientsCC() As String
     ' Formatiert die Personen im Format welches von Outlook verwendet wird.
     MailRecepientsCC = vbNullString
@@ -104,17 +96,15 @@ Private Function MailRecepientsCC() As String
     For Each Person In pMailCC
         MailRecepientsCC = MailRecepientsCC & " ; " & Person.EMail
     Next
-    
+
 End Function
 
-                                
 Private Sub CommandButtonClose_Click()
-    
+
     Unload Me
-    
+
 End Sub
 
-                                
 Private Sub ListViewMailTo_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     ' Aktualisiert die Collection von den E-Mail Empfänger gemäss den neuen Angaben
     Dim li                   As ListItem
@@ -124,10 +114,9 @@ Private Sub ListViewMailTo_ItemCheck(ByVal Item As MSComctlLib.ListItem)
             pMailTo.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).row)
         End If
     Next
-    
+
 End Sub
 
-                                
 Private Sub ListViewMailCC_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     ' Aktualisiert die Collection von den E-Mail Empfänger im CC gemäss den neuen Angaben
     Dim li                   As ListItem
@@ -137,10 +126,9 @@ Private Sub ListViewMailCC_ItemCheck(ByVal Item As MSComctlLib.ListItem)
             pMailCC.Add PersonFactory.LoadFromDataBase(Globals.shAdress.range("ADR_Adressen").Find(li.ListSubItems.Item(1).Text).row)
         End If
     Next
-    
+
 End Sub
 
-                                
 Private Sub ListViewPlankopf_ItemCheck(ByVal Item As MSComctlLib.ListItem)
     ' Aktualisiert die Collection von den Plänen welche geschickt werden gemäss den neuen Angaben
     Dim li                   As ListItem
@@ -150,31 +138,29 @@ Private Sub ListViewPlankopf_ItemCheck(ByVal Item As MSComctlLib.ListItem)
             pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).row)
         End If
     Next
-    
+
 End Sub
 
-                                
 Private Sub UserForm_Initialize()
-    
+
     Globals.SetWBs
     LoadListViewPlan Me.ListViewPlankopf
     LoadListViewMail Me.ListViewMailTo
     LoadListViewMail Me.ListViewMailCC
-    Me.TextBoxBetreff.value = Globals.Projekt.Projektnummer & " | Planversand " & Format(Now, "DD.MM.YYYY")
+    Me.TextBoxBetreff.value = Globals.Projekt.Projektnummer & " | Planversand " & Format$(Now, "DD.MM.YYYY")
     Set icons = New UserFormIconLibrary
     Me.TitleIcon.Picture = icons.IconOutlook.Picture
     Me.TitleLabel.Caption = "E-Mail schreiben"
     Me.LabelInstructions.Caption = "E-Mail automatisch schreiben und Pläne anhängen"
-    
+
 End Sub
 
-                                
-Private Sub LoadListViewMail(ByRef control As ListView)
+Private Sub LoadListViewMail(ByVal control As ListView)
     ' lädt die erfassten Adressen in die Listview
     Dim li                   As ListItem
     Dim row                  As range
     Dim lastrow              As Long
-    
+
     With control
         .ListItems.Clear
         .View = lvwReport
@@ -205,7 +191,6 @@ Private Sub LoadListViewMail(ByRef control As ListView)
             End With
         Next row
     End With
-    
+
 End Sub
 
-                                

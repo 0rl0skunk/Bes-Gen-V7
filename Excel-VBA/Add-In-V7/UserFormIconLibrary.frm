@@ -14,21 +14,17 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Icon-Library."
 
-
-
-
 '@Folder "Templates"
 '@ModuleDescription "Icon-Library"
+'@Version "Release V1.0.0"
 ' Die Icons können über 'icons."iconname".picture' geladen werden
 ' Dieses Modul hat kein wirkliches Makro und dient lediglich als Icon-Library.
 
 Option Explicit
 
-                                
 Private Sub CommandButtonClose_Click()
-    
+
     Unload Me
-    
+
 End Sub
 
-                                

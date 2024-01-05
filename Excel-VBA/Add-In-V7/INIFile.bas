@@ -2,6 +2,7 @@ Attribute VB_Name = "INIFile"
 '@IgnoreModule
 '@Folder "TinLine"
 '@ModuleDescription "Interface to work with *.ini Files from TinLine."
+'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -24,7 +25,6 @@ Private Declare PtrSafe Function WritePrivateProfileString Lib "kernel32" Alias 
                                                                ByVal lpString As Any, ByVal lpFileName As String) As Long
 #End If
 
-                                
 '// INI CONTROLLING PROCEDURES
 'reads an Ini string
 Public Function ReadIni(FileName As String, Section As String, Key As String) As String
@@ -33,7 +33,6 @@ Public Function ReadIni(FileName As String, Section As String, Key As String) As
     ReadIni = Left(RetVal, v)
 End Function
 
-                                
 'reads an Ini section
 Public Function ReadIniSection(FileName As String, Section As String) As String
     Dim RetVal               As String * 1024, v As Long
@@ -41,17 +40,14 @@ Public Function ReadIniSection(FileName As String, Section As String) As String
     ReadIniSection = Left(RetVal, v)
 End Function
 
-                                
 'writes an Ini string
 Public Sub WriteIni(FileName As String, Section As String, Key As String, value As String)
     WritePrivateProfileString Section, Key, value, FileName
 End Sub
 
-                                
 'writes an Ini section
 Public Sub WriteIniSection(FileName As String, Section As String, value As String)
     WritePrivateProfileSection Section, value, FileName
 End Sub
 
-                                
 

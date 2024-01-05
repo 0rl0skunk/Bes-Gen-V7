@@ -1,8 +1,11 @@
 Attribute VB_Name = "IndexFactory"
 Attribute VB_Description = "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
-Option Explicit
+
 '@Folder("Index")
 '@ModuleDescription "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Private oXml                 As New MSXML2.DOMDocument60
 Private oXsl                 As New MSXML2.DOMDocument60
@@ -13,7 +16,6 @@ Private NodGrandChild        As IXMLDOMElement
 
 Private pPlankopf            As IPlankopf
 
-                                
 Public Function Create( _
        ByVal IDPlan As String, _
        ByVal GezeichnetPerson As String, _
@@ -25,7 +27,7 @@ Public Function Create( _
        Optional ByVal GeprüftDatum As String = vbNullString, _
        Optional ByVal SkipValidation As Boolean _
        ) As IIndex
-    
+
     Dim newIndex             As New Index
     newIndex.Filldata _
         ID:=ID, _
@@ -37,31 +39,29 @@ Public Function Create( _
         GeprüftDatum:=GeprüftDatum, _
         Klartext:=Klartext, _
         SkipValidation:=SkipValidation
-    
+
     Set Create = newIndex
-    
+
 End Function
 
-                                
-Public Sub DeleteFromDatabase(ID As String)
+Public Sub DeleteFromDatabase(ByVal ID As String)
     ' löscht den gewählten Index aus der Datenbank
     Globals.shIndex.range("H:H").Find(ID).EntireRow.Delete
     writelog LogInfo, "Index gelöscht"
 End Sub
 
-                                
-Public Sub AddToDatabase(Index As IIndex)
+Public Sub AddToDatabase(ByVal Index As IIndex)
     ' erstellt einen neuen Index in der Datenbank
     Dim row                  As Long
     Dim Gezeichnet           As String
     Dim Geprüft              As String
-    
-    
+
+
     Gezeichnet = Index.Gezeichnet
     Geprüft = Index.Geprüft
-    
+
     row = Globals.shIndex.range("A1").CurrentRegion.rows.Count + 1
-    
+
     With Globals.shIndex
         .Cells(row, 1).value = Index.PlanID
         .Cells(row, 2).value = Index.Index
@@ -72,12 +72,11 @@ Public Sub AddToDatabase(Index As IIndex)
         .Cells(row, 7).value = Index.Klartext
         .Cells(row, 8).value = Index.IndexID
     End With
-    
+
     writelog LogInfo, "Index für Plankopf erstellt"
-    
+
 End Sub
 
-                                
 Public Sub DeletePlan(ByVal ID As String)
     ' Löscht alle Indexe von einem Plan
     Dim row                  As Long
@@ -87,15 +86,14 @@ Public Sub DeletePlan(ByVal ID As String)
             If .Cells(row, 1).value = ID Then: .Cells(row, 1).EntireRow.Delete
         Next
     End With
-    
+
     writelog LogInfo, coll.Count & " Indexe für Plankopf gelöscht"
-    
+
 End Sub
 
-                                
-Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal ID As String = vbNullString) As Collection
+Public Function GetIndexes(Optional ByVal Plankopf As IPlankopf, Optional ByVal ID As String = vbNullString) As Collection
     ' gibt eine Collection von allen Indexen eines Plankopes zurück
-    
+
     Dim row                  As Long
     Dim IndexID              As String
     Dim IDPlan               As String
@@ -107,8 +105,8 @@ Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal 
     Dim GeprüftDatum         As String
     Dim Index                As IIndex
     Dim coll                 As New Collection
-    
-    
+
+
     With Globals.shIndex
         For row = 2 To .range("A1").CurrentRegion.rows.Count
             IndexID = .Cells(row, 8).value
@@ -119,7 +117,7 @@ Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal 
             GeprüftPerson = .Cells(row, 5).value
             GeprüftDatum = .Cells(row, 6).value
             Klartext = .Cells(row, 7).value
-            
+
             If Not Plankopf Is Nothing Then If IDPlan = Plankopf.ID Then GoTo Matching
             If IDPlan = ID Then
                 GoTo Matching
@@ -148,18 +146,16 @@ ErrMsg:
     writelog LogInfo, "NO Indexe für Plankopf"
 End Function
 
-                                
-Public Function TinLineIndexes(ByRef Plankopf As IPlankopf, ByRef iNodChild As IXMLDOMElement, ByRef ioXml As MSXML2.DOMDocument60, ByRef iNodElement As IXMLDOMElement)
+Public Function TinLineIndexes(ByVal Plankopf As IPlankopf, ByVal iNodChild As IXMLDOMElement, ByVal ioXml As MSXML2.DOMDocument60, ByVal iNodElement As IXMLDOMElement)
     Set oXml = ioXml
     Set NodElement = iNodElement
     Set pPlankopf = Plankopf
     On Error GoTo 0
     DeleteIndexes
     WriteIndexes
-    
+
 End Function
 
-                                
 Private Sub DeleteIndexes()
     Dim seqNode              As IXMLDOMNode
     For Each seqNode In NodElement.SelectNodes("IN" & pPlankopf.TinLinePKNr)
@@ -168,7 +164,6 @@ Private Sub DeleteIndexes()
     writelog LogInfo, "Alle Indexe für Plankopf " & pPlankopf.XMLFile
 End Sub
 
-                                
 Private Sub WriteIndexes()
     Dim Index                As IIndex
     For Each Index In pPlankopf.Indexes
@@ -176,5 +171,4 @@ Private Sub WriteIndexes()
     Next
 End Sub
 
-                                
 

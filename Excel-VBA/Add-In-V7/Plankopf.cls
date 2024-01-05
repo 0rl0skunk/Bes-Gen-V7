@@ -8,9 +8,12 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Plankopf Objekt für einfacheres Management von Planköpfen."
-Option Explicit
+
 '@Folder "Plankopf"
 '@ModuleDescription "Plankopf Objekt für einfacheres Management von Planköpfen."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Implements IPlankopf
 
@@ -59,12 +62,10 @@ Private Type TPlankopf
     AnlageNummer As String
 End Type
 
-                                
 Private This                 As TPlankopf
 Private Inputs               As TPlankopf
 Private pProjekt             As IProjekt
 
-                                
 ' -------------------------------
 ' --- Properties
 ' -------------------------------
@@ -72,22 +73,18 @@ Private Property Get IPlankopf_Gewerk() As String
     IPlankopf_Gewerk = This.Gewerk
 End Property
 
-                                
 Private Property Get IPlankopf_UnterGewerk() As String
     IPlankopf_UnterGewerk = This.UnterGewerk
 End Property
 
-                                
 Private Property Get IPlankopf_UnterGewerkKF() As String
     IPlankopf_UnterGewerkKF = This.UnterGewerkKF
 End Property
 
-                                
 Private Property Get IPlankopf_ID() As String
     IPlankopf_ID = This.ID
 End Property
 
-                                
 Private Property Get IPlankopf_TinLinePKNr() As String
     IPlankopf_TinLinePKNr = This.TinLinePKNr
 End Property
@@ -95,102 +92,82 @@ Private Property Let IPlankopf_TinLinePKNr(ByVal NewPKNr As String)
     This.TinLinePKNr = NewPKNr
 End Property
 
-                                
 Private Property Let IPlankopf_IDTinLine(ByVal newID As String)
     This.IDTinLine = newID
 End Property
 
-                                
 Private Property Let IPlankopf_ID(ByVal NewValue As String)
     This.ID = NewValue
 End Property
 
-                                
 Private Property Get IPlankopf_IDTinLine() As String
     IPlankopf_IDTinLine = This.IDTinLine
 End Property
 
-                                
 Private Property Get IPlankopf_Plantyp() As String
     IPlankopf_Plantyp = This.PLANTYP
 End Property
 
-                                
 Private Property Get IPlankopf_Planart() As String
     IPlankopf_Planart = This.Planart
 End Property
 
-                                
 Private Property Get IPlankopf_GezeichnetPerson() As String
     IPlankopf_GezeichnetPerson = This.GezeichnetPerson
 End Property
 
-                                
 Private Property Get IPlankopf_GezeichnetDatum() As String
     IPlankopf_GezeichnetDatum = This.GezeichnetDatum
 End Property
 
-                                
 Private Property Get IPlankopf_Gezeichnet() As String
     IPlankopf_Gezeichnet = This.GezeichnetPerson & " ; " & This.GezeichnetDatum
 End Property
 
-                                
 Private Property Get IPlankopf_GeprüftPerson() As String
     IPlankopf_GeprüftPerson = This.GeprüftPerson
 End Property
 
-                                
 Private Property Get IPlankopf_GeprüftDatum() As String
     IPlankopf_GeprüftDatum = This.GeprüftDatum
 End Property
 
-                                
 Private Property Get IPlankopf_Geprüft() As String
     IPlankopf_Geprüft = This.GeprüftPerson & " ; " & This.GeprüftDatum
 End Property
 
-                                
 Private Property Get IPlankopf_Gebäude() As String
     IPlankopf_Gebäude = This.Gebäude
 End Property
 
-                                
 Private Property Get IPlankopf_Gebäudeteil() As String
     IPlankopf_Gebäudeteil = This.Gebäudeteil
 End Property
 
-                                
 Private Property Get IPlankopf_Geschoss() As String
     IPlankopf_Geschoss = This.Geschoss
 End Property
 
-                                
 Private Property Get IPlankopf_Planüberschrift() As String
     IPlankopf_Planüberschrift = This.Planüberschrift
 End Property
 
-                                
 Private Property Get IPlankopf_PlanBeschrieb() As String
     IPlankopf_PlanBeschrieb = This.PlanBeschrieb
 End Property
 
-                                
 Private Property Get IPlankopf_CustomPlanüberschrift() As Boolean
     IPlankopf_CustomPlanüberschrift = This.CustomPlanüberschrift
 End Property
 
-                                
 Private Property Get IPlankopf_LayoutName() As String
     IPlankopf_LayoutName = This.LayoutName
 End Property
 
-                                
 Private Property Get IPlankopf_PlanNummer() As String
     IPlankopf_PlanNummer = This.LayoutName
 End Property
 
-                                
 Private Property Get IPlankopf_LayoutGrösse(Optional ByVal Layout As Boolean = False) As String
     If Layout Then
         IPlankopf_LayoutGrösse = This.LayoutGrössecm
@@ -199,53 +176,43 @@ Private Property Get IPlankopf_LayoutGrösse(Optional ByVal Layout As Boolean = F
     End If
 End Property
 
-                                
 Private Property Get IPlankopf_LayoutMasstab() As String
     IPlankopf_LayoutMasstab = This.LayoutMasstab
 End Property
 
-                                
 Private Property Get IPlankopf_LayoutPlanstand() As String
     IPlankopf_LayoutPlanstand = This.LayoutPlanstand
 End Property
 
-                                
 Private Property Get IPlankopf_PDFFileName() As String
     IPlankopf_PDFFileName = This.PDFFileName
 End Property
 
-                                
 Private Property Get IPlankopf_DWGFileName() As String
     IPlankopf_DWGFileName = This.DWGFileName
 End Property
 
-                                
 Private Property Get IPlankopf_DWGFile() As String
     IPlankopf_DWGFile = This.DWGFilePath & "\" & This.DWGFileName & ".dwg"
 End Property
 
-                                
 Private Property Get IPlankopf_XMLFileName() As String
     IPlankopf_XMLFileName = This.XMLFileName
 End Property
 
-                                
 Private Property Get IPlankopf_XMLFile() As String
     IPlankopf_XMLFile = This.XMLFilePath & "\" & This.XMLFileName
 End Property
 
-                                
 Private Property Get IPlankopf_FolderName() As String
     IPlankopf_FolderName = This.Pfad
 End Property
 
-                                
 Private Property Get IPlankopf_CurrentIndex() As IIndex
     If This.CurrentIndex Is Nothing Then Set This.CurrentIndex = IndexFactory.Create(This.ID, vbNullString, vbNullString, vbNullString, vbNullString, " ", vbNullString, vbNullString, True)
     Set IPlankopf_CurrentIndex = This.CurrentIndex
 End Property
 
-                                
 Private Property Get IPlankopf_Indexes() As Collection
     Set IPlankopf_Indexes = This.Indexes
 End Property
@@ -253,17 +220,14 @@ Private Property Set IPlankopf_Indexes(ByVal NewIndexes As Collection)
     Set This.Indexes = NewIndexes
 End Property
 
-                                
 Private Property Get IPlankopf_Anlagetyp() As String
     IPlankopf_Anlagetyp = This.AnlageTyp
 End Property
 
-                                
 Private Property Get IPlankopf_AnlageNummer() As String
     IPlankopf_AnlageNummer = This.AnlageNummer
 End Property
 
-                                
 ' -------------------------------
 ' --- Functions
 ' -------------------------------
@@ -324,7 +288,7 @@ Public Function Filldata( _
         Else
             This.ID = ID
         End If
-        
+
         GetKF
         GetFileNames
         GetPlanüberschrift
@@ -334,7 +298,7 @@ Public Function Filldata( _
     On Error GoTo 0
     Filldata = True
     Exit Function
-    
+
     On Error GoTo -1
     On Error GoTo 0
     Dim frm                  As New UserFormMessage
@@ -344,17 +308,16 @@ Public Function Filldata( _
     frm.Show
     Filldata = False
     Exit Function
-    
+
 End Function
 
-                                
 Private Sub GetFormat()
     Dim tmpstr()             As String
     If Len(This.LayoutGrösse) < 4 Then Exit Sub
     tmpstr = Split(This.LayoutGrösse, "H")
-    Dim breite
-    Dim höhe
-    breite = Left(tmpstr(1), Len(tmpstr(1)) - 1)
+    Dim breite               As Long
+    Dim höhe                 As Long
+    breite = Left$(tmpstr(1), Len(tmpstr(1)) - 1)
     höhe = tmpstr(0)
     Select Case Join(Array(breite, höhe), ",")
     Case Join(Array(1, 1), ",")
@@ -372,12 +335,11 @@ Private Sub GetFormat()
     End Select
 End Sub
 
-                                
 Private Sub GetKF()
-    
+
     On Error GoTo ErrHandler
     This.GebäudeKF = Globals.shGebäude.range("1:1").Find(This.Gebäude).Offset(1).value
-    If This.GebäudeKF = "GES" And Globals.shGebäude.range("D1").value = "" Then
+    If This.GebäudeKF = "GES" And Globals.shGebäude.range("D1").value = vbNullString Then
         This.GebäudeKF = vbNullString
     End If
     If This.GebäudeKF = vbNullString Then
@@ -389,7 +351,7 @@ Private Sub GetKF()
     This.GeschossKF = Globals.shGebäude.range("B:B").Find(This.Geschoss).Offset(, 1).value
     This.GebäudeteilKF = Globals.shPData.range("PRO_Gebäudeteil").Find(This.Gebäudeteil).Offset(0, 1).value
     This.GewerkKF = Globals.shPData.range("PRO_Hauptgewerk").Find(This.Gewerk).Offset(0, 1).value
-    
+
     Dim col                  As Long
     Select Case This.PLANTYP
     Case "PLA"
@@ -420,18 +382,17 @@ Private Sub GetKF()
         This.PlanartKF = "PR"
         This.TinLineTyp = "PR"
     End Select
-    
+
     writelog LogInfo, "Kurzformen erstellt"
-    
+
     Exit Sub
 ErrHandler:
-    Debug.Print ">>>   "; err.Description
+Debug.Print ">>>   "; err.Description
     writelog LogError, "Beim erstellen der Kurzformen" & vbNewLine & _
                       err.Number & vbNewLine & err.Description & vbNewLine & err.source
-    
+
 End Sub
 
-                                
 Private Function GetFileNames()
     'BUG Hier kommen noch nicht die korrekten Pfäde raus.
     ' --- DWG FileName
@@ -455,7 +416,7 @@ Private Function GetFileNames()
     ' --- Pfad
     Select Case This.PLANTYP
     Case "PLA"
-        If This.Gebäude = "Gesamt" And Globals.shGebäude.range("D1").value = "" Then
+        If This.Gebäude = "Gesamt" And Globals.shGebäude.range("D1").value = vbNullString Then
             Select Case This.TinLineTyp
             Case "EP"
                 This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\" & This.GeschossCode & "_" & This.GeschossKF
@@ -493,9 +454,8 @@ Private Function GetFileNames()
     ' --- FilePath
 End Function
 
-                                
 Private Sub GetPlanüberschrift()
-    
+
     Dim Planüberschrift      As String
     If This.CustomPlanüberschrift Then Exit Sub
     Select Case This.PLANTYP
@@ -525,12 +485,12 @@ Private Sub GetPlanüberschrift()
                 Planüberschrift = "PR " & This.UnterGewerk
             End If
         End If
-        
+
     Case "SCH"
         ' Überschrift für Schemas
         Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Gewerk, This.AnlageTyp, This.Gebäude, This.Geschoss, This.Gebäudeteil, "Anlagenummer:", This.AnlageNummer)
     End Select
-    
+
     If This.Planüberschrift <> Planüberschrift And This.Planüberschrift <> vbNullString Then
         Select Case MsgBox("Die Beschriftung: " & This.Planüberschrift & " ist nicht Standard." & vbNewLine & "Soll diese mit der Standardmässigen Überschrift ersetzt werden?" & vbNewLine & Planüberschrift, vbYesNo, "Beschriftung Überschreiben?")
         Case vbYes
@@ -543,14 +503,13 @@ Private Sub GetPlanüberschrift()
         This.Planüberschrift = Planüberschrift
         writelog LogInfo, "Planüberschrift erstellt: " & This.Planüberschrift
     End If
-    
+
 End Sub
 
-                                
 Private Function ValidInputs() As Boolean
-    
+
     If Inputs.SkipValidation Then ValidInputs = True: Exit Function
-    
+
     ValidInputs = False
     Dim ErrorSource          As String
     ErrorSource = "Plankopf > ValidInputs > "
@@ -566,62 +525,58 @@ Private Function ValidInputs() As Boolean
     If Len(Inputs.LayoutMasstab) = 0 Then writelog LogError, ErrorSource & "no 'INPUT MASSTAB' given"
     If Len(Inputs.LayoutPlanstand) = 0 Then writelog LogError, ErrorSource & "no 'INPUT PLANSTAND' given"
     ValidInputs = True
-    
+
     writelog LogInfo, "Plankopf erstellt"
-    
+
 End Function
 
-                                
 Public Sub Refresh()
-    
+
     Dim dateToday            As String
-    dateToday = Format(Now(), "yymmdd")
+    dateToday = Format$(Now(), "yymmdd")
     Select Case This.PLANTYP
     Case "PLA"
         This.LayoutName = WorksheetFunction.TextJoin _
                           ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
-        
+
         This.PDFFileName = WorksheetFunction.TextJoin _
                            ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
     Case "SCH"
         This.LayoutName = WorksheetFunction.TextJoin _
                           ("-", True, This.GewerkKF, This.AnlageTypKF, This.GebäudeCode, This.GeschossCode, This.AnlageNummer)
-        
+
         This.PDFFileName = WorksheetFunction.TextJoin _
                            ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
     Case "PRI"
         This.LayoutName = WorksheetFunction.TextJoin _
                           ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
-        
+
         This.PDFFileName = WorksheetFunction.TextJoin _
                            ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
     Case Else
         This.LayoutName = WorksheetFunction.TextJoin _
                           ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
-        
+
         This.PDFFileName = WorksheetFunction.TextJoin _
                            ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
     End Select
     writelog LogInfo, "Planablage-Namen aktualisiert: " & This.PDFFileName
 End Sub
 
-                                
 ' -------------------------------
 ' --- Subs
 ' -------------------------------
 Private Sub IPlankopf_AddIndex(NewValue As IIndex)
-    
+
     This.Indexes.Add NewValue
     Set This.CurrentIndex = NewValue
-    
+
 End Sub
 
-                                
 Private Sub IPlankopf_ClearIndex()
-    
+
     Set This.Indexes = New Collection
-    
+
 End Sub
 
-                                
 

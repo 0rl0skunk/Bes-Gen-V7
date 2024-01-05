@@ -8,38 +8,33 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Interface für 'Index.cls'."
+
 '@Folder("Index")
 '@Interface
 '@ModuleDescription "Interface für 'Index.cls'."
+'@Version "Release V1.0.0"
 
 Option Explicit
 
-                                
 Public Property Get IndexID() As String
 End Property
 
-                                
 Public Property Get Index() As String
 End Property
-Public Property Let Index(NewValue As String)
+Public Property Let Index(ByVal NewValue As String)
 End Property
 
-                                
 Public Property Get Gezeichnet() As String
 End Property
 
-                                
 Public Property Get Geprüft() As String
 End Property
 
-                                
 Public Property Get Klartext() As String
 End Property
 
-                                
 Public Property Get PlanID() As String
 End Property
 Public Property Let PlanID(ByVal NewValue As String)
 End Property
 
-                                

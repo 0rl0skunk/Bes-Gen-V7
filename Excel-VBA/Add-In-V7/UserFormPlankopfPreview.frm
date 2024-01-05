@@ -14,12 +14,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Zeigt eine Vorschau des erstellten Plankopfes an. Dies dient zur überprüfung, ob ein Plankopf richtig ausgefüllt wurde und zur Fehlerfindung."
 
-
-
-
-
 '@Folder "Plankopf"
 '@ModuleDescription "Zeigt eine Vorschau des erstellten Plankopfes an. Dies dient zur überprüfung, ob ein Plankopf richtig ausgefüllt wurde und zur Fehlerfindung."
+'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -28,17 +25,15 @@ Private pPlankopfnummer      As Long
 Private icons                As UserFormIconLibrary
 Private pFileName            As String
 
-                                
 Private Sub CommandButtonClose_Click()
-    
+
     Unload Me
-    
+
 End Sub
 
-                                
 Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
     ' zeigt die Eingaben gemäss Plankopf-Objekt klasse an
-    
+
     Me.PA40.Caption = Plankopf.Planüberschrift
     Me.PA41.Caption = Plankopf.LayoutGrösse(True)
     Me.PA42.Caption = Plankopf.LayoutMasstab
@@ -48,16 +43,15 @@ Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
     Me.PA31.Caption = Split(Plankopf.Gezeichnet, " ; ")(1)
     Me.PA32.Caption = Split(Plankopf.Geprüft, " ; ")(0)
     Me.PA33.Caption = Split(Plankopf.Geprüft, " ; ")(1)
-    
+
     '--- Projektaddresse
     Me.LabelProjektAdresse.Caption = Projekt.ProjektBezeichnung & vbNewLine & Projekt.Projektadresse.Komplett
     Me.Projektnummer.Caption = Projekt.Projektnummer
     Me.Projektphase.Caption = Projekt.ProjektphaseNummer & " - " & Projekt.Projektphase
     Me.Plot.Caption = Format$(Now(), "DD.MM.YYYY HH:mm")
-    
+
 End Sub
 
-                                
 Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
     ' Zeigt die Felder aus einer XML-Datei an.
     pFileName = filepath
@@ -69,7 +63,7 @@ Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
     Set ParentNode = xmlDOMDoc.DocumentElement
     Dim ChildNode            As MSXML2.IXMLDOMElement
     Dim GrandChildNode       As MSXML2.IXMLDOMElement
-    
+
     ' Füllt die Felder aus gemäss den Attributen von TinLine
     For Each ChildNode In ParentNode.ChildNodes
         If ChildNode.HasChildNodes And ChildNode.BaseName = PKNr Then
@@ -88,7 +82,6 @@ Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
             Next
         End If
     Next
-    
+
 End Sub
 
-                                

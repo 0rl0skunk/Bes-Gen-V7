@@ -1,6 +1,10 @@
 Attribute VB_Name = "Planverzeichnis"
+
 '@Folder("Planverzeichnis")
+'@Version "Release V1.0.0"
+
 Option Explicit
+
 Private Enum Sorting
     ELEPLA = 0
     ELESCH = 1
@@ -40,7 +44,6 @@ Private Enum Sorting
     BRAPRI = 35
 End Enum
 
-                                
 Public Sub Create()
     Dim Plankopf             As IPlankopf
     Dim TempWS               As Worksheet
@@ -70,4 +73,3 @@ Public Sub Create()
     TempWS.Delete
 End Sub
 
-                                
