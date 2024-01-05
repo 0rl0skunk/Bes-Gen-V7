@@ -7,10 +7,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Option Explicit
-Implements IPerson
 
 '@Folder("Person")
+'@Version "Release V1.0.0"
+
+Option Explicit
+
+Implements IPerson
+
 
 Private Type TPerson
     Nachname As String

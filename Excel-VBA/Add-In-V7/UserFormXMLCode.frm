@@ -13,13 +13,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-
-
-
-
-
 '@Folder "Plankopf"
+'@Version "Release V1.0.0"
+
 Option Explicit
+
 Private icons                As UserFormIconLibrary
 
 Private Sub CommandButtonClose_Click()

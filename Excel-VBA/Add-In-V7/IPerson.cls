@@ -7,8 +7,12 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Attribute VB_Description = "Interface für 'Person.cls'."
+
 '@Folder("Person")
 '@Interface
+'@ModuleDescription "Interface für 'Person.cls'."
+'@Version "Release V1.0.0"
 
 Option Explicit
 

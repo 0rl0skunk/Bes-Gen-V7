@@ -1,8 +1,12 @@
 Attribute VB_Name = "AdressFactory"
 Attribute VB_Description = "Erstellt ein Adress-Objekt von welchem die daten einfach ausgelesen werden können."
-Option Explicit
+
 '@Folder "Adresse"
 '@ModuleDescription "Erstellt ein Adress-Objekt von welchem die daten einfach ausgelesen werden können."
+
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Public Function Create( _
        ByVal Strasse As String, _

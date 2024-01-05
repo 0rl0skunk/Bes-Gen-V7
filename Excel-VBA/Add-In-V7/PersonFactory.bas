@@ -1,8 +1,11 @@
 Attribute VB_Name = "PersonFactory"
 Attribute VB_Description = "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
-Option Explicit
+
 '@Folder("Person")
 '@ModuleDescription "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Public Function Create( _
        ByVal Nachname As String, _
@@ -28,7 +31,7 @@ Public Function Create( _
 
 End Function
 
-Public Sub AddToDatabase(Person As IPerson)
+Public Sub AddToDatabase(ByVal Person As IPerson)
     ' erstellt eine neue Person in der Datenbank
     Dim row                  As Long
     Dim ws                   As Worksheet

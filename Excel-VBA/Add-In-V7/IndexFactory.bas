@@ -1,8 +1,11 @@
 Attribute VB_Name = "IndexFactory"
 Attribute VB_Description = "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
-Option Explicit
+
 '@Folder("Index")
 '@ModuleDescription "Erstellt ein Index-Objekt von welchem die daten einfach ausgelesen werden können."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Private oXml                 As New MSXML2.DOMDocument60
 Private oXsl                 As New MSXML2.DOMDocument60
@@ -11,7 +14,7 @@ Private NodElement           As IXMLDOMElement
 Private NodChild             As IXMLDOMElement
 Private NodGrandChild        As IXMLDOMElement
 
-Private pPlankopf As IPlankopf
+Private pPlankopf            As IPlankopf
 
 Public Function Create( _
        ByVal IDPlan As String, _
@@ -41,13 +44,13 @@ Public Function Create( _
 
 End Function
 
-Public Sub DeleteFromDatabase(ID As String)
+Public Sub DeleteFromDatabase(ByVal ID As String)
     ' löscht den gewählten Index aus der Datenbank
     Globals.shIndex.range("H:H").Find(ID).EntireRow.Delete
     writelog LogInfo, "Index gelöscht"
 End Sub
 
-Public Sub AddToDatabase(Index As IIndex)
+Public Sub AddToDatabase(ByVal Index As IIndex)
     ' erstellt einen neuen Index in der Datenbank
     Dim row                  As Long
     Dim Gezeichnet           As String
@@ -88,7 +91,7 @@ Public Sub DeletePlan(ByVal ID As String)
 
 End Sub
 
-Public Function GetIndexes(Optional ByRef Plankopf As IPlankopf, Optional ByVal ID As String = vbNullString) As Collection
+Public Function GetIndexes(Optional ByVal Plankopf As IPlankopf, Optional ByVal ID As String = vbNullString) As Collection
     ' gibt eine Collection von allen Indexen eines Plankopes zurück
 
     Dim row                  As Long
@@ -143,27 +146,29 @@ ErrMsg:
     writelog LogInfo, "NO Indexe für Plankopf"
 End Function
 
-Public Function TinLineIndexes(ByRef Plankopf As IPlankopf, ByRef iNodChild As IXMLDOMElement, ByRef ioXml As MSXML2.DOMDocument60, ByRef iNodElement As IXMLDOMElement)
-Set oXml = ioXml
-Set NodElement = iNodElement
-Set pPlankopf = Plankopf
-On Error GoTo 0
-DeleteIndexes
-WriteIndexes
+Public Function TinLineIndexes(ByVal Plankopf As IPlankopf, ByVal iNodChild As IXMLDOMElement, ByVal ioXml As MSXML2.DOMDocument60, ByVal iNodElement As IXMLDOMElement)
+    Set oXml = ioXml
+    Set NodElement = iNodElement
+    Set pPlankopf = Plankopf
+    On Error GoTo 0
+    DeleteIndexes
+    WriteIndexes
 
 End Function
 
 Private Sub DeleteIndexes()
-Dim seqNode As IXMLDOMNode
-For Each seqNode In NodElement.SelectNodes("IN" & pPlankopf.TinLinePKNr)
-    NodElement.RemoveChild seqNode
-Next
-writelog LogInfo, "Alle Indexe für Plankopf " & pPlankopf.XMLFile
+    Dim seqNode              As IXMLDOMNode
+    For Each seqNode In NodElement.SelectNodes("IN" & pPlankopf.TinLinePKNr)
+        NodElement.RemoveChild seqNode
+    Next
+    writelog LogInfo, "Alle Indexe für Plankopf " & pPlankopf.XMLFile
 End Sub
 
 Private Sub WriteIndexes()
-Dim Index As IIndex
-For Each Index In pPlankopf.Indexes
-    CreateXmlIndexAttribute Index.Index, Index.Gezeichnet, Index.Klartext, "IN" & pPlankopf.TinLinePKNr, NodChild, oXml, NodElement
-Next
+    Dim Index                As IIndex
+    For Each Index In pPlankopf.Indexes
+        CreateXmlIndexAttribute Index.Index, Index.Gezeichnet, Index.Klartext, "IN" & pPlankopf.TinLinePKNr, NodChild, oXml, NodElement
+    Next
 End Sub
+
+

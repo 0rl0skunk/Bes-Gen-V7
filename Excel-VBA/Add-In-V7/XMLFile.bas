@@ -1,8 +1,11 @@
 Attribute VB_Name = "XMLFile"
+
 '@Folder("TinLine")
+'@Version "Release V1.0.0"
+
 Option Explicit
 
-Public Function CreateXmlAttribute(Name As String, Bez As String, Wert As String, str As String, NodChild As IXMLDOMElement, oXml As MSXML2.DOMDocument60, NodElement As IXMLDOMElement)
+Public Function CreateXmlAttribute(ByVal Name As String, ByVal Bez As String, ByVal Wert As String, ByVal str As String, ByRef NodChild As IXMLDOMElement, ByRef oXml As MSXML2.DOMDocument60, ByVal NodElement As IXMLDOMElement)
     ' create a TinLine XML Attribute with the given informations
     Dim NodGrandChild        As IXMLDOMElement
 
@@ -25,19 +28,19 @@ Public Function CreateXmlAttribute(Name As String, Bez As String, Wert As String
 
 End Function
 
-Public Function CreateXmlIndexAttribute(Index As String, Gezeichnet As String, Bez As String, NodName As String, NodChild As IXMLDOMElement, oXml As MSXML2.DOMDocument60, NodElement As IXMLDOMElement)
+Public Function CreateXmlIndexAttribute(ByVal Index As String, ByVal Gezeichnet As String, ByRef Bez As String, ByVal NodName As String, ByRef NodChild As IXMLDOMElement, ByRef oXml As MSXML2.DOMDocument60, ByVal NodElement As IXMLDOMElement)
     ' create a TinLine XML Attribute with the given informations
     Dim NodGrandChild        As IXMLDOMElement
     Dim Person               As String
     Dim Datum                As String
-    Dim Text()                 As String
+    Dim Text()               As String
 
     Person = Split(Gezeichnet, ";")(0)
     Datum = Split(Gezeichnet, ";")(1)
 
     Text = SplitStringByLength(Bez, 100)
     If UBound(Text) > 1 Then
-    Dim i As Long
+        Dim i                As Long
         Set NodChild = oXml.createElement(NodName)
         NodElement.appendChild NodChild
 

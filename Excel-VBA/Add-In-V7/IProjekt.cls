@@ -8,10 +8,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Interface für 'Projekt.cls'."
+
 '@Folder "Projekt"
 '@Interface
 '@ModuleDescription "Interface für 'Projekt.cls'."
-
+'@Version "Release V1.0.0"
 
 Option Explicit
 

@@ -8,11 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Task Objekt für einfacheres Management von Tasks im Projekt."
-'@IgnoreModule VariableNotUsed
-Option Explicit
-'@Folder "Tasks"
-'@ModuleDescription "Task Objekt für einfacheres Management von Tasks im Projekt."
 
+'@Folder "Tasks"
+'@IgnoreModule VariableNotUsed
+'@ModuleDescription "Task Objekt für einfacheres Management von Tasks im Projekt."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Private Type ttask
     ErfasstAm As String
@@ -32,16 +34,16 @@ Private This                 As ttask
 Private Inputs               As ttask
 
 Public Sub Filldata( _
-       ErfasstAm As String, _
-       ErfasstVon As String, _
-       FälligAm As String, _
-       Gewerk As String, _
-       Gebäude As String, _
-       Gebäudeteil As String, _
-       Geschoss As String, _
-       Erledigt As Boolean, _
-       Priorität As Long, _
-       Text As String _
+       ByVal ErfasstAm As String, _
+       ByVal ErfasstVon As String, _
+       ByVal FälligAm As String, _
+       ByVal Gewerk As String, _
+       ByVal Gebäude As String, _
+       ByVal Gebäudeteil As String, _
+       ByVal Geschoss As String, _
+       ByVal Erledigt As Boolean, _
+       ByVal Priorität As Long, _
+       ByVal Text As String _
        )
 
     Inputs.ErfasstAm = ErfasstAm

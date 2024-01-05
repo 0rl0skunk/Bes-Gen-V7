@@ -8,10 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Index Objekt für einfacheres Management von Indexen."
-Option Explicit
-'@IgnoreModule VariableNotUsed, EmptyStringLiteral
+
 '@Folder("Index")
+'@IgnoreModule VariableNotUsed, EmptyStringLiteral
 '@ModuleDescription "Index Objekt für einfacheres Management von Indexen."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Implements IIndex
 
@@ -93,7 +96,7 @@ Private Function validateInputs() As Boolean
         Dim Indexes(1 To 26) As String
         Dim LastIndex        As String
 
-        Dim i                As Integer
+        Dim i                As Long
         'For i = 65 To 90
         '    indexes(i - 64) = Chr(i)
         'Next
@@ -117,7 +120,7 @@ End Property
 Private Property Get IIndex_Index() As String
     IIndex_Index = This.Index
 End Property
-Private Property Let IIndex_Index(NewValue As String)
+Private Property Let IIndex_Index(ByVal NewValue As String)
     This.Index = NewValue
 End Property
 
@@ -139,3 +142,5 @@ End Property
 Private Property Let IIndex_PlanID(ByVal NewValue As String)
     This.IDPlan = NewValue
 End Property
+
+

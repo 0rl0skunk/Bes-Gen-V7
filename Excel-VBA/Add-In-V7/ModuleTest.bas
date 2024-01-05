@@ -1,8 +1,10 @@
 Attribute VB_Name = "ModuleTest"
 Attribute VB_Description = "Modul mit Test funktionen."
+
 '@IgnoreModule EmptyStringLiteral
 '@Folder "Objektdaten"
 '@ModuleDescription "Modul mit Test funktionen."
+'@Version "Release V1.0.0"
 
 Option Explicit
 
