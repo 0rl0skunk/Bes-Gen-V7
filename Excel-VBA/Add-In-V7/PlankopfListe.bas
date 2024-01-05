@@ -2,15 +2,16 @@ Attribute VB_Name = "PlankopfListe"
 '@Folder("Plankopf")
 Option Explicit
 
+                                
 Public Sub LoadListViewPlan(ByRef control As ListView)
-
+    
     Dim Pla                  As IPlankopf
     Dim li                   As ListItem
-
+    
     Dim row                  As Long
     Dim lastrow              As Long
-
-
+    
+    
     With control
         .ListItems.Clear
         .View = lvwReport
@@ -19,18 +20,18 @@ Public Sub LoadListViewPlan(ByRef control As ListView)
         .FullRowSelect = True
         With .ColumnHeaders
             .Clear
-            .Add , , vbNullString, 20            ' 0
-            .Add , , "ID", 0                     ' 1
-            .Add , , "Plannummer"                ' 2
-            .Add , , "Geschoss"                  ' 3
-            .Add , , "Gebäude"                   ' 4
-            .Add , , "Gebäudeteil"               ' 5
-            .Add , , "Gewerk", 0                 ' 6
-            .Add , , "Untergewerk", 0            ' 7
-            .Add , , "Planart", 0                ' 8
-            .Add , , "Gezeichnet"                ' 9
-            .Add , , "Geprüft"                   ' 10
-            .Add , , "Index"                     ' 11
+            .Add , , vbNullString, 20                                     ' 0
+            .Add , , "ID", 0                                              ' 1
+            .Add , , "Plannummer"                                         ' 2
+            .Add , , "Geschoss"                                           ' 3
+            .Add , , "Gebäude"                                            ' 4
+            .Add , , "Gebäudeteil"                                        ' 5
+            .Add , , "Gewerk", 0                                          ' 6
+            .Add , , "Untergewerk", 0                                     ' 7
+            .Add , , "Planart", 0                                         ' 8
+            .Add , , "Gezeichnet"                                         ' 9
+            .Add , , "Geprüft"                                            ' 10
+            .Add , , "Index"                                              ' 11
         End With
         If Globals.shStoreData Is Nothing Then Globals.SetWBs
         lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count
@@ -51,6 +52,7 @@ Public Sub LoadListViewPlan(ByRef control As ListView)
             li.ListSubItems.Add , , Pla.CurrentIndex.Index
         Next row
     End With
-
+    
 End Sub
 
+                                

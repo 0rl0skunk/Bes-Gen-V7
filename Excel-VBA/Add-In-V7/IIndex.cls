@@ -14,25 +14,32 @@ Attribute VB_Description = "Interface für 'Index.cls'."
 
 Option Explicit
 
+                                
 Public Property Get IndexID() As String
 End Property
 
+                                
 Public Property Get Index() As String
 End Property
 Public Property Let Index(NewValue As String)
 End Property
 
+                                
 Public Property Get Gezeichnet() As String
 End Property
 
+                                
 Public Property Get Geprüft() As String
 End Property
 
+                                
 Public Property Get Klartext() As String
 End Property
 
+                                
 Public Property Get PlanID() As String
 End Property
 Public Property Let PlanID(ByVal NewValue As String)
 End Property
 
+                                

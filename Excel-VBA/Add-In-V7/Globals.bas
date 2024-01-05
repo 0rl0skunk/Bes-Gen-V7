@@ -6,7 +6,7 @@ Option Explicit
 '@ModuleDescription "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
 
 Global Const Version As Double = 7#
-Global Const maxlen As Long = 35                 'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
+Global Const maxlen As Long = 35                                          'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
 Global Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
 Global Const XMLVorlage As String = "H:\TinLine\01_Standards\transform.xsl"
 Global Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
@@ -25,6 +25,7 @@ Public CopyrightSTR          As String
 Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection
 
+                                
 Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
     With Application.ActiveWorkbook.Sheets("Projektdaten")
         If pProjekt Is Nothing Or ForceNew Then
@@ -46,11 +47,13 @@ Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
     Set Projekt = pProjekt
 End Function
 
+                                
 Public Function Planköpfe() As Collection
     If pPlanköpfe Is Nothing Then GetPlanköpfe
     Set Planköpfe = pPlanköpfe
 End Function
 
+                                
 Public Function GetPlanköpfe(Optional ByVal Gewerk As String = vbNullString, Optional ByVal Planart As String = vbNullString) As Collection
     'TODO Create Planköpfe from Workbook / Database
     Set pPlanköpfe = New Collection
@@ -71,16 +74,17 @@ Public Function GetPlanköpfe(Optional ByVal Gewerk As String = vbNullString, Opt
     End If
     ' check if the Gewerk is applicable
     If bGewerk Then
-    For Each row In rng.Resize(ResizeRows, 1)
-        If Globals.shStoreData.Cells(row.row, 3).value = Gewerk Then pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
-    Next
-    GoTo Loaded
+        For Each row In rng.Resize(ResizeRows, 1)
+            If Globals.shStoreData.Cells(row.row, 3).value = Gewerk Then pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
+        Next
+        GoTo Loaded
     End If
 Loaded:
-Set GetPlanköpfe = pPlanköpfe
-writelog LogInfo, "Loaded " & pPlanköpfe.Count & " Planköpfe from the Database"
+    Set GetPlanköpfe = pPlanköpfe
+    writelog LogInfo, "Loaded " & pPlanköpfe.Count & " Planköpfe from the Database"
 End Function
 
+                                
 Public Function SetWBs() As Boolean
     ' Setzt alle Workbooks und Worksheets welche vom Add-In verwendet werden.
     SetWBs = False
@@ -101,4 +105,5 @@ Public Function SetWBs() As Boolean
     writelog LogInfo, "Loaded all Workbooks in Globals Module"
 End Function
 
+                                
 

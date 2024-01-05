@@ -20,37 +20,44 @@ Private Type TAdresse
     Ort As String
 End Type
 
+                                
 Private This                 As TAdresse
 
+                                
 Public Sub Filldata( _
        ByVal Strasse As String, _
        ByVal PLZ As String, _
        ByVal Ort As String _
        )
     ' Erstellt ein neues Adresse Objekt.
-
+    
     This.Strasse = Strasse
     This.PLZ = PLZ
     This.Ort = Ort
-
+    
     writelog LogInfo, "Adresse erstellt:" & vbNewLine & This.Strasse & vbNewLine & This.PLZ & " " & This.Ort
-
+    
 End Sub
 
+                                
 Private Property Get IAdresse_Strasse() As String
     IAdresse_Strasse = This.Strasse
 End Property
 
+                                
 Private Property Get IAdresse_PLZ() As String
     IAdresse_PLZ = This.PLZ
 End Property
 
+                                
 Private Property Get IAdresse_Ort() As String
     IAdresse_Ort = This.Ort
 End Property
 
+                                
 Private Property Get IAdresse_Komplett() As String
     IAdresse_Komplett = This.Strasse & vbNewLine & This.PLZ & " " & This.Ort
 End Property
 
+                                
 

@@ -26,8 +26,10 @@ Private Type TProjekt
     ProjektXML As String
 End Type
 
+                                
 Private This                 As TProjekt
 
+                                
 Public Sub Filldata( _
        ByVal Projektnummer As String, _
        ByVal Projektadresse As IAdresse, _
@@ -35,7 +37,7 @@ Public Sub Filldata( _
        ByVal Projektphase As String, _
        ByVal ProjektOrdnerSharePoint As String _
        )
-
+    
     This.Projektnummer = Projektnummer
     Set This.Projektadresse = Projektadresse
     This.ProjektBezeichnung = ProjektBezeichnung
@@ -43,54 +45,64 @@ Public Sub Filldata( _
     This.ProjektphaseNummer = Globals.shPData.range("PRO_Projektphase").Find(This.Projektphase).Offset(0, 1).value
     This.ProjektOrdnerSharePoint = ProjektOrdnerSharePoint
     GetCADPath
-
+    
 End Sub
 
+                                
 Private Property Get IProjekt_Projektnummer() As String
     IProjekt_Projektnummer = This.Projektnummer
 End Property
 
+                                
 Private Property Get IProjekt_ProjektXML() As String
     IProjekt_ProjektXML = This.ProjektXML
 End Property
 
+                                
 Private Property Get IProjekt_Projektadresse() As IAdresse
     Set IProjekt_Projektadresse = This.Projektadresse
 End Property
 
+                                
 Private Property Get IProjekt_ProjektBezeichnung() As String
     IProjekt_ProjektBezeichnung = This.ProjektBezeichnung
 End Property
 
+                                
 Private Property Get IProjekt_ProjektPhase() As String
     IProjekt_ProjektPhase = This.Projektphase
 End Property
 
+                                
 Private Property Get IProjekt_ProjektPhaseNummer() As String
     IProjekt_ProjektPhaseNummer = This.ProjektphaseNummer
 End Property
 
+                                
 Private Property Get IProjekt_ProjektOrdnerSharePoint() As String
     IProjekt_ProjektOrdnerSharePoint = This.ProjektOrdnerSharePoint
 End Property
 
+                                
 Private Property Get IProjekt_ProjektOrdnerCAD() As String
     IProjekt_ProjektOrdnerCAD = This.ProjektOrdnerCAD
 End Property
 
+                                
 Private Sub GetCADPath()
-
+    
     Dim TinLinePath          As String
     TinLinePath = "H:\TinLine\00_Projekte"
-
+    
     Dim Jahr                 As String
     Jahr = "20" & Left$(This.Projektnummer, 2)
-
+    
     This.ProjektOrdnerCAD = TinLinePath & "\" & Jahr & "\" & This.Projektnummer & "_" & This.ProjektBezeichnung
     This.ProjektXML = This.ProjektOrdnerCAD & "\99 TinConfiguration\TinPlanProject.xml"
-
+    
     writelog LogInfo, "CAD-Pfad für Projekt " & This.Projektnummer & " > " & This.ProjektOrdnerCAD
-
+    
 End Sub
 
+                                
 

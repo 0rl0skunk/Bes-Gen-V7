@@ -12,6 +12,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Attribute VB_Description = "Repariert das TinLine Projekt, wenn Fehler mit den Planköpfen entstehen."
+
+
 
 
 
@@ -22,19 +25,21 @@ Option Explicit
 
 Private icons                As UserFormIconLibrary
 
+                                
 Private Sub CommandButtonRepair_Click()
-
-If Me.CheckBoxPLAELE.value Then PlanBereinigen "01_EP", "Elektro"
-If Me.CheckBoxPLATF.value Then PlanBereinigen "05_TF", "Türfachplanung"
-If Me.CheckBoxPLABF.value Then PlanBereinigen "06_BR", "Brandschutzplanung"
-MsgBox "Das Projekt wurde bereinigt.", vbInformation, "Bereinigen abgaschlossen"
-Application.StatusBar = False
-Unload Me
-
+    
+    If Me.CheckBoxPLAELE.value Then PlanBereinigen "01_EP", "Elektro"
+    If Me.CheckBoxPLATF.value Then PlanBereinigen "05_TF", "Türfachplanung"
+    If Me.CheckBoxPLABF.value Then PlanBereinigen "06_BR", "Brandschutzplanung"
+    MsgBox "Das Projekt wurde bereinigt.", vbInformation, "Bereinigen abgaschlossen"
+    Application.StatusBar = False
+    Unload Me
+    
 End Sub
 
+                                
 Private Sub UserForm_Initialize()
-
+    
     Set icons = New UserFormIconLibrary
     Me.TitleIcon.Picture = icons.IconRepair.Picture
     Me.TitleLabel.Caption = "Projekt Bereinigen"
@@ -50,30 +55,34 @@ Private Sub UserForm_Initialize()
     Me.CheckBoxPLATF.Visible = Globals.shProjekt.range("A4").value = True
     ' BR
     Me.CheckBoxPLABF.Visible = Globals.shProjekt.range("A5").value = True
-
+    
 End Sub
 
+                                
 Private Sub CommandButtonClose_Click()
-
+    
     Unload Me
-
+    
 End Sub
 
+                                
 Private Sub PlanBereinigen(ByVal Folder As String, Gewerk As String)
-Dim Plankopf As IPlankopf
-
-' schreibt alle TinPlan und TinPrinzip *.xml files neu
-GebäudeFolders Globals.Projekt.ProjektOrdnerCAD & "\" & Folder, Gewerk, False
-
-Dim i As Long
-Dim pPlanköpfe As New Collection
-Set pPlanköpfe = Globals.GetPlanköpfe(Gewerk)
-i = 1
-
-For Each Plankopf In pPlanköpfe
-' für jeden Plankopf in den zu reparierenden Planköpfe ...
-    Application.StatusBar = "Updating Plankopf " & Plankopf.ID & " | " & i & " von " & pPlanköpfe.Count ' ... schreibt eine Statusmeldung
-    PlankopfFactory.RewritePlankopf Plankopf ' ... schreibt den Plankopf neu in die *.xml Datei
-    i = i + 1
-Next
+    Dim Plankopf             As IPlankopf
+    
+    ' schreibt alle TinPlan und TinPrinzip *.xml files neu
+    GebäudeFolders Globals.Projekt.ProjektOrdnerCAD & "\" & Folder, Gewerk, False
+    
+    Dim i                    As Long
+    Dim pPlanköpfe           As New Collection
+    Set pPlanköpfe = Globals.GetPlanköpfe(Gewerk)
+    i = 1
+    
+    For Each Plankopf In pPlanköpfe
+        ' für jeden Plankopf in den zu reparierenden Planköpfe ...
+        Application.StatusBar = "Updating Plankopf " & Plankopf.ID & " | " & i & " von " & pPlanköpfe.Count ' ... schreibt eine Statusmeldung
+        PlankopfFactory.RewritePlankopf Plankopf                          ' ... schreibt den Plankopf neu in die *.xml Datei
+        i = i + 1
+    Next
 End Sub
+
+                                

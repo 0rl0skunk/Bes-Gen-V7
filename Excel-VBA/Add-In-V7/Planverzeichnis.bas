@@ -40,6 +40,7 @@ Private Enum Sorting
     BRAPRI = 35
 End Enum
 
+                                
 Public Sub Create()
     Dim Plankopf             As IPlankopf
     Dim TempWS               As Worksheet
@@ -48,19 +49,19 @@ Public Sub Create()
     row = 1
     For Each Plankopf In Globals.Planköpfe
         With TempWS
-            Select Case Plankopf.Plantyp
-                Case "PLA"
-                    .Cells(row, 1).value = Plankopf.Plannummer
-                    .Cells(row, 2).value = Plankopf.Planart
-                    .Cells(row, 3).value = Plankopf.UnterGewerk
-                    .Cells(row, 4).value = Plankopf.Geschoss
-                    .Cells(row, 5).value = Plankopf.LayoutMasstab
-                Case "SCH"
-                    .Cells(row, 1).value = Plankopf.Plannummer
-                    .Cells(row, 2).value = Plankopf.UnterGewerk
-                Case "PRI"
-                    .Cells(row, 1).value = Plankopf.Plannummer
-                    .Cells(row, 2).value = Plankopf.UnterGewerk
+            Select Case Plankopf.PLANTYP
+            Case "PLA"
+                .Cells(row, 1).value = Plankopf.Plannummer
+                .Cells(row, 2).value = Plankopf.Planart
+                .Cells(row, 3).value = Plankopf.UnterGewerk
+                .Cells(row, 4).value = Plankopf.Geschoss
+                .Cells(row, 5).value = Plankopf.LayoutMasstab
+            Case "SCH"
+                .Cells(row, 1).value = Plankopf.Plannummer
+                .Cells(row, 2).value = Plankopf.UnterGewerk
+            Case "PRI"
+                .Cells(row, 1).value = Plankopf.Plannummer
+                .Cells(row, 2).value = Plankopf.UnterGewerk
             End Select
             row = row + 1
             .Cells(row, 1).value = Plankopf.Plannummer
@@ -69,3 +70,4 @@ Public Sub Create()
     TempWS.Delete
 End Sub
 
+                                

@@ -22,8 +22,10 @@ Private Type TPerson
     ID As String
 End Type
 
+                                
 Private This                 As TPerson
 
+                                
 Public Sub Filldata( _
        ByVal Nachname As String, _
        ByVal Vorname As String, _
@@ -43,32 +45,40 @@ Public Sub Filldata( _
     This.Anrede = Anrede
 End Sub
 
+                                
 Private Property Get IPerson_Nachname() As String
     IPerson_Nachname = This.Nachname
 End Property
 
+                                
 Private Property Get IPerson_Vorname() As String
     IPerson_Vorname = This.Vorname
 End Property
 
+                                
 Private Property Get IPerson_Anrede() As String
     IPerson_Anrede = This.Anrede
 End Property
 
+                                
 Private Property Get IPerson_Adresse() As IAdresse
     Set IPerson_Adresse = This.Adresse
 End Property
 
+                                
 Private Property Get IPerson_Firma() As String
     IPerson_Firma = This.Firma
 End Property
 
+                                
 Private Property Get IPerson_EMail() As String
     IPerson_EMail = This.EMail
 End Property
 
+                                
 Private Property Get IPerson_ID() As String
     IPerson_ID = This.ID
 End Property
 
+                                
 

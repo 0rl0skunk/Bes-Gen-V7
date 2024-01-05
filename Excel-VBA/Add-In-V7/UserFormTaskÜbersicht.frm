@@ -15,20 +15,24 @@ Attribute VB_Exposed = False
 
 
 
+
 '@Folder("Tasks")
 Option Explicit
 Private icons                As UserFormIconLibrary
 
+                                
 Private Sub UserForm_Initialize()
-
+    
     Set icons = New UserFormIconLibrary
     Me.TitleIcon.Picture = icons.IconTodoList.Picture
-
+    
 End Sub
 
+                                
 Private Sub CommandButtonClose_Click()
-
+    
     Unload Me
-
+    
 End Sub
 
+                                

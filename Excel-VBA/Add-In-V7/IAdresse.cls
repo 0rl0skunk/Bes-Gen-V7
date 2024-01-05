@@ -14,15 +14,20 @@ Attribute VB_Description = "Interface für 'Adresse.cls'."
 
 Option Explicit
 
+                                
 Public Property Get Strasse() As String
 End Property
 
+                                
 Public Property Get PLZ() As String
 End Property
 
+                                
 Public Property Get Ort() As String
 End Property
 
+                                
 Public Property Get Komplett() As String
 End Property
 
+                                

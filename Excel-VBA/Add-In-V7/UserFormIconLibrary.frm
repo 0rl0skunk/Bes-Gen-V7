@@ -16,6 +16,7 @@ Attribute VB_Description = "Icon-Library."
 
 
 
+
 '@Folder "Templates"
 '@ModuleDescription "Icon-Library"
 ' Die Icons können über 'icons."iconname".picture' geladen werden
@@ -23,9 +24,11 @@ Attribute VB_Description = "Icon-Library."
 
 Option Explicit
 
+                                
 Private Sub CommandButtonClose_Click()
-
+    
     Unload Me
-
+    
 End Sub
 
+                                
