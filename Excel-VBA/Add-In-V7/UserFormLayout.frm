@@ -19,6 +19,11 @@ Attribute VB_Description = "Einfaches Auswählen und definieren eines Layouts für
 
 
 
+
+
+
+
+
 '@Folder "Plankopf"
 '@ModuleDescription "Einfaches Auswählen und definieren eines Layouts für Plan und Prinzip Planköpfe."
 '@Version "Release V1.0.0"
@@ -206,20 +211,20 @@ Private Sub ChangeFormat()
                              height & "x" & width & "cm"
 
     Select Case MultiPageType
-    Case 0                                                                'Plan
+    Case 0                                       'Plan
         Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                  "Höhe: " & mHeight & "m" & vbLf & _
                                  "Beite: " & mWidth & "m"
-    Case 1                                                                'Schema
+    Case 1                                       'Schema
         Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                  "Höhe: " & mHeight & "m" & vbLf & _
                                  "Beite: " & mWidth & "m"
-    Case 2                                                                'Prinzip
+    Case 2                                       'Prinzip
         Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                  "Höhe: " & Application.WorksheetFunction.RoundDown(mHeight / 3, 0) & " Geschosse" & vbLf & _
                                  "Beite: " & mWidth & "m"
 
-    Case 3                                                                'Detail
+    Case 3                                       'Detail
         Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                  "Höhe: " & mHeight & "m" & vbLf & _
                                  "Beite: " & mWidth & "m"

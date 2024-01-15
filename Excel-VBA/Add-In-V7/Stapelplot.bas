@@ -6,7 +6,7 @@ Attribute VB_Name = "Stapelplot"
 Option Explicit
 
 Private a
-Private dsd                  As String                                    ' Dateiname von Stapelplott Datei
+Private dsd                  As String           ' Dateiname von Stapelplott Datei
 Private OutputFolder         As String
 Private NewFiles             As Long
 Private OldFiles             As Long
@@ -112,7 +112,7 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
     'If strFolderExists = "" Then MkDir folder
     ' Open the select folder prompt
     With Application.FileDialog(msoFileDialogFolderPicker)
-        If .Show = -1 Then                                                ' if OK is pressed
+        If .Show = -1 Then                       ' if OK is pressed
             OutputFolder = .SelectedItems(1)
         End If
     End With
@@ -187,11 +187,11 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
 End Function
 
 Private Sub Eintrag(ByVal Plan As IPlankopf)
-    a.WriteLine ("[DWF6Sheet:" & Plan.PDFFileName & "]")                  ' PDF Ablage
-    a.WriteLine ("DWG=" & Plan.dwgFile)                                   ' DWG Ablage
-    a.WriteLine ("Layout=" & Plan.LayoutName)                             ' Plannummer / Layoutname
+    a.WriteLine ("[DWF6Sheet:" & Plan.PDFFileName & "]") ' PDF Ablage
+    a.WriteLine ("DWG=" & Plan.dwgFile)          ' DWG Ablage
+    a.WriteLine ("Layout=" & Plan.LayoutName)    ' Plannummer / Layoutname
     a.WriteLine ("Setup=")
-    a.WriteLine ("OriginalSheetPath=" & Plan.dwgFile)                     ' DWG Ablage
+    a.WriteLine ("OriginalSheetPath=" & Plan.dwgFile) ' DWG Ablage
     a.WriteLine ("Has Plot Port=0")
     a.WriteLine ("Has3DDWF=0")
     a.WriteLine (" ")

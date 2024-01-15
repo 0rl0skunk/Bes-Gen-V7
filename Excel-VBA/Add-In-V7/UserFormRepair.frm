@@ -19,6 +19,11 @@ Attribute VB_Description = "Repariert das TinLine Projekt, wenn Fehler mit den P
 
 
 
+
+
+
+
+
 '@Folder("Repair")
 '@ModuleDescription "Repariert das TinLine Projekt, wenn Fehler mit den Planköpfen entstehen."
 '@Version "Release V1.0.0"
@@ -78,7 +83,7 @@ Private Sub PlanBereinigen(ByVal Folder As String, ByVal Gewerk As String)
     For Each Plankopf In pPlanköpfe
         ' für jeden Plankopf in den zu reparierenden Planköpfe ...
         Application.StatusBar = "Updating Plankopf " & Plankopf.ID & " | " & i & " von " & pPlanköpfe.Count ' ... schreibt eine Statusmeldung
-        PlankopfFactory.RewritePlankopf Plankopf                          ' ... schreibt den Plankopf neu in die *.xml Datei
+        PlankopfFactory.RewritePlankopf Plankopf ' ... schreibt den Plankopf neu in die *.xml Datei
         i = i + 1
     Next
 End Sub

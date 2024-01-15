@@ -24,7 +24,7 @@ Public Sub testProjekt()
                "https://rebsamennet.sharepoint.com/:f:/r/sites/PZM-ZH/03_Pub/00_Projekte/Auft.2022/220033_LU?csf=1&web=1&e=HHSqga" _
                )
 
-Debug.Print proj.ProjektBezeichnung
+    Debug.Print proj.ProjektBezeichnung
 
 End Sub
 

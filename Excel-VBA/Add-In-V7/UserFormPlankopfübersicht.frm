@@ -19,6 +19,11 @@ Attribute VB_Description = "Übersicht aller erstellten Planköpfe im Projekt. Die
 
 
 
+
+
+
+
+
 '@Folder "Plankopf"
 '@ModuleDescription "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
 '@Version "Release V1.0.0"
@@ -47,7 +52,7 @@ Private Sub CommandButtonEdit_Click()
     Dim row                  As Long
     row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row ' die zu ladende Reihe aus der Datenbank finden
     Dim frm                  As New UserFormPlankopf
-    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt          ' ein Plankopf-Objekt aus der Reihe erstellen und im UserForm laden
+    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt ' ein Plankopf-Objekt aus der Reihe erstellen und im UserForm laden
     frm.setIcons Edit
     frm.Show 1
 
@@ -198,7 +203,7 @@ Private Sub FilterListView(ByVal Index As String, ByVal FilterValue As String)
     Dim e                    As ListItem
 StartOver:
     For Each e In Me.ListViewPlankopf.ListItems
-Debug.Print e.ListSubItems.Item(Index).Text
+        Debug.Print e.ListSubItems.Item(Index).Text
         If FilterValue <> "Alles" Then
             If e.ListSubItems.Item(Index).Text <> FilterValue Then
                 Me.ListViewPlankopf.ListItems.Remove e.Index

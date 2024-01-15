@@ -149,10 +149,10 @@ Public Function AddToDatabase(ByVal Plankopf As IPlankopf) As Boolean
 
     CopyToClipBoard Plankopf.LayoutName
 
-    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A1").value And Plankopf.PLANTYP = "PLA" Then NewTinLinePlankopf Plankopf Else writelog Logwarning, "Das Projekt wurde ohne Elektropläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Elektroplan
-    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A2").value And Plankopf.PLANTYP = "PRI" Then NewTinLinePlankopf Plankopf Else writelog Logwarning, "Das Projekt wurde ohne Elektro Prinzipschemas erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Elektro Prinzipschema
-    If Plankopf.Gewerk = "Türfachplanung" And Globals.shProjekt.range("A4").value Then NewTinLinePlankopf Plankopf Else writelog Logwarning, "Das Projekt wurde ohne Türfachpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Türfachplanung
-    If Plankopf.Gewerk = "Brandschutzplanung" And Globals.shProjekt.range("A5").value Then NewTinLinePlankopf Plankopf Else writelog Logwarning, "Das Projekt wurde ohne Brandschutzpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Brandschutzplanung
+    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A1").value And Plankopf.PLANTYP = "PLA" Then NewTinLinePlankopf Plankopf Else writelog LogWarning, "Das Projekt wurde ohne Elektropläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Elektroplan
+    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A2").value And Plankopf.PLANTYP = "PRI" Then NewTinLinePlankopf Plankopf Else writelog LogWarning, "Das Projekt wurde ohne Elektro Prinzipschemas erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Elektro Prinzipschema
+    If Plankopf.Gewerk = "Türfachplanung" And Globals.shProjekt.range("A4").value Then NewTinLinePlankopf Plankopf Else writelog LogWarning, "Das Projekt wurde ohne Türfachpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Türfachplanung
+    If Plankopf.Gewerk = "Brandschutzplanung" And Globals.shProjekt.range("A5").value Then NewTinLinePlankopf Plankopf Else writelog LogWarning, "Das Projekt wurde ohne Brandschutzpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Brandschutzplanung
     With ws
         .Cells(row, 1).value = Plankopf.ID
         .Cells(row, 2).value = Plankopf.IDTinLine
@@ -206,14 +206,14 @@ Private Function NewTinLinePlankopf(ByRef Plankopf As IPlankopf) As Boolean
         NewTinLinePlankopf = True
     Else
         NewTinLinePlankopf = False
-        writelog Logwarning, "Plankopf " & Plankopf.Plannummer & " nicht erstellt"
+        writelog LogWarning, "Plankopf " & Plankopf.Plannummer & " nicht erstellt"
     End If
 
 End Function
 
 Private Function CheckEmptyPlankopf(ByRef Plankopf As IPlankopf) As Boolean
 
-load:                                                                     ' load xml file
+load:                                            ' load xml file
     On Error GoTo err
     Set NodElement = oXml.SelectSingleNode("tinPlan1")
     Dim oSeqNodes            As IXMLDOMNodeList
@@ -258,7 +258,7 @@ TinLineID:
 
     For Each oSeqNode In oSeqNodes
         If Not oSeqNode.SelectSingleNode("Name").Text = Plankopf.LayoutName And oSeqNode.SelectSingleNode("Nr").Text = Plankopf.TinLinePKNr Then
-            writelog Logwarning, "Das Layout wurde möglicherweise nicht richtig beschriftet " & Plankopf.LayoutName
+            writelog LogWarning, "Das Layout wurde möglicherweise nicht richtig beschriftet " & Plankopf.LayoutName
             CopyToClipBoard Plankopf.LayoutName
             MsgBox "Das Layout ist möglicherweise falsch bezeichnet." & vbNewLine & "Bitte das Layout :" & vbNewLine & oSeqNode.SelectSingleNode("Name").Text & vbNewLine & " in " & vbNewLine & Plankopf.LayoutName & vbNewLine & " Umbenennen." & vbNewLine & vbNewLine & "Die korrekte Beschriftung ist in der Zwischenablage.", vbExclamation, "Layout Umbenennen"
             oSeqNode.SelectSingleNode("Name").Text = Plankopf.LayoutName
@@ -362,14 +362,14 @@ Private Function ChangeTinLinePlankopf(ByRef Plankopf As IPlankopf) As Boolean
         ChangeTinLinePlankopf = True
     Else
         ChangeTinLinePlankopf = False
-        writelog Logwarning, "Plankopf " & Plankopf.Plannummer & " nicht geändert"
+        writelog LogWarning, "Plankopf " & Plankopf.Plannummer & " nicht geändert"
     End If
 
 End Function
 
 Private Function CheckChangePlankopf(ByRef Plankopf As IPlankopf) As Boolean
 
-load:                                                                     ' load xml file
+load:                                            ' load xml file
     On Error GoTo err
     Set NodElement = oXml.SelectSingleNode("tinPlan1")
     Dim oSeqNodes            As IXMLDOMNodeList

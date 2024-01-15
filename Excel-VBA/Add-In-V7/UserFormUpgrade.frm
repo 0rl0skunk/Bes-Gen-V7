@@ -14,6 +14,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
+
+
+
 '@Folder("Upgrade")
 '@Version "Release V1.0.0"
 
@@ -117,7 +122,7 @@ Private Sub Upgrade()
     Case 1
         ' for each row in shStoreData transpose it to the new order
         With Globals.shStoreData
-        writelog LogInfo, "Update Planköpfe"
+            writelog LogInfo, "Update Planköpfe"
             lastrow = shStoreDataOld.range("A2").CurrentRegion.rows.Count
             For row = 3 To lastrow
                 ' für jede zeile welche verwendet wird in den Neuen Bes-Gen übertragen.
@@ -134,12 +139,12 @@ Private Sub Upgrade()
                 .Cells(row, 3).value = shStoreDataOld.Cells(row, 6).value
                 .Cells(row, 4).value = shStoreDataOld.Cells(row, 7).value
                 .Cells(row, 5).value = shStoreDataOld.Cells(row, 9).value
-                .Cells(row, 6).value = PLANTYP                            ' Muss etwas komplizierter generiert werden siehe oben
+                .Cells(row, 6).value = PLANTYP   ' Muss etwas komplizierter generiert werden siehe oben
                 .Cells(row, 7).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 8).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 9).value = shStoreDataOld.Cells(row, 4).value
                 .Cells(row, 10).value = False
-                .Cells(row, 11).value = vbNullString                      ' wird beim updaten vom Plankopf geschrieben
+                .Cells(row, 11).value = vbNullString ' wird beim updaten vom Plankopf geschrieben
                 .Cells(row, 13).value = shStoreDataOld.Cells(row, 29).value
                 .Cells(row, 14).value = shStoreDataOld.Cells(row, 2).value
                 .Cells(row, 15).value = shStoreDataOld.Cells(row, 20).value
@@ -157,7 +162,7 @@ Private Sub Upgrade()
         End With
         ' for each row in shIndex transpose it to the new order
         With Globals.shIndex
-        writelog LogInfo, "Update Indexe"
+            writelog LogInfo, "Update Indexe"
             lastrow = shIndexOld.range("A3").CurrentRegion.rows.Count
             For row = 3 To lastrow
                 .Cells(row - 1, 1).value = shIndexOld.Cells(row, 2).value
@@ -172,8 +177,8 @@ Private Sub Upgrade()
         End With
         ' Transfer Projektdaten
         With Globals.shPData
-        writelog LogInfo, "Update Projektdaten"
-        .Unprotect "Reb$1991"
+            writelog LogInfo, "Update Projektdaten"
+            .Unprotect "Reb$1991"
             .range("ADM_Projektnummer").value = shPDataOld.range("C5").value
             .range("ADM_ADR_Strasse").value = shPDataOld.range("F5").value
             .range("ADM_ADR_PLZ").value = shPDataOld.range("F6").value
@@ -184,10 +189,10 @@ Private Sub Upgrade()
             .range("ADM_ProjektPfadCAD").value = shPDataOld.range("C8").value
             ' UnterProjekte
             .range("PRO_Unterprojekte") = shPDataOld.range("Unterprojekte")
-        .Protect "Reb$1991"
+            .Protect "Reb$1991"
         End With
         ' Transfer Gebäudedaten -> evtl. müssen diese von Hand noch angepasst / ausgefüllt werden.
-        Globals.shPData.range("A14:A50") = shPDataOld.range("A13:A49")    ' Gebäudeteil
+        Globals.shPData.range("A14:A50") = shPDataOld.range("A13:A49") ' Gebäudeteil
         writelog LogWarning, "Die Geschosse müssen für Version V1 manuell ausgefüllt werden!"
         MsgBox "Die Geschosse müssen für Version V1 manuell ausgefüllt werden.", vbMsgBoxHelpButton, "Gebäude ausfüllen"
         ' Transfer Adressen
@@ -207,7 +212,7 @@ Private Sub Upgrade()
     Case 2
         ' for each row in shStoreData transpose it to the new order
         With Globals.shStoreData
-        writelog LogInfo, "Update Planköpfe"
+            writelog LogInfo, "Update Planköpfe"
             lastrow = shStoreDataOld.range("A2").CurrentRegion.rows.Count
             For row = 3 To lastrow
                 ' für jede zeile welche verwendet wird in den Neuen Bes-Gen übertragen.
@@ -224,12 +229,12 @@ Private Sub Upgrade()
                 .Cells(row, 3).value = shStoreDataOld.Cells(row, 6).value
                 .Cells(row, 4).value = shStoreDataOld.Cells(row, 7).value
                 .Cells(row, 5).value = shStoreDataOld.Cells(row, 9).value
-                .Cells(row, 6).value = PLANTYP                            ' Muss etwas komplizierter generiert werden siehe oben
-                .Cells(row, 7).value = shStoreDataOld.Cells(row, 3).value
+                .Cells(row, 6).value = PLANTYP   ' Muss etwas komplizierter generiert werden siehe oben
+                .Cells(row, 7).value = shStoreDataOld.Cells(row, 30).value
                 .Cells(row, 8).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 9).value = shStoreDataOld.Cells(row, 4).value
                 .Cells(row, 10).value = False
-                .Cells(row, 11).value = vbNullString                      ' wird beim updaten vom Plankopf geschrieben
+                .Cells(row, 11).value = vbNullString ' wird beim updaten vom Plankopf geschrieben
                 .Cells(row, 13).value = shStoreDataOld.Cells(row, 29).value
                 .Cells(row, 14).value = shStoreDataOld.Cells(row, 2).value
                 .Cells(row, 15).value = shStoreDataOld.Cells(row, 20).value
@@ -247,7 +252,7 @@ Private Sub Upgrade()
         End With
         ' for each row in shIndex transpose it to the new order
         With Globals.shIndex
-        writelog LogInfo, "Update Indexe"
+            writelog LogInfo, "Update Indexe"
             lastrow = shIndexOld.range("A3").CurrentRegion.rows.Count
             For row = 3 To lastrow
                 .Cells(row - 1, 1).value = shIndexOld.Cells(row, 2).value
@@ -262,8 +267,8 @@ Private Sub Upgrade()
         End With
         ' Transfer Projektdaten
         With Globals.shPData
-        writelog LogInfo, "Update Projektdaten"
-        .Unprotect "Reb$1991"
+            writelog LogInfo, "Update Projektdaten"
+            .Unprotect "Reb$1991"
             .range("ADM_Projektnummer").value = shPDataOld.range("C5").value
             .range("ADM_ADR_Strasse").value = shPDataOld.range("F5").value
             .range("ADM_ADR_PLZ").value = shPDataOld.range("F6").value
@@ -280,8 +285,8 @@ Private Sub Upgrade()
         ' Transfer Gebäudedaten -> evtl. müssen diese von Hand noch angepasst / ausgefüllt werden.
         writelog LogInfo, "Update Gebäudeteile"
         For Each Cell In shPDataOld.range("C13:D49")
-                Globals.shPData.Cells(Cell.Offset(1, 0).row, Cell.Offset(1, 0).Column).value = Cell.value
-            Next Cell
+            Globals.shPData.Cells(Cell.Offset(1, 0).row, Cell.Offset(1, 0).Column).value = Cell.value
+        Next Cell
         ' Gebäude
         writelog LogInfo, "Update Gebäude"
         For Each Cell In shGebäudeOld.range("D1:AQ2")
@@ -295,7 +300,7 @@ Private Sub Upgrade()
         Globals.shPData.Protect "Reb$1991"
         ' Transfer Adressen
         With Globals.shAdress
-        writelog LogInfo, "Update Adresse"
+            writelog LogInfo, "Update Adresse"
             lastrow = shAdresseOld.range("A3").CurrentRegion.rows.Count
             For row = 6 To lastrow
                 .Cells(row, 1).value = shAdresseOld.Cells(row, 1).value
@@ -310,7 +315,7 @@ Private Sub Upgrade()
     Case 3
         ' for each row in shStoreData transpose it to the new order
         With Globals.shStoreData
-        writelog LogInfo, "Update Planköpfe"
+            writelog LogInfo, "Update Planköpfe"
             lastrow = shStoreDataOld.range("A2").CurrentRegion.rows.Count
             For row = 3 To lastrow
                 ' für jede zeile welche verwendet wird in den Neuen Bes-Gen übertragen.
@@ -327,12 +332,12 @@ Private Sub Upgrade()
                 .Cells(row, 3).value = shStoreDataOld.Cells(row, 6).value
                 .Cells(row, 4).value = shStoreDataOld.Cells(row, 7).value
                 .Cells(row, 5).value = shStoreDataOld.Cells(row, 9).value
-                .Cells(row, 6).value = PLANTYP                            ' Muss etwas komplizierter generiert werden siehe oben
+                .Cells(row, 6).value = PLANTYP   ' Muss etwas komplizierter generiert werden siehe oben
                 .Cells(row, 7).value = shStoreDataOld.Cells(row, 4).value
                 .Cells(row, 8).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 9).value = shStoreDataOld.Cells(row, 30).value
                 .Cells(row, 10).value = False
-                .Cells(row, 11).value = vbNullString                      ' wird beim updaten vom Plankopf geschrieben
+                .Cells(row, 11).value = vbNullString ' wird beim updaten vom Plankopf geschrieben
                 .Cells(row, 13).value = shStoreDataOld.Cells(row, 29).value
                 .Cells(row, 14).value = shStoreDataOld.Cells(row, 2).value
                 .Cells(row, 15).value = shStoreDataOld.Cells(row, 20).value
@@ -350,7 +355,7 @@ Private Sub Upgrade()
         End With
         ' for each row in shIndex transpose it to the new order
         With Globals.shIndex
-        writelog LogInfo, "Update Indexe"
+            writelog LogInfo, "Update Indexe"
             lastrow = shIndexOld.range("A3").CurrentRegion.rows.Count
             For row = 3 To lastrow
                 .Cells(row - 1, 1).value = shIndexOld.Cells(row, 2).value
@@ -365,8 +370,8 @@ Private Sub Upgrade()
         End With
         ' Transfer Projektdaten
         With Globals.shPData
-        writelog LogInfo, "Update Projektdaten"
-        .Unprotect "Reb$1991"
+            writelog LogInfo, "Update Projektdaten"
+            .Unprotect "Reb$1991"
             .range("ADM_Projektnummer").value = shPDataOld.range("C5").value
             .range("ADM_ADR_Strasse").value = shPDataOld.range("F5").value
             .range("ADM_ADR_PLZ").value = shPDataOld.range("F6").value
@@ -381,7 +386,7 @@ Private Sub Upgrade()
         ' Transfer Gebäudedaten -> evtl. müssen diese von Hand noch angepasst / ausgefüllt werden.
         writelog LogInfo, "Update Gebäudeteile"
         For Each Cell In shGebäudeOld.range("A14:A50")
-            Globals.shGebäude.Cells(Cell.offset(1,0).row, Cell.offset(1,0).Column).value = Cell.value
+            Globals.shGebäude.Cells(Cell.Offset(1, 0).row, Cell.Offset(1, 0).Column).value = Cell.value
         Next Cell
         ' Gebäude
         writelog LogInfo, "Update Gebäude"
@@ -396,7 +401,7 @@ Private Sub Upgrade()
         Globals.shPData.Protect "Reb$1991"
         ' Transfer Adressen
         With Globals.shAdress
-        writelog LogInfo, "Update Adresse"
+            writelog LogInfo, "Update Adresse"
             lastrow = shAdresseOld.range("A3").CurrentRegion.rows.Count
             For row = 6 To lastrow
                 .Cells(row, 1).value = shAdresseOld.Cells(row, 1).value
@@ -411,7 +416,7 @@ Private Sub Upgrade()
     Case 4
         ' for each row in shStoreData transpose it to the new order
         With Globals.shStoreData
-        writelog LogInfo, "Update Planköpfe"
+            writelog LogInfo, "Update Planköpfe"
             lastrow = shStoreDataOld.range("A2").CurrentRegion.rows.Count
             For row = 3 To lastrow
                 ' für jede zeile welche verwendet wird in den Neuen Bes-Gen übertragen.
@@ -428,12 +433,12 @@ Private Sub Upgrade()
                 .Cells(row, 3).value = shStoreDataOld.Cells(row, 6).value
                 .Cells(row, 4).value = shStoreDataOld.Cells(row, 7).value
                 .Cells(row, 5).value = shStoreDataOld.Cells(row, 9).value
-                .Cells(row, 6).value = PLANTYP                            ' Muss etwas komplizierter generiert werden siehe oben
+                .Cells(row, 6).value = PLANTYP   ' Muss etwas komplizierter generiert werden siehe oben
                 .Cells(row, 7).value = shStoreDataOld.Cells(row, 4).value
                 .Cells(row, 8).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 9).value = shStoreDataOld.Cells(row, 30).value
                 .Cells(row, 10).value = False
-                .Cells(row, 11).value = vbNullString                      ' wird beim updaten vom Plankopf geschrieben
+                .Cells(row, 11).value = vbNullString ' wird beim updaten vom Plankopf geschrieben
                 .Cells(row, 13).value = shStoreDataOld.Cells(row, 29).value
                 .Cells(row, 14).value = shStoreDataOld.Cells(row, 2).value
                 .Cells(row, 15).value = shStoreDataOld.Cells(row, 20).value
@@ -451,7 +456,7 @@ Private Sub Upgrade()
         End With
         ' for each row in shIndex transpose it to the new order
         With Globals.shIndex
-        writelog LogInfo, "Update Indexe"
+            writelog LogInfo, "Update Indexe"
             lastrow = shIndexOld.range("A3").CurrentRegion.rows.Count
             For row = 3 To lastrow
                 .Cells(row - 1, 1).value = shIndexOld.Cells(row, 2).value
@@ -466,8 +471,8 @@ Private Sub Upgrade()
         End With
         ' Transfer Projektdaten
         With Globals.shPData
-        writelog LogInfo, "Update Projektdaten"
-        .Unprotect "Reb$1991"
+            writelog LogInfo, "Update Projektdaten"
+            .Unprotect "Reb$1991"
             .range("ADM_Projektnummer").value = shPDataOld.range("C5").value
             .range("ADM_ADR_Strasse").value = shPDataOld.range("F5").value
             .range("ADM_ADR_PLZ").value = shPDataOld.range("F6").value
@@ -484,8 +489,8 @@ Private Sub Upgrade()
         ' Transfer Gebäudedaten -> evtl. müssen diese von Hand noch angepasst / ausgefüllt werden.
         writelog LogInfo, "Update Gebäudeteile"
         For Each Cell In shPDataOld.range("C13:D49")
-                Globals.shPData.Cells(Cell.Offset(1, 0).row, Cell.Offset(1, 0).Column).value = Cell.value
-            Next Cell
+            Globals.shPData.Cells(Cell.Offset(1, 0).row, Cell.Offset(1, 0).Column).value = Cell.value
+        Next Cell
         ' Gebäude
         writelog LogInfo, "Update Gebäude"
         For Each Cell In shGebäudeOld.range("D1:AQ2")
@@ -499,7 +504,7 @@ Private Sub Upgrade()
         Globals.shPData.Protect "Reb$1991"
         ' Transfer Adressen
         With Globals.shAdress
-        writelog LogInfo, "Update Adresse"
+            writelog LogInfo, "Update Adresse"
             lastrow = shAdresseOld.range("A3").CurrentRegion.rows.Count
             For row = 6 To lastrow
                 .Cells(row, 1).value = shAdresseOld.Cells(row, 1).value
@@ -513,7 +518,7 @@ Private Sub Upgrade()
         End With
     End Select
 
-writelog LogInfo, "Upgrade " & WBOldVersion.Name & " from Version " & FromVersion & " to Version 7 Complete!" & vbNewLine & "--------------------"
+    writelog LogInfo, "Upgrade " & WBOldVersion.Name & " from Version " & FromVersion & " to Version 7 Complete!" & vbNewLine & "--------------------"
 
 End Sub
 

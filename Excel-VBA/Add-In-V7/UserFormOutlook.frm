@@ -19,6 +19,11 @@ Attribute VB_Description = "E-Mails direkt vom Beschriftungsgenerator erstellen 
 
 
 
+
+
+
+
+
 '@Folder("Outlook")
 '@ModuleDescription "E-Mails direkt vom Beschriftungsgenerator erstellen und versenden."
 '@Version "Release V1.0.0"
@@ -174,13 +179,13 @@ Private Sub LoadListViewMail(ByVal control As ListView)
         .FullRowSelect = True
         With .ColumnHeaders
             .Clear
-            .Add , , vbNullString, 20                                     ' 0
-            .Add , , "ID", 0                                              ' 0
-            .Add , , "Anrede", 0                                          ' 1
-            .Add , , "Vorname"                                            ' 2
-            .Add , , "Nachname"                                           ' 3
-            .Add , , "Firma"                                              ' 4
-            .Add , , "E-Mail", 0                                          ' 5
+            .Add , , vbNullString, 20            ' 0
+            .Add , , "ID", 0                     ' 0
+            .Add , , "Anrede", 0                 ' 1
+            .Add , , "Vorname"                   ' 2
+            .Add , , "Nachname"                  ' 3
+            .Add , , "Firma"                     ' 4
+            .Add , , "E-Mail", 0                 ' 5
         End With
         If Globals.shAdress Is Nothing Then Globals.SetWBs
         lastrow = Globals.shAdress.range("ADR_Adressen").rows.Count

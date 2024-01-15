@@ -8,7 +8,7 @@ Attribute VB_Description = "Beinhaltet Globale Variabeln und Funktionen auf welc
 Option Explicit
 
 Public Const Version         As Double = 7#
-Public Const maxlen          As Long = 35                                 'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
+Public Const maxlen          As Long = 35        'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
 Public Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
 Public Const XMLVorlage      As String = "H:\TinLine\01_Standards\transform.xsl"
 Public Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"

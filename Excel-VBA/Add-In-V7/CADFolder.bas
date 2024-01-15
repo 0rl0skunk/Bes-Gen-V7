@@ -254,7 +254,7 @@ Private Sub TinLineFloorXML(ByVal Plan As IPlankopf)
         NodChild.appendChild NodGrandChild
 
         ' XML formatieren
-Debug.Print Plan.FolderName & "\TinPlanFloor.xml"
+        Debug.Print Plan.FolderName & "\TinPlanFloor.xml"
         oXml.Save Plan.FolderName & "\TinPlanFloor.xml"
         oXml.transformNodeToObject oXsl, oXml
         oXml.Save Plan.FolderName & "\TinPlanFloor.xml"
@@ -295,7 +295,7 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     NodGrandChild.Text = vbNullString
     NodChild.appendChild NodGrandChild
     ' XML formatieren
-Debug.Print Plan.XMLFile
+    Debug.Print Plan.XMLFile
     oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
     oXml.Save Plan.XMLFile
@@ -336,7 +336,7 @@ Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     NodGrandChild.Text = vbNullString
     NodChild.appendChild NodGrandChild
     ' XML formatieren
-Debug.Print Plan.XMLFile
+    Debug.Print Plan.XMLFile
     oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
     oXml.Save Plan.XMLFile

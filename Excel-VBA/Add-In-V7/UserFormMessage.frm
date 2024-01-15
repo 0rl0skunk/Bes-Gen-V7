@@ -19,6 +19,11 @@ Attribute VB_Description = "Erster Versuch für eine Custom Fehlermeldung. Implem
 
 
 
+
+
+
+
+
 '@Folder "Templates"
 '@ModuleDescription "Erster Versuch für eine Custom Fehlermeldung. Implementierung folgt zu einem späteren Zeitpunkt."
 '@Version "Release V1.0.0"
@@ -36,17 +41,17 @@ End Enum
 Public Sub Typ(ByVal MessageType As MSGTyp, ByVal MessageText As String, Optional ByVal Title As String = "Ein Fehler ist aufgetreten!", Optional ByVal OpenLog As Boolean = False)
 
     Select Case MessageType
-    Case 0                                                                ' Error
-        Me.TitleIcon.Picture = icons.IconError.Picture                    ' Icon setzen
-        Me.TitleLabel.Caption = Title                                     ' Titel gemäss Eingabe
-        Me.LabelMessage.value = MessageText                               ' Message gemäss Eingabe
-        If OpenLog Then Me.CommandButtonLog.Visible = True                ' der Button für die Anzeige vom Log kann über den TYP definiert werden.
-    Case 1                                                                ' Warning
+    Case 0                                       ' Error
+        Me.TitleIcon.Picture = icons.IconError.Picture ' Icon setzen
+        Me.TitleLabel.Caption = Title            ' Titel gemäss Eingabe
+        Me.LabelMessage.value = MessageText      ' Message gemäss Eingabe
+        If OpenLog Then Me.CommandButtonLog.Visible = True ' der Button für die Anzeige vom Log kann über den TYP definiert werden.
+    Case 1                                       ' Warning
         Me.TitleIcon.Picture = icons.IconWarning.Picture
         Me.TitleLabel.Caption = Title
         Me.LabelMessage.value = MessageText
         If OpenLog Then Me.CommandButtonLog.Visible = True
-    Case 2                                                                ' Info
+    Case 2                                       ' Info
         Me.TitleIcon.Picture = icons.IconInfo.Picture
         Me.TitleLabel.Caption = Title
         Me.LabelMessage.value = MessageText

@@ -26,6 +26,7 @@ End Sub
 Private Sub UserForm_Initialize()
 
     Me.TitleLabel.Caption = "Module-Manager"
+    Me.LabelSystemTime.Caption = Now
 
 End Sub
 

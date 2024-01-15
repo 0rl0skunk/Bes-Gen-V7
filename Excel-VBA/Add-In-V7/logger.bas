@@ -11,12 +11,12 @@ Option Explicit
 Public Const LogFile         As String = "C:\Users\Public\Documents\TinLine\Bes-Gen_V7.log"
 Public Enum ErrorLevel
     LogError = 0
-    Logwarning = 1
+    LogWarning = 1
     LogInfo = 2
     LogTrace = 3
 End Enum
 
-Const LogDepth = 3
+Const LogDepth = 1
 ' 3 = Trace
 ' 2 = Info
 ' 1 = Warnings
@@ -61,9 +61,9 @@ Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
     l_StringDateTimeNow = Now
     l_StringToday = Format$(l_StringDateTimeNow, "YYYY-MM-DD hh:mm:ss")
     ' concatenate date and what the user wants logged
-    l_StringLogStatement = "| " & Join(Array(l_StringToday, l_StringSource, Typstr, a_stringLogThis), " | ") & " |"
+    l_StringLogStatement = Join(Array(l_StringToday, l_StringSource, Typstr, a_stringLogThis), " | ")
     ' send to TTY
-Debug.Print (l_StringLogStatement)
+    Debug.Print (l_StringLogStatement)
     ' append (not write) to disk
     Open LogFile For Append As #1
     Print #1, l_StringLogStatement
@@ -71,16 +71,10 @@ Debug.Print (l_StringLogStatement)
 End Sub
 
 Public Sub LogClear()
-Debug.Print ("Erasing the previous logs.")
+    Debug.Print ("Erasing the previous logs.")
     Open LogFile For Output As #1
     Print #1, ""
     Close #1
-End Sub
-
-Private Sub samples()
-    'for error Logging:
-    writelog LogError, "Where did the error occure?" & vbNewLine & _
-                      err.Number & vbNewLine & err.Description & vbNewLine & err.source
 End Sub
 
 
