@@ -1,8 +1,11 @@
 Attribute VB_Name = "TinLine"
 Attribute VB_Description = "Funktionen welche das TinLine Betreffen."
-Option Explicit
+
 '@Folder("TinLine")
 '@ModuleDescription "Funktionen welche das TinLine Betreffen."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Public Sub setTinProject(ByVal path As String)
     ' Aktuelles Projekt als aktiv setzen

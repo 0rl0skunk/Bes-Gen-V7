@@ -12,7 +12,12 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Attribute VB_Description = "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
+
 '@Folder "Plankopf"
+'@ModuleDescription "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
+'@Version "Release V1.0.0"
+
 Option Explicit
 
 Public Enum EnumIcon
@@ -28,30 +33,32 @@ Private shPData              As Worksheet
 Private shGebäude            As Worksheet
 
 Public Sub setIcons(ByVal icon As EnumIcon)
-
+    ' Icon anpassen für erstellen oder Bearbeiten
     Select Case icon
-        Case 0
-            Me.TitleIcon.Picture = icons.IconAddProperties.Picture
-            Me.TitleLabel.Caption = "Plankopf erstellen"
-        Case 1
-            Me.TitleIcon.Picture = icons.IconEditProperties.Picture
-            Me.TitleLabel.Caption = "Plankopf bearbeiten"
+    Case 0
+        Me.TitleIcon.Picture = icons.IconAddProperties.Picture
+        Me.TitleLabel.Caption = "Plankopf erstellen"
+    Case 1
+        Me.TitleIcon.Picture = icons.IconEditProperties.Picture
+        Me.TitleLabel.Caption = "Plankopf bearbeiten"
     End Select
 
 End Sub
 
 Private Sub CommandButtonCreate_Click()
-
+    ' Plankopf in Datenbank schreiben
     If Me.CommandButtonCreate.Caption = "Update" Then
+        ' Ersetzen / Updaten
         If PlankopfFactory.ReplaceInDatabase(FormToPlankopf) Then Unload Me
     Else
+        ' Neu erstellen
         If PlankopfFactory.AddToDatabase(FormToPlankopf) Then Unload Me
     End If
 
 End Sub
 
 Private Sub CommandButtonBeschriftungAktualisieren_Click()
-
+    ' Beschriftungen und Plannummer neu erstellen
     Set pPlankopf = FormToPlankopf
     Me.TextBoxBeschriftungPlannummer.value = pPlankopf.Plannummer
     Me.TextBoxBeschriftungDateiname.value = pPlankopf.PDFFileName
@@ -64,7 +71,7 @@ Private Sub CommandButtonBeschriftungAktualisieren_Click()
 End Sub
 
 Private Sub CommandButtonIndexErstellen_Click()
-
+    ' Neuer Index für den geöffneten Plankopf erstellen
     Dim Index                As IIndex: Set Index = IndexFactory.Create( _
         IDPlan:=pPlankopf.ID, _
         GezeichnetPerson:=Me.TextBoxIndexGez.value, _
@@ -85,7 +92,7 @@ Private Sub CommandButtonIndexErstellen_Click()
 End Sub
 
 Private Sub CommandButtonIndexLöschen_Click()
-
+    ' Ausgewählten Index löschen
     Dim ID                   As String
     ID = Me.ListViewIndex.SelectedItem.ListSubItems(1)
     IndexFactory.DeleteFromDatabase ID
@@ -98,7 +105,7 @@ Private Sub CommandButtonIndexLöschen_Click()
 End Sub
 
 Private Sub CommandLayoutWählen_Click()
-
+    ' UserFormLayout öffnen und diese übernehmen
     Dim frm                  As New UserFormLayout
     frm.load Me.ComboBoxLayoutFormat.value, Me.TextBoxLayoutMasstab.value, Me.MultiPageTyp.value
     frm.Show 1
@@ -110,14 +117,14 @@ Private Sub CommandLayoutWählen_Click()
 End Sub
 
 '@Ignore ProcedureNotUsed
-Private Sub EditDWG_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-
+Private Sub EditDWG_MouseDown(ByVal Button As Long, ByVal Shift As Long, ByVal X As Single, ByVal Y As Single)
+    ' DWG-Datei im TinLine öffnen
     TinLine.setTinProject pProjekt.ProjektOrdnerCAD
     Select Case Me.MultiPageTyp.value
-        Case 0                                   'Plan
-            TinLine.setTinPlanBibliothek
-        Case 1                                   'Prinzip
-            TinLine.setTinPrinzipBibiothek
+    Case 0                                                                'Plan
+        TinLine.setTinPlanBibliothek
+    Case 1                                                                'Prinzip
+        TinLine.setTinPrinzipBibiothek
     End Select
 
     CreateObject("Shell.Application").Open (FormToPlankopf.dwgFile)
@@ -125,30 +132,45 @@ Private Sub EditDWG_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, B
 End Sub
 
 Private Sub MultiPageTyp_Change()
+    ' Anpassungen wenn der Plantyp geändert wird
     ' TODO Remove Geschoss "Gesamt" from Plan and Schema Beschriftungen
     Select Case Me.MultiPageTyp.value
-        Case 0                                   'PLA
-            Me.ComboBoxGebäude.Enabled = True
-            Me.ComboBoxGebäudeTeil.Enabled = True
-            Me.ComboBoxGeschoss.Enabled = True
-        Case 1                                   'SCH
-            Me.ComboBoxGebäude.Enabled = True
-            Me.ComboBoxGebäudeTeil.Enabled = True
-            Me.ComboBoxGeschoss.Enabled = True
-        Case 2                                   'PRI
-            Me.ComboBoxGebäude.value = Me.ComboBoxGebäude.List(0)
-            Me.ComboBoxGebäudeTeil.value = Me.ComboBoxGebäudeTeil.List(0)
-            Me.ComboBoxGeschoss.value = Me.ComboBoxGeschoss.List(0)
-            Me.ComboBoxGebäude.Enabled = False
-            Me.ComboBoxGebäudeTeil.Enabled = False
-            Me.ComboBoxGeschoss.Enabled = False
+    Case 0                                                                'PLA
+        Me.ComboBoxGebäude.Enabled = True
+        Me.ComboBoxGebäudeTeil.Enabled = True
+        Me.ComboBoxGeschoss.Enabled = True
+    Case 1                                                                'SCH
+        Me.ComboBoxGebäude.Enabled = True
+        Me.ComboBoxGebäudeTeil.Enabled = True
+        Me.ComboBoxGeschoss.Enabled = True
+    Case 2                                                                'PRI
+        Me.ComboBoxGebäude.value = "Gesamt"
+        Me.ComboBoxGebäudeTeil.value = "Gesamt"
+        Me.ComboBoxGeschoss.value = "Gesamt"
+        Me.ComboBoxGebäude.Enabled = False
+        Me.ComboBoxGebäudeTeil.Enabled = False
+        Me.ComboBoxGeschoss.Enabled = False
     End Select
+
+    If Me.ComboBoxGebäude.ListCount = 1 Then
+        Me.ComboBoxGebäude.value = Me.ComboBoxGebäude.List(0)
+        Me.ComboBoxGebäude.Enabled = False
+    Else
+        Me.ComboBoxGebäude.Enabled = True
+    End If
+
+    If Me.ComboBoxGebäudeTeil.ListCount = 1 Then
+        Me.ComboBoxGebäudeTeil.value = Me.ComboBoxGebäudeTeil.List(0)
+        Me.ComboBoxGebäudeTeil.Enabled = False
+    Else
+        Me.ComboBoxGebäudeTeil.Enabled = True
+    End If
 
 End Sub
 
 '@Ignore ProcedureNotUsed
-Private Sub Preview_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-
+Private Sub Preview_MouseDown(ByVal Button As Long, ByVal Shift As Long, ByVal X As Single, ByVal Y As Single)
+    ' Plankopfpreview öffnen
     Dim frm                  As New UserFormPlankopfPreview
     frm.LoadClass FormToPlankopf, pProjekt
     frm.Show 1
@@ -204,16 +226,6 @@ Private Sub UserForm_Initialize()
     ' Gebäude
     Me.ComboBoxGebäude.Clear
     Me.ComboBoxGebäude.List = getList("PRO_Gebäude")
-    If Me.ComboBoxGebäude.ListCount = 1 Then
-        Me.ComboBoxGebäude.value = Me.ComboBoxGebäude.List(0)
-        Me.ComboBoxGebäude.Enabled = False
-    Else
-        Me.ComboBoxGebäude.Enabled = True
-    End If
-
-    ' Geschoss
-    'Me.ComboBoxGeschoss.Clear
-    Me.ComboBoxGeschoss.Enabled = Me.ComboBoxGebäude.ListCount = 1
 
     Me.MultiPageTyp.value = 0
     ' Formate
@@ -225,7 +237,7 @@ Private Sub UserForm_Initialize()
     Me.TextBoxLayoutMasstab.value = "1:50"
     Me.LabelProjektnummer.Caption = Globals.shPData.range("ADM_Projektnummer").value
 
-    Me.TextBoxPlanInfoDatumGezeichnet.value = Format(Now, "DD.MM.YYYY")
+    Me.TextBoxPlanInfoDatumGezeichnet.value = Format$(Now, "DD.MM.YYYY")
     Me.TextBoxPlanInfoKürzelGezeichnet.value = getUserName
 
     writelog LogInfo, "UserFormPlankopf > Inizialise complete"
@@ -239,7 +251,7 @@ Private Sub CommandButtonClose_Click()
 End Sub
 
 Private Sub LoadIndexes()
-
+    ' Indexe vom Plankopf laden und ListView abfüllen
     Dim ind                  As IIndex
     Dim li                   As ListItem
 
@@ -251,8 +263,8 @@ Private Sub LoadIndexes()
         .FullRowSelect = True
         With .ColumnHeaders
             .Clear
-            .Add , , "", 20
-            .Add , , "", 0
+            .Add , , vbNullString, 20
+            .Add , , vbNullString, 0
             .Add , , "Index", 20
             .Add , , "Gezeichnet", 40
             .Add , , "Datum", 60
@@ -271,33 +283,35 @@ Private Sub LoadIndexes()
 
 End Sub
 
-Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional copy As Boolean = False)
-
+Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional ByVal copy As Boolean = False)
+    ' Usercontrols von Klasse laden
     Set pProjekt = Projekt
 
     Set pPlankopf = Plankopf
     Set Plankopf = Nothing
     Dim Planstand            As String
-    Dim Plantyp              As Integer
+    Dim PLANTYP              As Long
     Dim Gewerk               As String
     Dim UnterGewerk          As String
 
 
-    Select Case pPlankopf.Plantyp
-        Case "PLA"
-            Me.MultiPageTyp.value = 0
-            Me.ComboBoxEPHGewerk.value = pPlankopf.Gewerk
-            Me.ComboBoxEPUGewerk.value = pPlankopf.UnterGewerk
-            Me.ComboBoxEPArt.value = pPlankopf.Planart
-        Case "SCH"
-            Me.MultiPageTyp.value = 1
-            Me.ComboBoxESHGewerk.value = pPlankopf.Gewerk
-            Me.ComboBoxESUGewerk.value = pPlankopf.UnterGewerk
-        Case "PRI"
-            Me.MultiPageTyp.value = 2
-            Me.ComboBoxPRHGewerk.value = pPlankopf.Gewerk
-            Me.ComboBoxPRUGewerk.value = pPlankopf.UnterGewerk
+    Select Case pPlankopf.PLANTYP
+    Case "PLA"
+        Me.MultiPageTyp.value = 0
+        Me.ComboBoxEPHGewerk.value = pPlankopf.Gewerk
+        Me.ComboBoxEPUGewerk.value = pPlankopf.UnterGewerk
+        Me.ComboBoxEPArt.value = pPlankopf.Planart
+    Case "SCH"
+        Me.MultiPageTyp.value = 1
+        Me.ComboBoxESHGewerk.value = pPlankopf.Gewerk
+        Me.ComboBoxESUGewerk.value = pPlankopf.UnterGewerk
+    Case "PRI"
+        Me.MultiPageTyp.value = 2
+        Me.ComboBoxPRHGewerk.value = pPlankopf.Gewerk
+        Me.ComboBoxPRUGewerk.value = pPlankopf.UnterGewerk
     End Select
+
+    ' füllt die Eingabefelder gemäss geladenem Objekt aus
     Me.ComboBoxGebäude.value = pPlankopf.Gebäude
     Me.ComboBoxGebäudeTeil.value = pPlankopf.Gebäudeteil
     Me.ComboBoxGeschoss.value = pPlankopf.Geschoss
@@ -311,6 +325,8 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
     Me.LabelDWGFileName.Caption = pPlankopf.DWGFileName
     Me.LabelXMLFileName.Caption = pPlankopf.XMLFileName
     Me.LabelFolderName.Caption = pPlankopf.FolderName
+    Me.TBAnlageteil.value = pPlankopf.AnlageNummer
+    Me.ComboBoxESAnlageTyp.value = pPlankopf.AnlageTyp
     LoadIndexes
 
     Me.ComboBoxStand.value = pPlankopf.LayoutPlanstand
@@ -348,18 +364,19 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
 End Sub
 
 Public Sub CopyPlankopf(Plankopf As IPlankopf, ByVal Projekt As IProjekt, ByVal CopyIndex As Boolean)
-
+    ' Plankopf Kopieren mit oder ohne Indexe
     If CopyIndex Then
         Set Plankopf.Indexes = PlankopfCopyFrom.Indexes
         Set PlankopfCopyFrom = Nothing
     End If
+
     LoadClass Plankopf, Projekt, True
 
 End Sub
 
 Private Function FormToPlankopf() As IPlankopf
-
-    Dim Plantyp              As String
+    ' UserForm in ein Plankopf-Objekt umwandeln
+    Dim PLANTYP              As String
     Dim Gewerk               As String
     Dim UnterGewerk          As String
     Dim ID                   As String
@@ -367,23 +384,24 @@ Private Function FormToPlankopf() As IPlankopf
     If Me.BesID.Caption = "ID" Then ID = getNewID(IDPlankopf)
 
     Select Case Me.MultiPageTyp.value
-        Case 0
-            Plantyp = "PLA"
-            Gewerk = Me.ComboBoxEPHGewerk.value
-            UnterGewerk = Me.ComboBoxEPUGewerk.value
-        Case 1
-            Plantyp = "SCH"
-            Gewerk = Me.ComboBoxESHGewerk.value
-            UnterGewerk = Me.ComboBoxESUGewerk.value
-        Case 2
-            Plantyp = "PRI"
-            Gewerk = Me.ComboBoxPRHGewerk.value
-            UnterGewerk = Me.ComboBoxPRUGewerk.value
-        Case Else
-            Plantyp = "PLA"
-            Gewerk = Me.ComboBoxEPHGewerk.value
-            UnterGewerk = Me.ComboBoxEPUGewerk.value
+    Case 0
+        PLANTYP = "PLA"
+        Gewerk = Me.ComboBoxEPHGewerk.value
+        UnterGewerk = Me.ComboBoxEPUGewerk.value
+    Case 1
+        PLANTYP = "SCH"
+        Gewerk = Me.ComboBoxESHGewerk.value
+        UnterGewerk = Me.ComboBoxESUGewerk.value
+    Case 2
+        PLANTYP = "PRI"
+        Gewerk = Me.ComboBoxPRHGewerk.value
+        UnterGewerk = Me.ComboBoxPRUGewerk.value
+    Case Else
+        PLANTYP = "PLA"
+        Gewerk = Me.ComboBoxEPHGewerk.value
+        UnterGewerk = Me.ComboBoxEPUGewerk.value
     End Select
+
     If pProjekt Is Nothing Then Set pProjekt = Globals.Projekt
     Set FormToPlankopf = PlankopfFactory.Create( _
                          Projekt:=pProjekt, _
@@ -399,13 +417,15 @@ Private Function FormToPlankopf() As IPlankopf
                          Format:=Me.ComboBoxLayoutFormat.value, _
                          Masstab:=Me.TextBoxLayoutMasstab.value, _
                          Stand:=Me.ComboBoxStand.value, _
-                         Plantyp:=Plantyp, _
+                         PLANTYP:=PLANTYP, _
                          Planart:=Me.ComboBoxEPArt.value, _
                          TinLineID:=Me.TinLineID.Caption, _
                          SkipValidation:=False, _
                          Planüberschrift:=Me.TextBoxPlanüberschrift.value, _
-                         ID:=Me.BesID.Caption _
-                              )
+                         ID:=Me.BesID.Caption, _
+                         AnlageTyp:=Me.ComboBoxESAnlageTyp.value, _
+                         AnlageNummer:=Me.TBAnlageteil.value _
+                                        )
 
 End Function
 
@@ -421,7 +441,7 @@ Private Sub ComboBoxEPUGewerk_Change()
 
     Me.ComboBoxEPUGewerk.BackColor = SystemColorConstants.vbWindowBackground
 
-    If Me.ComboBoxEPUGewerk.value = "" Then
+    If Me.ComboBoxEPUGewerk.value = vbNullString Then
         Me.ComboBoxEPUGewerk.value = "-- Bitte wählen --"
     End If
 
@@ -429,15 +449,13 @@ End Sub
 
 Private Sub ComboBoxEPHGewerk_Change()
 
-    Dim row                  As Variant
-    Dim col                  As Integer
-    Dim lastrow              As Long
+    Dim row                  As Variant                                   ' Reihe in welcher der Kontext gefunden wurde
+    Dim col                  As Long                                      ' Spalte in welcher der Kontext gefunden wurde
+    Dim lastrow              As Long                                      ' Die Letzte verwendete Zeile in der Spalte
     Dim ws                   As Worksheet: Set ws = Globals.shPData
 
-
-    'If Not Dev Then On Error GoTo ErrMsg
-
     If Me.ComboBoxEPHGewerk.value = "-- Bitte wählen --" Then
+        ' wenn keine Auswahl getroffen wurde
         Me.ComboBoxEPUGewerk.Enabled = False
         Me.ComboBoxEPUGewerk.Clear
         Me.ComboBoxEPUGewerk.value = "-- Bitte wählen --"
@@ -447,7 +465,7 @@ Private Sub ComboBoxEPHGewerk_Change()
         Exit Sub
     End If
 
-    If Me.ComboBoxEPHGewerk.value = "" Then Exit Sub
+    If Me.ComboBoxEPHGewerk.value = vbNullString Then Exit Sub
 
     Me.ComboBoxEPArt.Enabled = True
     Me.ComboBoxEPUGewerk.Enabled = True
@@ -457,27 +475,35 @@ Private Sub ComboBoxEPHGewerk_Change()
     HGewerk = WLookup(Me.ComboBoxEPHGewerk.value, ws.range("PRO_Hauptgewerk"), 2)
 
     If Not IsError(Application.Match(HGewerk & " PLA", ws.range("10:10"), 0)) Then
-1       col = Application.Match(HGewerk & " PLA", ws.range("10:10"), 0)
-        lastrow = Application.CountA(ws.Cells(13, col).EntireColumn) + 10
-        Me.ComboBoxEPUGewerk.Clear
-        For row = 13 To lastrow
-            If ws.Cells(row, col).value <> "" Then
+        ' checkt ob das Gewerk vorhanden ist und verwendet werden kann
+1       col = Application.Match(HGewerk & " PLA", ws.range("10:10"), 0)   ' findet die aktuelle Spalte mit dem ausgewählten Wert für das Hauptgewerk
+        lastrow = Application.CountA(ws.Cells(13, col).EntireColumn) + 10 ' findet die Letzte Reihe in welcher der Wert ausgewählt wurde
+
+        Me.ComboBoxEPUGewerk.Clear                                        ' löscht die aktuelle Liste der ComboBox
+
+        For row = 13 To lastrow                                           ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
+            If ws.Cells(row, col).value <> vbNullString Then
                 Me.ComboBoxEPUGewerk.AddItem ws.Cells(row, col).value
             End If
         Next row
-        Me.ComboBoxEPUGewerk.value = "-- Bitte wählen --"
-2       col = Application.Match(HGewerk, ws.range("9:9"), 0)
-        lastrow = Application.CountA(ws.Cells(13, col).EntireColumn) + 10
-        Me.ComboBoxEPArt.Clear
-        For row = 13 To lastrow
-            If ws.Cells(row, col).value <> "" Then
+
+        Me.ComboBoxEPUGewerk.value = "-- Bitte wählen --"                 ' Setzt den default wert der ComboBox
+
+        ' --- Planart ---
+2       col = Application.Match(HGewerk, ws.range("9:9"), 0)              ' findet die aktuelle Spalte mit dem ausgewählten Wert für das Hauptgewerk
+        lastrow = Application.CountA(ws.Cells(13, col).EntireColumn) + 10 ' findet die Letzte Reihe in welcher der Wert ausgewählt wurde
+
+        Me.ComboBoxEPArt.Clear                                            ' löscht die aktuelle Liste der ComboBox
+
+        For row = 13 To lastrow                                           ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
+            If ws.Cells(row, col).value <> vbNullString Then
                 Me.ComboBoxEPArt.AddItem ws.Cells(row, col).value
             End If
         Next row
-        Me.ComboBoxEPArt.value = "-- Bitte wählen --"
-    End If
 
-    Exit Sub
+        Me.ComboBoxEPArt.value = "-- Bitte wählen --"                     ' Setzt den default wert der ComboBox
+
+    End If
 
 End Sub
 
@@ -493,13 +519,11 @@ Private Sub ComboBoxESAnlageTyp_Change()
 End Sub
 
 Private Sub ComboBoxESHGewerk_Change()
-
+    ' Funktionsweise gem. Kommentaren ComboboxEPHGewerk
     Dim row                  As Variant
-    Dim col                  As Integer
+    Dim col                  As Long
     Dim lastrow              As Long
     Dim ws                   As Worksheet: Set ws = Globals.shPData
-
-    'If Not Dev Then On Error GoTo ErrMsg
 
     Dim HGewerk              As String
     HGewerk = WLookup(Me.ComboBoxESHGewerk.value, ws.range("PRO_Hauptgewerk"), 2)
@@ -514,26 +538,27 @@ Private Sub ComboBoxESHGewerk_Change()
         Me.ComboBoxESUGewerk.value = "-- Bitte wählen --"
         Exit Sub
     End If
-1   col = Application.WorksheetFunction.Match(HGewerk & " SCH", ws.range("10:10"), 0) 'get collumn of currently selected Gewerk
-2   lastrow = Application.WorksheetFunction.CountA(ws.Cells(13, col).EntireColumn) + 11 'get last row of said collumn
+
+1   col = Application.WorksheetFunction.Match(HGewerk & " SCH", ws.range("10:10"), 0)
+2   lastrow = Application.WorksheetFunction.CountA(ws.Cells(13, col).EntireColumn) + 11
+
     Me.ComboBoxESUGewerk.Clear
+
     Me.ComboBoxESAnlageTyp.Enabled = True
     Me.ComboBoxESUGewerk.Enabled = True
+
     For row = 13 To lastrow
-        If ws.Cells(row, col).value <> "" Then
+        If ws.Cells(row, col).value <> vbNullString Then
             Me.ComboBoxESUGewerk.AddItem ws.Cells(row, col).value
         End If
     Next row
+
     Me.ComboBoxESUGewerk.value = "-- Bitte wählen --"
-
-    Me.ComboBoxESHGewerk.BackColor = SystemColorConstants.vbWindowBackground
-
-    Exit Sub
 
 End Sub
 
 Private Sub ComboBoxESUGewerk_Change()
-
+    ' Funktionsweise gem. Kommentaren ComboboxEPHGewerk
     Dim col                  As Variant
     Dim row                  As Variant
     Dim lastrow              As Variant
@@ -542,42 +567,37 @@ Private Sub ComboBoxESUGewerk_Change()
     Me.ComboBoxESUGewerk.BackColor = SystemColorConstants.vbWindowBackground
 
     If Me.ComboBoxESUGewerk.value = "-- Bitte wählen --" Then Exit Sub
-    If Me.ComboBoxESUGewerk.value = "" Then Exit Sub
+    If Me.ComboBoxESUGewerk.value = vbNullString Then Exit Sub
     Select Case Me.ComboBoxESHGewerk.value
-        Case "Elektro"
-            If Not IsError(Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.value, ws.range("11:11"), 0)) Then
-1               col = Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.value, ws.range("11:11"), 0)
-                lastrow = Application.WorksheetFunction.CountA(ws.Cells(13, col).EntireColumn) + 11
-                Me.ComboBoxESAnlageTyp.Clear
-                For row = 12 To lastrow
-                    If ws.Cells(row, col).value <> "" Then
-                        Me.ComboBoxESAnlageTyp.AddItem ws.Cells(row, col).value
-                    End If
-                Next row
-                Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
-            Else
-                Me.ComboBoxESAnlageTyp.Clear
-                Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
-            End If
-        Case ""
-
-        Case Else
-            'HLKKS
+    Case "Elektro"
+        If Not IsError(Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.value, ws.range("12:12"), 0)) Then
+1           col = Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.value, ws.range("12:12"), 0)
+            lastrow = Application.WorksheetFunction.CountA(ws.Cells(13, col).EntireColumn) + 12
+            Me.ComboBoxESAnlageTyp.Clear
+            For row = 13 To lastrow
+                If ws.Cells(row, col).value <> vbNullString Then
+                    Me.ComboBoxESAnlageTyp.AddItem ws.Cells(row, col).value
+                End If
+            Next row
+            Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
+        Else
             Me.ComboBoxESAnlageTyp.Clear
             Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
+        End If
+    Case vbNullString
+    Case Else
+        Me.ComboBoxESAnlageTyp.Clear
+        Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
     End Select
 
 End Sub
 
 Private Sub ComboBoxPRHGewerk_Change()
-
+    ' Funktionsweise gem. Kommentaren ComboboxEPHGewerk
     Dim row                  As Variant
-    Dim col                  As Integer
+    Dim col                  As Long
     Dim lastrow              As Long
     Dim ws                   As Worksheet: Set ws = Globals.shPData
-
-
-    If Not Dev Then On Error GoTo ErrMsg
 
     Me.ComboBoxPRHGewerk.BackColor = SystemColorConstants.vbWindowBackground
 
@@ -592,24 +612,25 @@ Private Sub ComboBoxPRHGewerk_Change()
     HGewerk = WLookup(Me.ComboBoxPRHGewerk.value, ws.range("PRO_Hauptgewerk"), 2)
 
     If Not IsError(Application.WorksheetFunction.Match(HGewerk & " PRI", ws.range("10:10"), 0)) Then
+
 1       col = Application.WorksheetFunction.Match(HGewerk & " PRI", ws.range("10:10"), 0)
         lastrow = Application.WorksheetFunction.CountA(ws.Cells(13, col).EntireColumn) + 10
+
         Me.ComboBoxPRUGewerk.Clear
+
         Me.ComboBoxPRUGewerk.Enabled = True
+
         For row = 13 To lastrow
-            If ws.Cells(row, col).value <> "" Then
+            If ws.Cells(row, col).value <> vbNullString Then
                 Me.ComboBoxPRUGewerk.AddItem ws.Cells(row, col).value
             End If
         Next row
+
     Else
         Me.ComboBoxPRUGewerk.value = "-- Bitte wählen --"
     End If
 
     Me.ComboBoxPRHGewerk.BackColor = SystemColorConstants.vbWindowBackground
-
-    Exit Sub
-
-ErrMsg:
 
 End Sub
 
@@ -620,18 +641,15 @@ Private Sub ComboBoxPRUGewerk_Change()
 End Sub
 
 Private Sub ComboBoxGebäude_Change()
-
+    ' Funktionsweise gem. Kommentaren ComboboxEPHGewerk
     Me.ComboBoxGebäude.BackColor = SystemColorConstants.vbWindowBackground
-    'get current building column
     Dim col                  As Long
     Dim lastrow              As Long
-
     Dim arr()                As Variant
     Dim tmparr()             As Variant
-
     Dim rng                  As range
-
-    'If Not Dev Then On Error GoTo ErrMsg
+    Dim ws                   As Worksheet
+    Set ws = Globals.shGebäude
 
     If Me.ComboBoxGebäude.value = "-- Bitte wählen --" Then
         Me.ComboBoxGeschoss.Enabled = False
@@ -639,41 +657,23 @@ Private Sub ComboBoxGebäude_Change()
         Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
         Exit Sub
     End If
-    'On Error Resume Next
-    If Not IsError(Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.value).Column) Then
-1       col = Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.value).Column
-        lastrow = Globals.shGebäude.Cells(Globals.shGebäude.rows.Count, col).End(xlUp).row
+
+    If Not IsError(ws.range("1:1").Find(Me.ComboBoxGebäude.value).Column) Then
+
+1       col = ws.range("1:1").Find(Me.ComboBoxGebäude.value).Column
+        lastrow = ws.Cells(ws.rows.Count, col).End(xlUp).row
+
         Me.ComboBoxGeschoss.Clear
+
         Me.ComboBoxGeschoss.Enabled = True
-        Set rng = Globals.shGebäude.range(Globals.shGebäude.Cells(5, col), Globals.shGebäude.Cells(lastrow, col + 1))
-        arr() = rng.Resize(rng.rows.Count, 1)
+        Set rng = ws.range(Globals.shGebäude.Cells(5, col), ws.Cells(lastrow, col + 1))
+        arr() = rng.Resize(rng.rows.Count, 1).Offset(1, 0)
         tmparr() = RemoveBlanksFromStringArray(arr())
         Me.ComboBoxGeschoss.List = tmparr()
         Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
     Else
         Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
     End If
-
-    If Me.ComboBoxGebäude.ListCount = 1 Then
-        ' if there is only one listitem in Gebäude
-        If Not IsError(Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.value).Column) Then
-2           col = Globals.shGebäude.range("1:1").Find(Me.ComboBoxGebäude.value).Column
-            lastrow = Globals.shGebäude.Cells(Globals.shGebäude.rows.Count, col).End(xlUp).row
-            Me.ComboBoxGeschoss.Clear
-            Me.ComboBoxGeschoss.Enabled = True
-            Set rng = Globals.shGebäude.range(Globals.shGebäude.Cells(5, col), Globals.shGebäude.Cells(lastrow, col + 1))
-Debug.Print rng.Address
-            arr() = rng.Resize(rng.rows.Count, 1)
-            tmparr() = RemoveBlanksFromStringArray(arr())
-            Me.ComboBoxGeschoss.List = tmparr()
-            Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
-        Else
-            Me.ComboBoxGeschoss.value = "-- Bitte wählen --"
-        End If
-    End If
-    On Error GoTo 0
-
-    Exit Sub
 
 End Sub
 

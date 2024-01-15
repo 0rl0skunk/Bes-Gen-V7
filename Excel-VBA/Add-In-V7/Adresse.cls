@@ -8,12 +8,15 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Adress Objekt für einfacheres Management einer Adresse."
-Option Explicit
+
+'@Folder "Adresse"
 '@ModuleDescription "Adress Objekt für einfacheres Management einer Adresse."
+'@Version "Release V1.0.0"
 
 Implements IAdresse
 
-'@Folder "Adresse"
+Option Explicit
+
 Private Type TAdresse
     Strasse As String
     PLZ As String

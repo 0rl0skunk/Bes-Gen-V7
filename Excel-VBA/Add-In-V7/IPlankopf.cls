@@ -8,10 +8,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Interface für 'Plankopf.cls'."
+
 '@Folder "Plankopf"
 '@Interface
 '@ModuleDescription "Interface für 'Plankopf.cls'."
-
+'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -23,10 +24,15 @@ End Property
 Public Property Get IDTinLine() As String
 End Property
 
+Public Property Get TinLinePKNr() As String
+End Property
+Public Property Let TinLinePKNr(ByVal NewPKNr As String)
+End Property
+
 Public Property Let IDTinLine(ByVal newID As String)
 End Property
 
-Public Property Get Plantyp() As String
+Public Property Get PLANTYP() As String
 End Property
 
 Public Property Get Planart() As String
@@ -71,6 +77,9 @@ End Property
 Public Property Get Planüberschrift() As String
 End Property
 
+Public Property Get PlanBeschrieb() As String
+End Property
+
 Public Property Get CustomPlanüberschrift() As Boolean
 End Property
 
@@ -80,7 +89,7 @@ End Property
 Public Property Get Plannummer() As String
 End Property
 
-Public Property Get LayoutGrösse() As String
+Public Property Get LayoutGrösse(Optional ByVal Layout As Boolean = False) As String
 End Property
 
 Public Property Get LayoutMasstab() As String
@@ -120,4 +129,10 @@ End Sub
 
 Public Sub ClearIndex()
 End Sub
+
+Public Property Get AnlageTyp() As String
+End Property
+
+Public Property Get AnlageNummer() As String
+End Property
 

@@ -8,11 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Task Objekt für einfacheres Management von Tasks im Projekt."
-'@IgnoreModule VariableNotUsed
-Option Explicit
-'@Folder "Tasks"
-'@ModuleDescription "Task Objekt für einfacheres Management von Tasks im Projekt."
 
+'@Folder "Tasks"
+'@IgnoreModule VariableNotUsed
+'@ModuleDescription "Task Objekt für einfacheres Management von Tasks im Projekt."
+'@Version "Release V1.0.0"
+
+Option Explicit
 
 Private Type ttask
     ErfasstAm As String
@@ -24,7 +26,7 @@ Private Type ttask
     Geschoss As String
     Erledigt As Boolean
     Priorität As Long
-    text As String * 1024
+    Text As String * 1024
     Pläne As New Collection
 End Type
 
@@ -32,16 +34,16 @@ Private This                 As ttask
 Private Inputs               As ttask
 
 Public Sub Filldata( _
-       ErfasstAm As String, _
-       ErfasstVon As String, _
-       FälligAm As String, _
-       Gewerk As String, _
-       Gebäude As String, _
-       Gebäudeteil As String, _
-       Geschoss As String, _
-       Erledigt As Boolean, _
-       Priorität As Long, _
-       text As String _
+       ByVal ErfasstAm As String, _
+       ByVal ErfasstVon As String, _
+       ByVal FälligAm As String, _
+       ByVal Gewerk As String, _
+       ByVal Gebäude As String, _
+       ByVal Gebäudeteil As String, _
+       ByVal Geschoss As String, _
+       ByVal Erledigt As Boolean, _
+       ByVal Priorität As Long, _
+       ByVal Text As String _
        )
 
     Inputs.ErfasstAm = ErfasstAm
@@ -53,7 +55,7 @@ Public Sub Filldata( _
     Inputs.Gebäudeteil = Gebäudeteil
     Inputs.Erledigt = Erledigt
     Inputs.Priorität = Priorität
-    Inputs.text = text
+    Inputs.Text = Text
 
     If ValidInputs Then
         This = Inputs
@@ -98,8 +100,8 @@ Public Property Get Priorität() As Long
     Priorität = This.Priorität
 End Property
 
-Public Property Get text() As String
-    text = This.text
+Public Property Get Text() As String
+    Text = This.Text
 End Property
 
 Private Function ValidInputs() As Boolean
