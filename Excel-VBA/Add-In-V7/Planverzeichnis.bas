@@ -1,10 +1,8 @@
 Attribute VB_Name = "Planverzeichnis"
-
 '@Folder("Planverzeichnis")
 '@Version "Release V1.0.0"
 
 Option Explicit
-
 Private Enum Sorting
     ELEPLA = 0
     ELESCH = 1
@@ -50,21 +48,21 @@ Public Sub Create()
     Set TempWS = Application.ActiveWorkbook.Worksheets.Add
     Dim row                  As Long
     row = 1
-    For Each Plankopf In Globals.Planköpfe
+    For Each Plankopf In Globals.PlankÃ¶pfe
         With TempWS
-            Select Case Plankopf.PLANTYP
-            Case "PLA"
-                .Cells(row, 1).value = Plankopf.Plannummer
-                .Cells(row, 2).value = Plankopf.Planart
-                .Cells(row, 3).value = Plankopf.UnterGewerk
-                .Cells(row, 4).value = Plankopf.Geschoss
-                .Cells(row, 5).value = Plankopf.LayoutMasstab
-            Case "SCH"
-                .Cells(row, 1).value = Plankopf.Plannummer
-                .Cells(row, 2).value = Plankopf.UnterGewerk
-            Case "PRI"
-                .Cells(row, 1).value = Plankopf.Plannummer
-                .Cells(row, 2).value = Plankopf.UnterGewerk
+            Select Case Plankopf.Plantyp
+                Case "PLA"
+                    .Cells(row, 1).value = Plankopf.Plannummer
+                    .Cells(row, 2).value = Plankopf.Planart
+                    .Cells(row, 3).value = Plankopf.UnterGewerk
+                    .Cells(row, 4).value = Plankopf.Geschoss
+                    .Cells(row, 5).value = Plankopf.LayoutMasstab
+                Case "SCH"
+                    .Cells(row, 1).value = Plankopf.Plannummer
+                    .Cells(row, 2).value = Plankopf.UnterGewerk
+                Case "PRI"
+                    .Cells(row, 1).value = Plankopf.Plannummer
+                    .Cells(row, 2).value = Plankopf.UnterGewerk
             End Select
             row = row + 1
             .Cells(row, 1).value = Plankopf.Plannummer
