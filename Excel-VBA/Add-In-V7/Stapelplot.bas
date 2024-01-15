@@ -1,17 +1,28 @@
 Attribute VB_Name = "Stapelplot"
+
 '@Folder("Print")
+'@Version "Release V1.0.0"
+
 Option Explicit
 
-Private a
-Private dsd                  As String           ' Dateiname von Stapelplott Datei
+Private a                    As File
+Private dsd                  As String                                    ' Dateiname von Stapelplott Datei
 Private OutputFolder         As String
-Private NewFiles As Long
-Private OldFiles As Long
-Private pPlanköpfe As Collection
+Private NewFiles             As Long
+Private OldFiles             As Long
+Private pPlanköpfe           As Collection
+
+Public Property Get Planliste() As Collection
+    Set Planliste = pPlanköpfe
+End Property
 
 Sub plotPlanliste()
 
-    Dim fs, a, i             As Integer, search As String
+    Dim fs                   As FileSystemObject
+
+    Dim i                    As Long
+    Dim search               As String
+
     Set fs = CreateObject("Scripting.FileSystemObject")
     Dim scr                  As String
     scr = "C:\Users\Public\Documents\plotter.scr"
@@ -23,44 +34,44 @@ Sub plotPlanliste()
     Dim wsh                  As Object
     Set wsh = VBA.CreateObject("WScript.Shell")
     Dim waitOnReturn         As Boolean: waitOnReturn = True
-    Dim windowStyle          As Integer: windowStyle = 1
-    Dim errorCode            As Integer
-    
+    Dim windowStyle          As Long: windowStyle = 1
+    Dim errorCode            As Long
+
     OldFiles = CountFiles(OutputFolder)
-    
+
     wsh.Run """C:\Program Files\TinLine\TinLine 23-Deu\accoreconsole.exe"" /i ""H:\TinLine\01_Standards\TinBlank.dwg"" /s ""C:\Users\Public\Documents\plotter.scr"" /l EN-US", windowStyle, waitOnReturn
-    
+
     ' File Counting
     If Not CountFiles(OutputFolder) = OldFiles + NewFiles Then
-    Select Case MsgBox("Es wurden nicht alle Pläne geplottet." & vbNewLine & "Soll geprüft werden welche Pläne fehlen?", vbYesNo, "Fehler beim plotten")
-    Case vbYes
-        Checkplot
-    Case vbNo
-    End Select
-    End If
-    Dim CreatedFiles
-    CreatedFiles = CountFiles(OutputFolder) - OldFiles
-    
-    Select Case MsgBox("Es wurden " & CreatedFiles & " von " & NewFiles & " Plänen erstellt." & vbNewLine & "Pfad im Explorer öffnen?", vbYesNo, "Pläne erstellt")
+        Select Case MsgBox("Es wurden nicht alle Pläne geplottet." & vbNewLine & "Soll geprüft werden welche Pläne fehlen?", vbYesNo, "Fehler beim plotten")
         Case vbYes
-            ' open explorer
-            Shell "explorer.exe" & " " & OutputFolder, vbNormalFocus
-            Exit Sub
+            Checkplot
         Case vbNo
-            ' exit sub
-            Exit Sub
+        End Select
+    End If
+    Dim CreatedFiles         As Long
+    CreatedFiles = CountFiles(OutputFolder) - OldFiles
+
+    Select Case MsgBox("Es wurden " & CreatedFiles & " von " & NewFiles & " Plänen erstellt." & vbNewLine & "Pfad im Explorer öffnen?", vbYesNo, "Pläne erstellt")
+    Case vbYes
+        ' open explorer
+        Shell "explorer.exe" & " " & OutputFolder, vbNormalFocus
+        Exit Sub
+    Case vbNo
+        ' exit sub
+        Exit Sub
     End Select
 
 End Sub
 
 Public Sub Checkplot()
-    Dim fso As New FileSystemObject
-    Dim File As scripting.File
-    Dim PDFFile As IPlankopf
-    Dim i As Long
-    
-    For Each File In fso.GetFolder(OutputFolder).files
-    i = 1
+    Dim FSO                  As New FileSystemObject
+    Dim File                 As scripting.File
+    Dim PDFFile              As IPlankopf
+    Dim i                    As Long
+
+    For Each File In FSO.GetFolder(OutputFolder).files
+        i = 1
         For Each PDFFile In pPlanköpfe
             If File.Name = PDFFile.PDFFileName & ".pdf" Then
                 pPlanköpfe.Remove i
@@ -69,46 +80,50 @@ Public Sub Checkplot()
             i = i + 1
         Next
     Next
-    
-    Dim msg As String
+
+    Dim msg                  As String
     msg = "Folgende Pläne müssen überprüft werden:" & vbNewLine
     For Each PDFFile In pPlanköpfe
-    msg = msg & vbNewLine & PDFFile.dwgFile & " | " & PDFFile.LayoutName
+        msg = msg & vbNewLine & PDFFile.dwgFile & " | " & PDFFile.LayoutName
     Next
-    
+
     MsgBox msg, vbInformation, "Fehlerhafte Pläne"
-    
+
 End Sub
 
 Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
 
-    Dim folder               As String, strFolderExists As String
+    Dim Folder               As String
+    Dim strFolderExists      As String
+
     Dim outputCol            As New Collection
     Dim Plan                 As IPlankopf
-    
+
     Set pPlanköpfe = Planköpfe
     Set Planköpfe = Nothing
-    
+
     NewFiles = pPlanköpfe.Count
-    
+
     If Globals.shPData Is Nothing Then Globals.SetWBs
 
-    folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
-    strFolderExists = dir(folder)
+    Folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
+    strFolderExists = dir(Folder)
 
     'If strFolderExists = "" Then MkDir folder
     ' Open the select folder prompt
     With Application.FileDialog(msoFileDialogFolderPicker)
-        If .Show = -1 Then                       ' if OK is pressed
+        If .Show = -1 Then                                                ' if OK is pressed
             OutputFolder = .SelectedItems(1)
         End If
     End With
 
 
-    Dim filename             As String: filename = Format(Now, "YYMMDDhhmmss")
-    Dim i                    As Integer, search As String
-    Set a = CreateObject("Scripting.FileSystemObject").CreateTextFile(Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & filename & ".dsd", True)
-    dsd = Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & filename & ".dsd"
+    Dim FileName             As String: FileName = Format$(Now, "YYMMDDhhmmss")
+    Dim i                    As Long
+    Dim search               As String
+
+    Set a = CreateObject("Scripting.FileSystemObject").CreateTextFile(Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & FileName & ".dsd", True)
+    dsd = Globals.Projekt.ProjektOrdnerCAD & "\99 Planlisten\" & FileName & ".dsd"
     a.WriteLine ("[DWF6Version]")
     a.WriteLine ("Ver=1")
     a.WriteLine ("[DWF6MinorVersion]")
@@ -171,12 +186,12 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
 
 End Function
 
-Private Sub Eintrag(Plan As IPlankopf)
-    a.WriteLine ("[DWF6Sheet:" & Plan.PDFFileName & "]") ' PDF Ablage
-    a.WriteLine ("DWG=" & Plan.dwgFile)          ' DWG Ablage
-    a.WriteLine ("Layout=" & Plan.LayoutName)    ' Plannummer / Layoutname
+Private Sub Eintrag(ByVal Plan As IPlankopf)
+    a.WriteLine ("[DWF6Sheet:" & Plan.PDFFileName & "]")                  ' PDF Ablage
+    a.WriteLine ("DWG=" & Plan.dwgFile)                                   ' DWG Ablage
+    a.WriteLine ("Layout=" & Plan.LayoutName)                             ' Plannummer / Layoutname
     a.WriteLine ("Setup=")
-    a.WriteLine ("OriginalSheetPath=" & Plan.dwgFile) ' DWG Ablage
+    a.WriteLine ("OriginalSheetPath=" & Plan.dwgFile)                     ' DWG Ablage
     a.WriteLine ("Has Plot Port=0")
     a.WriteLine ("Has3DDWF=0")
     a.WriteLine (" ")

@@ -1,5 +1,7 @@
 Attribute VB_Name = "Planverzeichnis"
 '@Folder("Planverzeichnis")
+'@Version "Release V1.0.0"
+
 Option Explicit
 Private Enum Sorting
     ELEPLA = 0
@@ -46,7 +48,7 @@ Public Sub Create()
     Set TempWS = Application.ActiveWorkbook.Worksheets.Add
     Dim row                  As Long
     row = 1
-    For Each Plankopf In Globals.Planköpfe
+    For Each Plankopf In Globals.PlankÃ¶pfe
         With TempWS
             Select Case Plankopf.Plantyp
                 Case "PLA"

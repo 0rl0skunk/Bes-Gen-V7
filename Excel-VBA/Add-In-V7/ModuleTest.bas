@@ -1,8 +1,10 @@
 Attribute VB_Name = "ModuleTest"
 Attribute VB_Description = "Modul mit Test funktionen."
+
 '@IgnoreModule EmptyStringLiteral
 '@Folder "Objektdaten"
 '@ModuleDescription "Modul mit Test funktionen."
+'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -39,7 +41,7 @@ Public Sub test2()
         Geschoss:="Erdgeschoss", _
         Erledigt:=False, _
         Priorität:=2, _
-        text:="Lorem ipsum dolor sit amet"
+        Text:="Lorem ipsum dolor sit amet"
 
     Dim frm                  As New UserFormTaskDetail
     frm.LoadClass ttask

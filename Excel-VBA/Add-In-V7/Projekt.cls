@@ -8,10 +8,12 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Projekt Objekt für einfacheres Management vom Projekt."
-Option Explicit
+
 '@Folder "Projekt"
 '@ModuleDescription "Projekt Objekt für einfacheres Management vom Projekt."
+'@Version "Release V1.0.0"
 
+Option Explicit
 
 Implements IProjekt
 

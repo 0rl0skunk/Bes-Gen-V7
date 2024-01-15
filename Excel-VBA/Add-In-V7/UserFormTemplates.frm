@@ -12,8 +12,12 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '@Folder "Templates"
+'@Version "Release V1.0.0"
+
 Option Explicit
+
 Private icons                As UserFormIconLibrary
 
 Private Sub CheckBox1_Enter()

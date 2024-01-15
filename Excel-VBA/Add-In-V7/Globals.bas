@@ -1,22 +1,17 @@
 Attribute VB_Name = "Globals"
 Attribute VB_Description = "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
-'@IgnoreModule VariableNotUsed
-Option Explicit
 '@Folder "Excel-Items"
+'@IgnoreModule VariableNotUsed
 '@ModuleDescription "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
+'@Version "Release V1.0.0"
 
-Global Const Version As Double = 5#
+Option Explicit
 
-Global Const maxlen As Long = 35                 'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
-Global Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
-Global Const XMLVorlage As String = "H:\TinLine\01_Standards\transform.xsl"
-Global Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
-Global Const LogDepth As Double = 0
-' 3 = Trace
-' 2 = Info
-' 1 = Warnings
-' 0 = Errors
-
+Public Const Version         As Double = 7#
+Public Const maxlen          As Long = 35                                 'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
+Public Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
+Public Const XMLVorlage      As String = "H:\TinLine\01_Standards\transform.xsl"
+Public Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
 
 Public WB                    As Workbook
 Public shPData               As Worksheet
@@ -27,9 +22,9 @@ Public shIndex               As Worksheet
 Public shPlanListe           As Worksheet
 Public shGebäude             As Worksheet
 Public shSPSync              As Worksheet
+Public shProjekt             As Worksheet
 Public xlsmPages             As Workbook
 Public CopyrightSTR          As String
-
 Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection
 
@@ -50,133 +45,63 @@ Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
         Else
             writelog LogInfo, "Projekt already exists " & pProjekt.Projektnummer
         End If
-
     End With
     Set Projekt = pProjekt
 End Function
 
 Public Function Planköpfe() As Collection
-
     If pPlanköpfe Is Nothing Then GetPlanköpfe
     Set Planköpfe = pPlanköpfe
-
 End Function
 
-Private Sub GetPlanköpfe()
-
+Public Function GetPlanköpfe(Optional ByVal Gewerk As String = vbNullString, Optional ByVal Planart As String = vbNullString) As Collection
     'TODO Create Planköpfe from Workbook / Database
+    Set pPlanköpfe = New Collection
     Dim row                  As range
-    For Each row In shStoreData.range("A1").CurrentRegion
-        pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
-    Next
-    writelog LogInfo, "Loaded " & pPlanköpfe.Count & " Planköpfe from the Database"
-End Sub
-
-Function Initialize() As Boolean
-    Initialize = False
-    Set WB = ActiveWorkbook
-
-    CopyrightSTR = _
-                 "Release: " & Version & vbLf _
-               & ChrW(&HA9) & Format(Now(), "yyyy") & " Orlando Bassi"
-
-    Set shPData = WB.Sheets("Projektdaten")
-
-    On Error GoTo 0
-    ' Version checking
-    If shPData.range("B4").value < Version Then
-        Dim curVersion       As String
-        Dim shouldVersion    As String
-
-        curVersion = "Bes-Gen-PZM-Add-In-V" & Version
-        Select Case shPData.range("B4").value
-            Case vbNullString
-                shouldVersion = "Bes-Gen-PZM-Add-In"
-            Case Else
-                If shPData.range("B4").value > Version Then
-                    shouldVersion = "Bes-Gen-PZM-Add-In-V" & shPData.range("B4").value & " oder neuer"
-                End If
-        End Select
-        MsgBox "Die Arbeitsmappe wird von dieser Version vom Beschriftungsgenerator nicht unterstüzt!" & vbLf _
-             & "Bitte Update die Arbeitsmappe oder lade eine ältere Version vom Beschriftungsgenerator." & vbLf _
-             & vbLf & "aktuelle Version" & vbLf & curVersion & vbLf _
-             & "zu verwendende Version: " & vbLf & shouldVersion _
-               , vbCritical, "Nicht unterstützte Arbeitsmappe"
-        Exit Function
+    Dim ResizeRows           As Long
+    Dim rng                  As range
+    Set rng = shStoreData.range("A1").CurrentRegion.Offset(2, 0)
+    If rng.rows.Count - 3 = 0 Then ResizeRows = 1 Else ResizeRows = rng.rows.Count - 3
+    'select what filters matter
+    Dim bGewerk              As Boolean: If Gewerk = vbNullString Then bGewerk = False Else bGewerk = True
+    Dim bPlanart             As Boolean: If Planart = vbNullString Then bPlanart = False Else Planart = True
+    ' if it is a Prinzipschema
+    If Planart = "Prinzipschema" Then
+        For Each row In rng.Resize(ResizeRows, 1)
+            If bPlanart And Globals.shStoreData.Cells(row.row, 5).value = Gewerk Then pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
+        Next
+        GoTo Loaded
     End If
-
-    On Error Resume Next
-    WB.Activate
-
-    SetWBs
-
-    xlsmPages.Close False
-    Set xlsmPages = Nothing
-    On Error GoTo 0
-    Initialize = True
-    shPData.Activate
-
+    ' check if the Gewerk is applicable
+    If bGewerk Then
+        For Each row In rng.Resize(ResizeRows, 1)
+            If Globals.shStoreData.Cells(row.row, 3).value = Gewerk Then pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
+        Next
+        GoTo Loaded
+    End If
+Loaded:
+    Set GetPlanköpfe = pPlanköpfe
+    writelog LogInfo, "Loaded " & pPlanköpfe.Count & " Planköpfe from the Database"
 End Function
 
 Public Function SetWBs() As Boolean
     ' Setzt alle Workbooks und Worksheets welche vom Add-In verwendet werden.
     SetWBs = False
     If WB Is Nothing Then Set WB = Application.ActiveWorkbook
-    Dim i                    As Integer
+    Dim i                    As Long
     Set shAdress = WB.Sheets("Adressverzeichnis")
-    If err Then
-        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
-        xlsmPages.Sheets("Adressverzeichnis").copy after:=WB.Sheets(WB.Sheets.Count)
-        Set shAdress = WB.Sheets("Adressverzeichnis")
-    End If
     Set shStoreData = WB.Sheets("Datenbank")
-    If err Then
-        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
-        xlsmPages.Sheets("Datenbank").copy after:=WB.Sheets(WB.Sheets.Count)
-        Set shStoreData = WB.Sheets("Datenbank")
-    End If
     Set shIndex = WB.Sheets("Index")
-    If err Then
-        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
-        xlsmPages.Sheets("Index").copy after:=WB.Sheets(WB.Sheets.Count)
-        Set shIndex = WB.Sheets("Index")
-    End If
     Set shPlanListe = WB.Sheets("Planlisten")
-    If err Then
-        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
-        xlsmPages.Sheets("Planlisten").copy after:=WB.Sheets(WB.Sheets.Count)
-        Set shPlanListe = WB.Sheets("Planlisten")
-    End If
     Set shVersand = WB.Sheets("Versand")
-    If err Then
-        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
-        xlsmPages.Sheets("Versand").copy after:=WB.Sheets(WB.Sheets.Count)
-        Set shVersand = WB.Sheets("Versand")
-    End If
     Set shGebäude = WB.Sheets("Gebäude")
-    If err Then
-        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
-        xlsmPages.Sheets("Gebäude").copy after:=WB.Sheets(WB.Sheets.Count)
-        Set shGebäude = WB.Sheets("Gebäude")
-    End If
     Set shPData = WB.Sheets("Projektdaten")
-    If err Then
-        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
-        xlsmPages.Sheets("Projektdaten").copy after:=WB.Sheets(WB.Sheets.Count)
-        Set shPData = WB.Sheets("Projektdaten")
-    End If
     Set shSPSync = WB.Sheets("SharePointSync")
-    If err Then
-        Set xlsmPages = Workbooks.Open(TemplatePagesXslm)
-        xlsmPages.Sheets("SharePointSync").copy after:=WB.Sheets(WB.Sheets.Count)
-        Set shPData = WB.Sheets("SharePointSync")
-    End If
-
+    Set shProjekt = WB.Sheets("Projekterstellen")
 
     Globals.Projekt
     SetWBs = True
     writelog LogInfo, "Loaded all Workbooks in Globals Module"
-
 End Function
 
 

@@ -1,5 +1,8 @@
 Attribute VB_Name = "PlankopfListe"
+
 '@Folder("Plankopf")
+'@Version "Release V1.0.0"
+
 Option Explicit
 
 Public Sub LoadListViewPlan(ByRef control As ListView)
@@ -19,18 +22,18 @@ Public Sub LoadListViewPlan(ByRef control As ListView)
         .FullRowSelect = True
         With .ColumnHeaders
             .Clear
-            .Add , , vbNullString, 20            ' 0
-            .Add , , "ID", 0                     ' 1
-            .Add , , "Plannummer"                ' 2
-            .Add , , "Geschoss"                  ' 3
-            .Add , , "Gebäude"                   ' 4
-            .Add , , "Gebäudeteil"               ' 5
-            .Add , , "Gewerk", 0                 ' 6
-            .Add , , "Untergewerk", 0            ' 7
-            .Add , , "Planart", 0                ' 8
-            .Add , , "Gezeichnet"                ' 9
-            .Add , , "Geprüft"                   ' 10
-            .Add , , "Index"                     ' 11
+            .Add , , vbNullString, 20                                     ' 0
+            .Add , , "ID", 0                                              ' 1
+            .Add , , "Plannummer"                                         ' 2
+            .Add , , "Geschoss"                                           ' 3
+            .Add , , "Gebäude"                                            ' 4
+            .Add , , "Gebäudeteil"                                        ' 5
+            .Add , , "Gewerk", 0                                          ' 6
+            .Add , , "Untergewerk", 0                                     ' 7
+            .Add , , "Planart", 0                                         ' 8
+            .Add , , "Gezeichnet"                                         ' 9
+            .Add , , "Geprüft"                                            ' 10
+            .Add , , "Index"                                              ' 11
         End With
         If Globals.shStoreData Is Nothing Then Globals.SetWBs
         lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count
