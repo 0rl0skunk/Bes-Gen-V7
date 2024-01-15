@@ -61,7 +61,7 @@ Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
     l_StringDateTimeNow = Now
     l_StringToday = Format$(l_StringDateTimeNow, "YYYY-MM-DD hh:mm:ss")
     ' concatenate date and what the user wants logged
-    l_StringLogStatement = Join(Array(l_StringToday, l_StringSource, Typstr, a_stringLogThis), " | ")
+    l_StringLogStatement = "| " & Join(Array(l_StringToday, l_StringSource, Typstr, a_stringLogThis), " | ") & " |"
     ' send to TTY
 Debug.Print (l_StringLogStatement)
     ' append (not write) to disk

@@ -12,10 +12,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-'@Folder("Excel-Items")
-
 Option Explicit
+'@Folder("Excel-Items")
 
 Public pModules              As New Collection
 

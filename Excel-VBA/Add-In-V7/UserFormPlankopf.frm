@@ -14,6 +14,11 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
 
+
+
+
+
+
 '@Folder "Plankopf"
 '@ModuleDescription "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
 '@Version "Release V1.0.0"
@@ -117,7 +122,7 @@ Private Sub CommandLayoutWählen_Click()
 End Sub
 
 '@Ignore ProcedureNotUsed
-Private Sub EditDWG_MouseDown(ByVal Button As Long, ByVal Shift As Long, ByVal X As Single, ByVal Y As Single)
+Private Sub EditDWG_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
     ' DWG-Datei im TinLine öffnen
     TinLine.setTinProject pProjekt.ProjektOrdnerCAD
     Select Case Me.MultiPageTyp.value
@@ -169,7 +174,7 @@ Private Sub MultiPageTyp_Change()
 End Sub
 
 '@Ignore ProcedureNotUsed
-Private Sub Preview_MouseDown(ByVal Button As Long, ByVal Shift As Long, ByVal X As Single, ByVal Y As Single)
+Private Sub Preview_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
     ' Plankopfpreview öffnen
     Dim frm                  As New UserFormPlankopfPreview
     frm.LoadClass FormToPlankopf, pProjekt

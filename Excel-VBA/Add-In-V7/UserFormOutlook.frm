@@ -14,6 +14,11 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "E-Mails direkt vom Beschriftungsgenerator erstellen und versenden."
 
+
+
+
+
+
 '@Folder("Outlook")
 '@ModuleDescription "E-Mails direkt vom Beschriftungsgenerator erstellen und versenden."
 '@Version "Release V1.0.0"

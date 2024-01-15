@@ -74,6 +74,7 @@ Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
             End Select
         End If
     End If
+    writelog LogInfo, " CUSTOM UI | " & control.ID & " is visible = " & returnedVal
 End Sub
 
 Sub onLoad(ribbon As IRibbonUI)
@@ -91,7 +92,7 @@ Sub onLoad(ribbon As IRibbonUI)
     StoreRibbonPointer = ObjPtr(ribbon)
     ThisWorkbook.Names.Add Name:="RibbonID", RefersTo:=StoreRibbonPointer
 
-    writelog LogInfo, "CustomRibbon successfully Loaded"
+    writelog LogInfo, " CUSTOM UI | " & "CustomRibbon successfully Loaded"
 
 End Sub
 
@@ -114,13 +115,13 @@ Public Sub RefreshRibbon()
     'ERROR MESSAGES:
 RestartExcel:
     MsgBox "Please restart Excel for Ribbon UI changes to take affect", , "Ribbon UI Refresh Failed"
-    writelog LogError, "trying to refresh CustomRibbon" & vbNewLine & _
+    writelog LogError, " CUSTOM UI | " & "trying to refresh CustomRibbon" & vbNewLine & _
                       err.Number & vbNewLine & err.Description & vbNewLine & err.source
 
 End Sub
 
 Sub onActionButton(control As IRibbonControl)
-    writelog LogInfo, "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
+    writelog LogInfo, " CUSTOM UI | " & "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
     If Globals.shPData Is Nothing Then Globals.SetWBs
     Select Case control.ID
     Case "Objektdaten"
@@ -134,7 +135,7 @@ Sub onActionButton(control As IRibbonControl)
         Shell "explorer.exe " & folderpath, vbNormalFocus
     Case "SharePoint"
         Dim folderSP         As String: folderSP = Globals.Projekt.ProjektOrdnerSharePoint
-        writelog LogInfo, "Opening SharePoint-Folder" & vbNewLine & folderSP
+        writelog LogInfo, " CUSTOM UI | " & "Opening SharePoint-Folder" & vbNewLine & folderSP
         If folderSP <> vbNullString Then
             ActiveWorkbook.FollowHyperlink Address:=folderSP
         Else
@@ -184,7 +185,7 @@ Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
     Case Else
         returnedVal = True
     End Select
-    writelog LogInfo, control.ID & " is enabled = " & returnedVal
+    writelog LogInfo, " CUSTOM UI | " & control.ID & " is enabled = " & returnedVal
 End Sub
 
 

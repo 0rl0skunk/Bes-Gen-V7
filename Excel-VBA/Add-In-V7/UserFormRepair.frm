@@ -14,6 +14,11 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Repariert das TinLine Projekt, wenn Fehler mit den Planköpfen entstehen."
 
+
+
+
+
+
 '@Folder("Repair")
 '@ModuleDescription "Repariert das TinLine Projekt, wenn Fehler mit den Planköpfen entstehen."
 '@Version "Release V1.0.0"

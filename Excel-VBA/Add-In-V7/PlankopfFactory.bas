@@ -419,12 +419,12 @@ err:
             GoTo load
         Case Else
             writelog LogTrace, "Plankopf NICHT erstellt "
-            CheckEmptyPlankopf = False
+            CheckChangePlankopf = False
             Exit Function
         End Select
     Case Else
         writelog LogTrace, "DWG NICHT Geöffnet im TinLine " & Plankopf.dwgFile
-        CheckEmptyPlankopf = False
+        CheckChangePlankopf = False
         Exit Function
     End Select
 

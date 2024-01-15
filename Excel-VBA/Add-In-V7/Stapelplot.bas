@@ -5,7 +5,7 @@ Attribute VB_Name = "Stapelplot"
 
 Option Explicit
 
-Private a                    As File
+Private a
 Private dsd                  As String                                    ' Dateiname von Stapelplott Datei
 Private OutputFolder         As String
 Private NewFiles             As Long

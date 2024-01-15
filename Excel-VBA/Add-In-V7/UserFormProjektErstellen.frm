@@ -14,6 +14,11 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Elektro-Projekt TinLine auf dem Laufwerk H: erstellen."
 
+
+
+
+
+
 '@Folder("Projekt")
 '@ModuleDescription "Elektro-Projekt TinLine auf dem Laufwerk H: erstellen."
 '@Version "Release V1.0.0"
@@ -34,7 +39,7 @@ Private Sub CommandButtonErstellen_Click()
 
 End Sub
 
-Private Sub Image1_MouseDown(ByVal Button As Long, ByVal Shift As Long, ByVal X As Single, ByVal Y As Single)
+Private Sub Image1_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
     ' SharePoint öffnen für den SharePoint Link welcher eingefügt werden kann / muss
     ActiveWorkbook.FollowHyperlink Address:="https://rebsamennet.sharepoint.com/:f:/r/sites/PZM-ZH/03_Pub/00_Projekte?csf=1&web=1&e=EGLXoZ"
 
