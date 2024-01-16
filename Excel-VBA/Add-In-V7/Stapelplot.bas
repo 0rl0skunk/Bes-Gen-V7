@@ -65,12 +65,12 @@ Sub plotPlanliste()
 End Sub
 
 Public Sub Checkplot()
-    Dim FSO                  As New FileSystemObject
+    Dim fso                  As New FileSystemObject
     Dim File                 As scripting.File
     Dim PDFFile              As IPlankopf
     Dim i                    As Long
 
-    For Each File In FSO.GetFolder(OutputFolder).files
+    For Each File In fso.GetFolder(OutputFolder).files
         i = 1
         For Each PDFFile In pPlanköpfe
             If File.Name = PDFFile.PDFFileName & ".pdf" Then
@@ -98,10 +98,18 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
 
     Dim outputCol            As New Collection
     Dim Plan                 As IPlankopf
-
-    Set pPlanköpfe = Planköpfe
+    
+    ' Planköpfe Filtern um nur AutoCAD-Dateien zu beinhalten
+    Dim e As IPlankopf
+        Set pPlanköpfe = New Collection
+        For Each e In Planköpfe
+        If e.Gewerk = "Elektro" Or e.Gewerk = "Türfachplanung" Or e.Gewerk = "Brandschutzplanung" Then
+        pPlanköpfe.Add e
+        End If
+    Next e
+    
     Set Planköpfe = Nothing
-
+    
     NewFiles = pPlanköpfe.Count
 
     If Globals.shPData Is Nothing Then Globals.SetWBs

@@ -6,18 +6,13 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormUpgrade
    ClientTop       =   465
    ClientWidth     =   4680
    OleObjectBlob   =   "UserFormUpgrade.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormUpgrade"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
 
 '@Folder("Upgrade")
 '@Version "Release V1.0.0"
@@ -79,6 +74,7 @@ Private Sub CommandButtonUpgrade_Click()
 
     Upgrade
     WBOldVersion.Close False
+    Globals.Projekt True
     Unload Me
 
 End Sub
@@ -143,7 +139,7 @@ Private Sub Upgrade()
                 .Cells(row, 7).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 8).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 9).value = shStoreDataOld.Cells(row, 4).value
-                .Cells(row, 10).value = False
+                .Cells(row, 10).value = True
                 .Cells(row, 11).value = vbNullString ' wird beim updaten vom Plankopf geschrieben
                 .Cells(row, 13).value = shStoreDataOld.Cells(row, 29).value
                 .Cells(row, 14).value = shStoreDataOld.Cells(row, 2).value
@@ -233,7 +229,7 @@ Private Sub Upgrade()
                 .Cells(row, 7).value = shStoreDataOld.Cells(row, 30).value
                 .Cells(row, 8).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 9).value = shStoreDataOld.Cells(row, 4).value
-                .Cells(row, 10).value = False
+                .Cells(row, 10).value = True
                 .Cells(row, 11).value = vbNullString ' wird beim updaten vom Plankopf geschrieben
                 .Cells(row, 13).value = shStoreDataOld.Cells(row, 29).value
                 .Cells(row, 14).value = shStoreDataOld.Cells(row, 2).value
@@ -336,7 +332,7 @@ Private Sub Upgrade()
                 .Cells(row, 7).value = shStoreDataOld.Cells(row, 4).value
                 .Cells(row, 8).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 9).value = shStoreDataOld.Cells(row, 30).value
-                .Cells(row, 10).value = False
+                .Cells(row, 10).value = True
                 .Cells(row, 11).value = vbNullString ' wird beim updaten vom Plankopf geschrieben
                 .Cells(row, 13).value = shStoreDataOld.Cells(row, 29).value
                 .Cells(row, 14).value = shStoreDataOld.Cells(row, 2).value
@@ -437,7 +433,7 @@ Private Sub Upgrade()
                 .Cells(row, 7).value = shStoreDataOld.Cells(row, 4).value
                 .Cells(row, 8).value = shStoreDataOld.Cells(row, 3).value
                 .Cells(row, 9).value = shStoreDataOld.Cells(row, 30).value
-                .Cells(row, 10).value = False
+                .Cells(row, 10).value = True
                 .Cells(row, 11).value = vbNullString ' wird beim updaten vom Plankopf geschrieben
                 .Cells(row, 13).value = shStoreDataOld.Cells(row, 29).value
                 .Cells(row, 14).value = shStoreDataOld.Cells(row, 2).value

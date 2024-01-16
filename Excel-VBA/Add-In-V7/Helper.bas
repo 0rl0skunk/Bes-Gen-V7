@@ -209,14 +209,14 @@ End Function
 
 Public Sub deleteIndexesXml()
 
-    Dim FSO                  As Object
+    Dim fso                  As Object
     Dim lastrow              As Long
     Dim row                  As Long
     Dim col                  As Long
     Dim lastcol              As Long
 
 
-    Set FSO = CreateObject("scripting.FileSystemObject")
+    Set fso = CreateObject("scripting.FileSystemObject")
 
     lastrow = shGebäude.Cells(shGebäude.rows.Count, 2).End(xlUp).row
     lastcol = shGebäude.Cells(1, shGebäude.Columns.Count).End(xlToLeft).Column
@@ -512,14 +512,11 @@ Public Function getUserName() As String
 
     Dim arrUsername()        As String
     Dim UserName             As String
-
     UserName = Application.UserName
-
-    'arrUsername = Split(UserName, " ")
-
-    'getUserName = Left(arrUsername(1), 2) & Left(arrUsername(0), 2)
-
-    getUserName = UserName
+    
+    arrUsername = Split(UserName, " ")
+    getUserName = Left(arrUsername(1), 2) & Left(arrUsername(0), 2)
+    'getUserName = UserName
 
 End Function
 
@@ -594,21 +591,21 @@ End Function
 
 Function CountFiles(ByVal path As String) As Long
 
-    Dim FSO                  As Object
+    Dim fso                  As Object
     Dim Folder               As Object
     Dim subfolder            As Object
     Dim amount               As Long
 
-    Set FSO = CreateObject("Scripting.FileSystemObject")
+    Set fso = CreateObject("Scripting.FileSystemObject")
 
-    Set Folder = FSO.GetFolder(path)
+    Set Folder = fso.GetFolder(path)
     For Each subfolder In Folder.SubFolders
         amount = amount + CountFiles(subfolder.path)
     Next subfolder
 
     amount = amount + Folder.files.Count
 
-    Set FSO = Nothing
+    Set fso = Nothing
     Set Folder = Nothing
     Set subfolder = Nothing
 

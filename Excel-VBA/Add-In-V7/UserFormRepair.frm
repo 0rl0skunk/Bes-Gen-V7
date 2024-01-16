@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormRepair
    ClientTop       =   465
    ClientWidth     =   4680
    OleObjectBlob   =   "UserFormRepair.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormRepair"
 Attribute VB_GlobalNameSpace = False
@@ -13,17 +13,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Repariert das TinLine Projekt, wenn Fehler mit den Planköpfen entstehen."
-
-
-
-
-
-
-
-
-
-
-
 '@Folder("Repair")
 '@ModuleDescription "Repariert das TinLine Projekt, wenn Fehler mit den Planköpfen entstehen."
 '@Version "Release V1.0.0"
@@ -36,7 +25,7 @@ Private Sub CommandButtonRepair_Click()
 
     If Me.CheckBoxPLAELE.value Then PlanBereinigen "01_EP", "Elektro"
     If Me.CheckBoxPLATF.value Then PlanBereinigen "05_TF", "Türfachplanung"
-    If Me.CheckBoxPLABF.value Then PlanBereinigen "06_BR", "Brandschutzplanung"
+    If Me.CheckBoxPLABF.value Then PlanBereinigen "06_BS", "Brandschutzplanung"
     MsgBox "Das Projekt wurde bereinigt.", vbInformation, "Bereinigen abgaschlossen"
     Application.StatusBar = False
     Unload Me
@@ -58,7 +47,7 @@ Private Sub UserForm_Initialize()
     Me.CheckBox1.Visible = Globals.shProjekt.range("A2").value = True
     ' TF
     Me.CheckBoxPLATF.Visible = Globals.shProjekt.range("A4").value = True
-    ' BR
+    ' BS
     Me.CheckBoxPLABF.Visible = Globals.shProjekt.range("A5").value = True
 
 End Sub

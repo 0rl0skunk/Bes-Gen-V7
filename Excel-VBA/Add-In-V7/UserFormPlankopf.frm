@@ -1,11 +1,11 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopf 
-   ClientHeight    =   11760
+   ClientHeight    =   13500
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9960.001
    OleObjectBlob   =   "UserFormPlankopf.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormPlankopf"
 Attribute VB_GlobalNameSpace = False
@@ -13,16 +13,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
-
-
-
-
-
-
-
-
-
-
 
 '@Folder "Plankopf"
 '@ModuleDescription "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
@@ -653,6 +643,7 @@ End Sub
 Private Sub ComboBoxGebäude_Change()
     ' Funktionsweise gem. Kommentaren ComboboxEPHGewerk
     Me.ComboBoxGebäude.BackColor = SystemColorConstants.vbWindowBackground
+    If Me.MultiPageTyp.value = 2 Then Exit Sub
     Dim col                  As Long
     Dim lastrow              As Long
     Dim arr()                As Variant

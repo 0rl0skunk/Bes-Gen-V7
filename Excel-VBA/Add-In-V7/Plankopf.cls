@@ -15,7 +15,7 @@ Attribute VB_Description = "Plankopf Objekt für einfacheres Management von Plank
 
 Option Explicit
 
-private const ErrSourceModule = "Plankopf.cls"
+Private Const ErrSourceModule = "Plankopf.cls"
 
 Implements IPlankopf
 
@@ -33,7 +33,7 @@ Private Type TPlankopf
     GeprüftDatum As String
     '--- Gebäude ---
     Gebäude As String: GebäudeKF As String: GebäudeCode As String
-    Gebäudeteil As String: GebäudeteilKF As String
+    Gebäudeteil As String: GebäudeTeilKF As String
     Geschoss As String: GeschossKF As String: GeschossCode As String
     '--- Gewerk ---
     Gewerk As String: GewerkKF As String
@@ -208,7 +208,7 @@ Private Property Get IPlankopf_XMLFile() As String
 End Property
 
 Private Property Get IPlankopf_FolderName() As String
-    IPlankopf_FolderName = This.Pfad
+    IPlankopf_FolderName = This.DWGFilePath
 End Property
 
 Private Property Get IPlankopf_CurrentIndex() As IIndex
@@ -362,7 +362,7 @@ Private Sub GetKF()
 2   This.GeschossKF = Globals.shGebäude.range("B:AQ").Find(This.Geschoss).Offset(, 1).value
     ErrSourceLog = ErrSource & " > " & "Gebäudeteil KF"
     ErrDescription = This.Gebäudeteil & " nicht in Range Globals.shPData.range(PRO_Gebäudeteil) gefunden"
-3   This.GebäudeteilKF = Globals.shPData.range("PRO_Gebäudeteil").Find(This.Gebäudeteil).Offset(0, 1).value
+3   This.GebäudeTeilKF = Globals.shPData.range("PRO_Gebäudeteil").Find(This.Gebäudeteil).Offset(0, 1).value
     ErrSourceLog = ErrSource & " > " & "Gewerk KF"
     ErrDescription = This.Gewerk & " nicht in Range Globals.shPData.range(PRO_Hauptgewerk) gefunden"
 4   This.GewerkKF = Globals.shPData.range("PRO_Hauptgewerk").Find(This.Gewerk).Offset(0, 1).value
@@ -380,14 +380,14 @@ Private Sub GetKF()
         ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(9:9) gefunden"
 7       col = Application.Match(This.GewerkKF, Globals.shPData.range("9:9"), 0)
         ErrSourceLog = ErrSource & " > " & "PLA > Planart KF"
-        ErrDescription = This.planart & " nicht in Range Globals.shPData.Columns(" & col & ") gefunden"
+        ErrDescription = This.Planart & " nicht in Range Globals.shPData.Columns(" & col & ") gefunden"
 8       This.PlanartKF = Globals.shPData.Columns(col).Find(This.Planart).Offset(0, 1).value
         ' Welcher Kürzel kommt vor die Stockwerkbezeichnung beim DWG?
         Select Case This.GewerkKF
         Case "ELE"
             This.TinLineTyp = "EP"
         Case "BRA"
-            This.TinLineTyp = "BR"
+            This.TinLineTyp = "BS"
         Case "TUE"
             This.TinLineTyp = "TF"
         End Select
@@ -404,7 +404,7 @@ Private Sub GetKF()
         ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(12:12) gefunden"
 11      col = Application.Match("Anlagetyp " & This.UnterGewerk, Globals.shPData.range("12:12"), 0)
         ErrSourceLog = ErrSource & " > " & "SCH > Anlagetyp KF"
-        ErrDescription = This.Anlagetyp & " nicht in Range Globals.shPData.Columns(" & col & ") gefunden"
+        ErrDescription = This.AnlageTyp & " nicht in Range Globals.shPData.Columns(" & col & ") gefunden"
 12      This.AnlageTypKF = Globals.shPData.Columns(col).Find(This.AnlageTyp).Offset(0, 1).value
     Case "PRI"
         ErrSourceLog = ErrSource & " > " & "PRI > Column UnterGewerk KF"
@@ -457,8 +457,8 @@ Private Function GetFileNames()
             Select Case This.TinLineTyp
             Case "EP"
                 This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\" & This.GeschossCode & "_" & This.GeschossKF
-            Case "BR"
-                This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR\" & This.GeschossCode & "_" & This.GeschossKF
+            Case "BS"
+                This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BS\" & This.GeschossCode & "_" & This.GeschossKF
             Case "TF"
                 This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF\" & This.GeschossCode & "_" & This.GeschossKF
             End Select
@@ -466,8 +466,8 @@ Private Function GetFileNames()
             Select Case This.TinLineTyp
             Case "EP"
                 This.Pfad = pProjekt.ProjektOrdnerCAD & "\01_EP\" & This.GebäudeCode & "_" & This.GebäudeKF & "\" & This.GeschossCode & "_" & This.GeschossKF
-            Case "BR"
-                This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BR\" & This.GebäudeCode & "_" & This.GebäudeKF & "\" & This.GeschossCode & "_" & This.GeschossKF
+            Case "BS"
+                This.Pfad = pProjekt.ProjektOrdnerCAD & "\06_BS\" & This.GebäudeCode & "_" & This.GebäudeKF & "\" & This.GeschossCode & "_" & This.GeschossKF
             Case "TF"
                 This.Pfad = pProjekt.ProjektOrdnerCAD & "\05_TF\" & This.GebäudeCode & "_" & This.GebäudeKF & "\" & This.GeschossCode & "_" & This.GeschossKF
             End Select
@@ -495,19 +495,28 @@ Private Sub GetPlanüberschrift()
 
     Dim Planüberschrift      As String
     If This.CustomPlanüberschrift Then Exit Sub
+    Dim Gebäudeteil As String
+    Dim GebäudeTeilKF As String
+    If This.Gebäudeteil = "Gesamt" Then
+    Gebäudeteil = vbNullString
+    GebäudeTeilKF = vbNullString
+    Else
+    Gebäudeteil = This.Gebäudeteil
+    GebäudeTeilKF = This.GebäudeTeilKF
+    End If
     Select Case This.PLANTYP
     Case "PLA"
         ' Überschrift für Elektropläne
-        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschoss, This.Gebäudeteil)
+        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschoss, Gebäudeteil)
         This.PlanBeschrieb = Planüberschrift
         If Len(Planüberschrift) > Globals.maxlen Then
-            Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.GeschossKF, This.Gebäudeteil)
+            Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.GeschossKF, Gebäudeteil)
             If Len(Planüberschrift) > maxlen Then
-                Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.GeschossKF, This.GebäudeteilKF)
+                Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.GeschossKF, GebäudeTeilKF)
                 If Len(Planüberschrift) > maxlen Then
-                    Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerkKF, This.GeschossKF, This.GebäudeteilKF)
+                    Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerkKF, This.GeschossKF, GebäudeTeilKF)
                     If Len(Planüberschrift) > maxlen Then
-                        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.PlanartKF, This.UnterGewerkKF, This.GeschossKF, This.GebäudeteilKF)
+                        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.PlanartKF, This.UnterGewerkKF, This.GeschossKF, GebäudeTeilKF)
                     End If
                 End If
             End If
@@ -576,7 +585,7 @@ Public Sub Refresh()
     Select Case This.PLANTYP
     Case "PLA"
         This.LayoutName = WorksheetFunction.TextJoin _
-                          ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
+                          ("-", True, This.GebäudeKF, This.GebäudeTeilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
 
         This.PDFFileName = WorksheetFunction.TextJoin _
                            ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
@@ -588,13 +597,13 @@ Public Sub Refresh()
                            ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
     Case "PRI"
         This.LayoutName = WorksheetFunction.TextJoin _
-                          ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
+                          ("-", True, This.GebäudeKF, This.GebäudeTeilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
 
         This.PDFFileName = WorksheetFunction.TextJoin _
                            ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
     Case Else
         This.LayoutName = WorksheetFunction.TextJoin _
-                          ("-", True, This.GebäudeKF, This.GebäudeteilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
+                          ("-", True, This.GebäudeKF, This.GebäudeTeilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
 
         This.PDFFileName = WorksheetFunction.TextJoin _
                            ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)

@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormMessage
    ClientTop       =   450
    ClientWidth     =   5160
    OleObjectBlob   =   "UserFormMessage.frx":0000
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   3  'Windows-Standard
 End
 Attribute VB_Name = "UserFormMessage"
 Attribute VB_GlobalNameSpace = False
@@ -13,16 +13,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Erster Versuch für eine Custom Fehlermeldung. Implementierung folgt zu einem späteren Zeitpunkt."
-
-
-
-
-
-
-
-
-
-
 
 '@Folder "Templates"
 '@ModuleDescription "Erster Versuch für eine Custom Fehlermeldung. Implementierung folgt zu einem späteren Zeitpunkt."
