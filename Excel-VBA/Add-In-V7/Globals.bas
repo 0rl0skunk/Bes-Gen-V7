@@ -49,9 +49,9 @@ Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
     Set Projekt = pProjekt
 End Function
 
-Public Function Planköpfe() As Collection
+Public Function planköpfe() As Collection
     If pPlanköpfe Is Nothing Then GetPlanköpfe
-    Set Planköpfe = pPlanköpfe
+    Set planköpfe = pPlanköpfe
 End Function
 
 Public Function GetPlanköpfe(Optional ByVal Gewerk As String = vbNullString, Optional ByVal Planart As String = vbNullString) As Collection

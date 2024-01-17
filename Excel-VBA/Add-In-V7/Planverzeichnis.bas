@@ -48,7 +48,7 @@ Public Sub Create()
     Set TempWS = Application.ActiveWorkbook.Worksheets.Add
     Dim row                  As Long
     row = 1
-    For Each Plankopf In Globals.Planköpfe
+    For Each Plankopf In Globals.planköpfe
         With TempWS
             Select Case Plankopf.PLANTYP
             Case "PLA"

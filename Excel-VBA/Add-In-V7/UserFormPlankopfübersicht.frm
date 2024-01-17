@@ -14,6 +14,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
 
+
 '@Folder "Plankopf"
 '@ModuleDescription "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
 '@Version "Release V1.0.0"
@@ -21,7 +22,7 @@ Attribute VB_Description = "Übersicht aller erstellten Planköpfe im Projekt. Die
 Option Explicit
 
 Private icons                As UserFormIconLibrary
-Private Planköpfe            As New Collection
+Private planköpfe            As New Collection
 Private Filters              As Boolean
 
 Private Sub CommandButtonAdd_Click()

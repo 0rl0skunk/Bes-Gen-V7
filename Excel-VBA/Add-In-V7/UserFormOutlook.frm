@@ -14,6 +14,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "E-Mails direkt vom Beschriftungsgenerator erstellen und versenden."
 
+
 '@Folder("Outlook")
 '@ModuleDescription "E-Mails direkt vom Beschriftungsgenerator erstellen und versenden."
 '@Version "Release V1.0.0"
@@ -46,9 +47,33 @@ Private Sub CommandButton1_Click()
     Mail.Body = Anrede & vbNewLine & vbNewLine & Me.TextBoxFreitext.value & vbNewLine & Planliste
     Mail.Display 0
 
+    writeToVersandliste
     Unload Me
 
 End Sub
+
+Private Sub writeToVersandliste()
+
+Dim lastrow As Long
+With Globals.shVersand
+lastrow = .ListObjects("Versandliste").range.rows.Count + 5
+.Cells(lastrow, 1).value = JoinCollection(pPlanköpfe)
+.Cells(lastrow, 2).value = MailRecepientsTO
+.Cells(lastrow, 3).value = Format(Now, "dd.MM.YYYY")
+.Cells(lastrow, 6).value = "X"
+End With
+
+End Sub
+
+Private Function JoinCollection(planköpfe As Collection) As String
+Dim pla As IPlankopf
+Dim str As String
+For Each pla In planköpfe
+str = str & pla.Plannummer & " | " & pla.CurrentIndex.Index & vbNewLine
+Next
+JoinCollection = str
+End Function
+
 
 Private Function Planliste() As String
 

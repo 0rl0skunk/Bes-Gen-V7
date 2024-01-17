@@ -91,7 +91,7 @@ Public Sub Checkplot()
 
 End Sub
 
-Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
+Public Function CreatePlotList(ByVal planköpfe As Collection) As String
 
     Application.Cursor = xlWait
     Dim Folder               As String
@@ -103,13 +103,13 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
     ' Planköpfe Filtern um nur AutoCAD-Dateien zu beinhalten
     Dim e As IPlankopf
     Set pPlanköpfe = New Collection
-    For Each e In Planköpfe
+    For Each e In planköpfe
         If e.Gewerk = "Elektro" Or e.Gewerk = "Türfachplanung" Or e.Gewerk = "Brandschutzplanung" Then
             pPlanköpfe.Add e
         End If
     Next e
     
-    Set Planköpfe = Nothing
+    Set planköpfe = Nothing
     
     NewFiles = pPlanköpfe.Count
 

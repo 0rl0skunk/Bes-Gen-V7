@@ -14,6 +14,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Erster Versuch für eine Custom Fehlermeldung. Implementierung folgt zu einem späteren Zeitpunkt."
 
+
 '@Folder "Templates"
 '@ModuleDescription "Erster Versuch für eine Custom Fehlermeldung. Implementierung folgt zu einem späteren Zeitpunkt."
 '@Version "Release V1.0.0"
