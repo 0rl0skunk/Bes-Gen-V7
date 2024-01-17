@@ -77,4 +77,3 @@ Public Sub LogClear()
     Close #1
 End Sub
 
-

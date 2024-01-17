@@ -232,6 +232,7 @@ End Sub
 
 Private Sub UserForm_Initialize()
 
+    Application.Cursor = xlWait
     LoadListViewPlan Me.ListViewPlankopf
     Filters = False
     ShowFilter
@@ -240,6 +241,7 @@ Private Sub UserForm_Initialize()
     Me.LabelInstructions.Caption = "Planköpfe erstellen, bearbeiten und löschen"
 
     If Me.ListViewPlankopf.ListItems.Count < 1 Then CommandButtonAdd_Click
+    Application.Cursor = xlDefault
 
 End Sub
 

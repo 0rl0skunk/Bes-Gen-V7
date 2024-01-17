@@ -13,6 +13,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Repariert das TinLine Projekt, wenn Fehler mit den Planköpfen entstehen."
+
 '@Folder("Repair")
 '@ModuleDescription "Repariert das TinLine Projekt, wenn Fehler mit den Planköpfen entstehen."
 '@Version "Release V1.0.0"
@@ -23,12 +24,14 @@ Private icons                As UserFormIconLibrary
 
 Private Sub CommandButtonRepair_Click()
 
+    Application.Cursor = xlWait
     If Me.CheckBoxPLAELE.value Then PlanBereinigen "01_EP", "Elektro"
     If Me.CheckBoxPLATF.value Then PlanBereinigen "05_TF", "Türfachplanung"
     If Me.CheckBoxPLABF.value Then PlanBereinigen "06_BS", "Brandschutzplanung"
     MsgBox "Das Projekt wurde bereinigt.", vbInformation, "Bereinigen abgaschlossen"
     Application.StatusBar = False
     Unload Me
+    Application.Cursor = xlDefault
 
 End Sub
 

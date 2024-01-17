@@ -20,18 +20,22 @@ Public Sub LoadListViewPlan(ByRef control As ListView)
         .FlatScrollBar = False
         With .ColumnHeaders
             .Clear
+            If control.CheckBoxES Then
             .Add , , vbNullString, 20            ' 0
+            Else
+            .Add , , vbNullString, 0    '0
+            End If
             .Add , , "ID", 0                     ' 1
-            .Add , , "Plannummer"                ' 2
-            .Add , , "Geschoss"                  ' 3
-            .Add , , "Gebäude"                   ' 4
-            .Add , , "Gebäudeteil"               ' 5
-            .Add , , "Gewerk", 0                 ' 6
-            .Add , , "Untergewerk", 0            ' 7
-            .Add , , "Planart", 0                ' 8
-            .Add , , "Gezeichnet"                ' 9
-            .Add , , "Geprüft"                   ' 10
-            .Add , , "Index"                     ' 11
+            .Add , , "Plannummer", 70               ' 2
+            .Add , , "Geschoss", 70                 ' 3
+            .Add , , "Gebäude", 70                  ' 4
+            .Add , , "Gebäudeteil", 70              ' 5
+            .Add , , "Gewerk", 70                 ' 6
+            .Add , , "Untergewerk", 70            ' 7
+            .Add , , "Planart", 70                ' 8
+            .Add , , "Gezeichnet", 70               ' 9
+            .Add , , "Geprüft", 70                  ' 10
+            .Add , , "Index", 20                    ' 11
         End With
         If Globals.shStoreData Is Nothing Then Globals.SetWBs
         lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count

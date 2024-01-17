@@ -40,9 +40,9 @@ End Sub
 
 Private Function CreateFolderXRef() As Boolean
 
-Dim fso As New FileSystemObject
-MkDir Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
-fso.CopyFolder "H:\TinLine\01_Standards\00_Vorlageordner\00_Xref", Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
+    Dim fso As New FileSystemObject
+    MkDir Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
+    fso.CopyFolder "H:\TinLine\01_Standards\00_Vorlageordner\00_Xref", Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
 
 End Function
 

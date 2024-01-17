@@ -93,6 +93,7 @@ End Sub
 
 Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
 
+    Application.Cursor = xlWait
     Dim Folder               As String
     Dim strFolderExists      As String
 
@@ -101,10 +102,10 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
     
     ' Planköpfe Filtern um nur AutoCAD-Dateien zu beinhalten
     Dim e As IPlankopf
-        Set pPlanköpfe = New Collection
-        For Each e In Planköpfe
+    Set pPlanköpfe = New Collection
+    For Each e In Planköpfe
         If e.Gewerk = "Elektro" Or e.Gewerk = "Türfachplanung" Or e.Gewerk = "Brandschutzplanung" Then
-        pPlanköpfe.Add e
+            pPlanköpfe.Add e
         End If
     Next e
     
@@ -113,7 +114,7 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
     NewFiles = pPlanköpfe.Count
 
     If Globals.shPData Is Nothing Then Globals.SetWBs
-
+    
     Folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
     strFolderExists = dir(Folder)
 
@@ -191,6 +192,8 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
     plotPlanliste
 
     CreatePlotList = OutputFolder
+    
+    Application.Cursor = xlDefault
 
 End Function
 

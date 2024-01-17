@@ -498,11 +498,11 @@ Private Sub GetPlanüberschrift()
     Dim Gebäudeteil As String
     Dim GebäudeTeilKF As String
     If This.Gebäudeteil = "Gesamt" Then
-    Gebäudeteil = vbNullString
-    GebäudeTeilKF = vbNullString
+        Gebäudeteil = vbNullString
+        GebäudeTeilKF = vbNullString
     Else
-    Gebäudeteil = This.Gebäudeteil
-    GebäudeTeilKF = This.GebäudeTeilKF
+        Gebäudeteil = This.Gebäudeteil
+        GebäudeTeilKF = This.GebäudeTeilKF
     End If
     Select Case This.PLANTYP
     Case "PLA"

@@ -72,10 +72,12 @@ End Sub
 
 Private Sub CommandButtonUpgrade_Click()
 
+    Application.Cursor = xlWait
     Upgrade
     WBOldVersion.Close False
     Globals.Projekt True
     Unload Me
+    Application.Cursor = xlDefault
 
 End Sub
 
