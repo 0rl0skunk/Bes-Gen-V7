@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormLayout
    ClientTop       =   465
    ClientWidth     =   5880
    OleObjectBlob   =   "UserFormLayout.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormLayout"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +13,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Einfaches Auswählen und definieren eines Layouts für Plan und Prinzip Planköpfe."
+
 
 '@Folder "Plankopf"
 '@ModuleDescription "Einfaches Auswählen und definieren eines Layouts für Plan und Prinzip Planköpfe."
@@ -201,20 +202,20 @@ Private Sub ChangeFormat()
                              height & "x" & width & "cm"
 
     Select Case MultiPageType
-    Case 0                                                                'Plan
+    Case 0                                       'Plan
         Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                  "Höhe: " & mHeight & "m" & vbLf & _
                                  "Beite: " & mWidth & "m"
-    Case 1                                                                'Schema
+    Case 1                                       'Schema
         Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                  "Höhe: " & mHeight & "m" & vbLf & _
                                  "Beite: " & mWidth & "m"
-    Case 2                                                                'Prinzip
+    Case 2                                       'Prinzip
         Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                  "Höhe: " & Application.WorksheetFunction.RoundDown(mHeight / 3, 0) & " Geschosse" & vbLf & _
                                  "Beite: " & mWidth & "m"
 
-    Case 3                                                                'Detail
+    Case 3                                       'Detail
         Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
                                  "Höhe: " & mHeight & "m" & vbLf & _
                                  "Beite: " & mWidth & "m"

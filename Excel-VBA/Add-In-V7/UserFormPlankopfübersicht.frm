@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopfübersicht
    ClientTop       =   465
    ClientWidth     =   17280
    OleObjectBlob   =   "UserFormPlankopfübersicht.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormPlankopfübersicht"
 Attribute VB_GlobalNameSpace = False
@@ -14,6 +14,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
 
+
 '@Folder "Plankopf"
 '@ModuleDescription "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
 '@Version "Release V1.0.0"
@@ -21,7 +22,7 @@ Attribute VB_Description = "Übersicht aller erstellten Planköpfe im Projekt. Die
 Option Explicit
 
 Private icons                As UserFormIconLibrary
-Private Planköpfe            As New Collection
+Private planköpfe            As New Collection
 Private Filters              As Boolean
 
 Private Sub CommandButtonAdd_Click()
@@ -42,7 +43,7 @@ Private Sub CommandButtonEdit_Click()
     Dim row                  As Long
     row = Globals.shStoreData.range("A:A").Find(Me.ListViewPlankopf.SelectedItem.ListSubItems.Item(1).Text).row ' die zu ladende Reihe aus der Datenbank finden
     Dim frm                  As New UserFormPlankopf
-    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt          ' ein Plankopf-Objekt aus der Reihe erstellen und im UserForm laden
+    frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt ' ein Plankopf-Objekt aus der Reihe erstellen und im UserForm laden
     frm.setIcons Edit
     frm.Show 1
 
@@ -193,7 +194,7 @@ Private Sub FilterListView(ByVal Index As String, ByVal FilterValue As String)
     Dim e                    As ListItem
 StartOver:
     For Each e In Me.ListViewPlankopf.ListItems
-Debug.Print e.ListSubItems.Item(Index).Text
+        Debug.Print e.ListSubItems.Item(Index).Text
         If FilterValue <> "Alles" Then
             If e.ListSubItems.Item(Index).Text <> FilterValue Then
                 Me.ListViewPlankopf.ListItems.Remove e.Index
@@ -232,6 +233,7 @@ End Sub
 
 Private Sub UserForm_Initialize()
 
+    Application.Cursor = xlWait
     LoadListViewPlan Me.ListViewPlankopf
     Filters = False
     ShowFilter
@@ -240,6 +242,7 @@ Private Sub UserForm_Initialize()
     Me.LabelInstructions.Caption = "Planköpfe erstellen, bearbeiten und löschen"
 
     If Me.ListViewPlankopf.ListItems.Count < 1 Then CommandButtonAdd_Click
+    Application.Cursor = xlDefault
 
 End Sub
 

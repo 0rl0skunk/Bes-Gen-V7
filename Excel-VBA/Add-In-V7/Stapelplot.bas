@@ -5,8 +5,8 @@ Attribute VB_Name = "Stapelplot"
 
 Option Explicit
 
-Private a                    As File
-Private dsd                  As String                                    ' Dateiname von Stapelplott Datei
+Private a
+Private dsd                  As String           ' Dateiname von Stapelplott Datei
 Private OutputFolder         As String
 Private NewFiles             As Long
 Private OldFiles             As Long
@@ -65,12 +65,12 @@ Sub plotPlanliste()
 End Sub
 
 Public Sub Checkplot()
-    Dim FSO                  As New FileSystemObject
+    Dim fso                  As New FileSystemObject
     Dim File                 As scripting.File
     Dim PDFFile              As IPlankopf
     Dim i                    As Long
 
-    For Each File In FSO.GetFolder(OutputFolder).files
+    For Each File In fso.GetFolder(OutputFolder).files
         i = 1
         For Each PDFFile In pPlanköpfe
             If File.Name = PDFFile.PDFFileName & ".pdf" Then
@@ -91,28 +91,37 @@ Public Sub Checkplot()
 
 End Sub
 
-Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
+Public Function CreatePlotList(ByVal planköpfe As Collection) As String
 
+    Application.Cursor = xlWait
     Dim Folder               As String
     Dim strFolderExists      As String
 
     Dim outputCol            As New Collection
     Dim Plan                 As IPlankopf
-
-    Set pPlanköpfe = Planköpfe
-    Set Planköpfe = Nothing
-
+    
+    ' Planköpfe Filtern um nur AutoCAD-Dateien zu beinhalten
+    Dim e As IPlankopf
+    Set pPlanköpfe = New Collection
+    For Each e In planköpfe
+        If e.Gewerk = "Elektro" Or e.Gewerk = "Türfachplanung" Or e.Gewerk = "Brandschutzplanung" Then
+            pPlanköpfe.Add e
+        End If
+    Next e
+    
+    Set planköpfe = Nothing
+    
     NewFiles = pPlanköpfe.Count
 
     If Globals.shPData Is Nothing Then Globals.SetWBs
-
+    
     Folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
     strFolderExists = dir(Folder)
 
     'If strFolderExists = "" Then MkDir folder
     ' Open the select folder prompt
     With Application.FileDialog(msoFileDialogFolderPicker)
-        If .Show = -1 Then                                                ' if OK is pressed
+        If .Show = -1 Then                       ' if OK is pressed
             OutputFolder = .SelectedItems(1)
         End If
     End With
@@ -183,15 +192,17 @@ Public Function CreatePlotList(ByVal Planköpfe As Collection) As String
     plotPlanliste
 
     CreatePlotList = OutputFolder
+    
+    Application.Cursor = xlDefault
 
 End Function
 
 Private Sub Eintrag(ByVal Plan As IPlankopf)
-    a.WriteLine ("[DWF6Sheet:" & Plan.PDFFileName & "]")                  ' PDF Ablage
-    a.WriteLine ("DWG=" & Plan.dwgFile)                                   ' DWG Ablage
-    a.WriteLine ("Layout=" & Plan.LayoutName)                             ' Plannummer / Layoutname
+    a.WriteLine ("[DWF6Sheet:" & Plan.PDFFileName & "]") ' PDF Ablage
+    a.WriteLine ("DWG=" & Plan.dwgFile)          ' DWG Ablage
+    a.WriteLine ("Layout=" & Plan.LayoutName)    ' Plannummer / Layoutname
     a.WriteLine ("Setup=")
-    a.WriteLine ("OriginalSheetPath=" & Plan.dwgFile)                     ' DWG Ablage
+    a.WriteLine ("OriginalSheetPath=" & Plan.dwgFile) ' DWG Ablage
     a.WriteLine ("Has Plot Port=0")
     a.WriteLine ("Has3DDWF=0")
     a.WriteLine (" ")

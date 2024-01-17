@@ -1,11 +1,11 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopf 
-   ClientHeight    =   11760
+   ClientHeight    =   13500
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9960.001
    OleObjectBlob   =   "UserFormPlankopf.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormPlankopf"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +13,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
+
 
 '@Folder "Plankopf"
 '@ModuleDescription "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
@@ -117,13 +118,13 @@ Private Sub CommandLayoutWählen_Click()
 End Sub
 
 '@Ignore ProcedureNotUsed
-Private Sub EditDWG_MouseDown(ByVal Button As Long, ByVal Shift As Long, ByVal X As Single, ByVal Y As Single)
+Private Sub EditDWG_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
     ' DWG-Datei im TinLine öffnen
     TinLine.setTinProject pProjekt.ProjektOrdnerCAD
     Select Case Me.MultiPageTyp.value
-    Case 0                                                                'Plan
+    Case 0                                       'Plan
         TinLine.setTinPlanBibliothek
-    Case 1                                                                'Prinzip
+    Case 1                                       'Prinzip
         TinLine.setTinPrinzipBibiothek
     End Select
 
@@ -135,15 +136,15 @@ Private Sub MultiPageTyp_Change()
     ' Anpassungen wenn der Plantyp geändert wird
     ' TODO Remove Geschoss "Gesamt" from Plan and Schema Beschriftungen
     Select Case Me.MultiPageTyp.value
-    Case 0                                                                'PLA
+    Case 0                                       'PLA
         Me.ComboBoxGebäude.Enabled = True
         Me.ComboBoxGebäudeTeil.Enabled = True
         Me.ComboBoxGeschoss.Enabled = True
-    Case 1                                                                'SCH
+    Case 1                                       'SCH
         Me.ComboBoxGebäude.Enabled = True
         Me.ComboBoxGebäudeTeil.Enabled = True
         Me.ComboBoxGeschoss.Enabled = True
-    Case 2                                                                'PRI
+    Case 2                                       'PRI
         Me.ComboBoxGebäude.value = "Gesamt"
         Me.ComboBoxGebäudeTeil.value = "Gesamt"
         Me.ComboBoxGeschoss.value = "Gesamt"
@@ -169,7 +170,7 @@ Private Sub MultiPageTyp_Change()
 End Sub
 
 '@Ignore ProcedureNotUsed
-Private Sub Preview_MouseDown(ByVal Button As Long, ByVal Shift As Long, ByVal X As Single, ByVal Y As Single)
+Private Sub Preview_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
     ' Plankopfpreview öffnen
     Dim frm                  As New UserFormPlankopfPreview
     frm.LoadClass FormToPlankopf, pProjekt
@@ -449,9 +450,9 @@ End Sub
 
 Private Sub ComboBoxEPHGewerk_Change()
 
-    Dim row                  As Variant                                   ' Reihe in welcher der Kontext gefunden wurde
-    Dim col                  As Long                                      ' Spalte in welcher der Kontext gefunden wurde
-    Dim lastrow              As Long                                      ' Die Letzte verwendete Zeile in der Spalte
+    Dim row                  As Variant          ' Reihe in welcher der Kontext gefunden wurde
+    Dim col                  As Long             ' Spalte in welcher der Kontext gefunden wurde
+    Dim lastrow              As Long             ' Die Letzte verwendete Zeile in der Spalte
     Dim ws                   As Worksheet: Set ws = Globals.shPData
 
     If Me.ComboBoxEPHGewerk.value = "-- Bitte wählen --" Then
@@ -476,32 +477,32 @@ Private Sub ComboBoxEPHGewerk_Change()
 
     If Not IsError(Application.Match(HGewerk & " PLA", ws.range("10:10"), 0)) Then
         ' checkt ob das Gewerk vorhanden ist und verwendet werden kann
-1       col = Application.Match(HGewerk & " PLA", ws.range("10:10"), 0)   ' findet die aktuelle Spalte mit dem ausgewählten Wert für das Hauptgewerk
+1       col = Application.Match(HGewerk & " PLA", ws.range("10:10"), 0) ' findet die aktuelle Spalte mit dem ausgewählten Wert für das Hauptgewerk
         lastrow = Application.CountA(ws.Cells(13, col).EntireColumn) + 10 ' findet die Letzte Reihe in welcher der Wert ausgewählt wurde
 
-        Me.ComboBoxEPUGewerk.Clear                                        ' löscht die aktuelle Liste der ComboBox
+        Me.ComboBoxEPUGewerk.Clear               ' löscht die aktuelle Liste der ComboBox
 
-        For row = 13 To lastrow                                           ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
+        For row = 13 To lastrow                  ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
             If ws.Cells(row, col).value <> vbNullString Then
                 Me.ComboBoxEPUGewerk.AddItem ws.Cells(row, col).value
             End If
         Next row
 
-        Me.ComboBoxEPUGewerk.value = "-- Bitte wählen --"                 ' Setzt den default wert der ComboBox
+        Me.ComboBoxEPUGewerk.value = "-- Bitte wählen --" ' Setzt den default wert der ComboBox
 
         ' --- Planart ---
-2       col = Application.Match(HGewerk, ws.range("9:9"), 0)              ' findet die aktuelle Spalte mit dem ausgewählten Wert für das Hauptgewerk
+2       col = Application.Match(HGewerk, ws.range("9:9"), 0) ' findet die aktuelle Spalte mit dem ausgewählten Wert für das Hauptgewerk
         lastrow = Application.CountA(ws.Cells(13, col).EntireColumn) + 10 ' findet die Letzte Reihe in welcher der Wert ausgewählt wurde
 
-        Me.ComboBoxEPArt.Clear                                            ' löscht die aktuelle Liste der ComboBox
+        Me.ComboBoxEPArt.Clear                   ' löscht die aktuelle Liste der ComboBox
 
-        For row = 13 To lastrow                                           ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
+        For row = 13 To lastrow                  ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
             If ws.Cells(row, col).value <> vbNullString Then
                 Me.ComboBoxEPArt.AddItem ws.Cells(row, col).value
             End If
         Next row
 
-        Me.ComboBoxEPArt.value = "-- Bitte wählen --"                     ' Setzt den default wert der ComboBox
+        Me.ComboBoxEPArt.value = "-- Bitte wählen --" ' Setzt den default wert der ComboBox
 
     End If
 
@@ -643,6 +644,7 @@ End Sub
 Private Sub ComboBoxGebäude_Change()
     ' Funktionsweise gem. Kommentaren ComboboxEPHGewerk
     Me.ComboBoxGebäude.BackColor = SystemColorConstants.vbWindowBackground
+    If Me.MultiPageTyp.value = 2 Then Exit Sub
     Dim col                  As Long
     Dim lastrow              As Long
     Dim arr()                As Variant

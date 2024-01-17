@@ -8,7 +8,7 @@ Attribute VB_Description = "Beinhaltet Globale Variabeln und Funktionen auf welc
 Option Explicit
 
 Public Const Version         As Double = 7#
-Public Const maxlen          As Long = 35                                 'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
+Public Const maxlen          As Long = 35        'Maximale Anzahl Zeichen der Planüberschrift im Modul 'Plankopf.cls'
 Public Const TinLineProjekte As String = "H:\TinLine\00_Projekte\"
 Public Const XMLVorlage      As String = "H:\TinLine\01_Standards\transform.xsl"
 Public Const TemplatePagesXslm As String = "H:\TinLine\01_Standards\Beschriftungsgenerator\Bes-Gen-PZM_Templates.xlsm"
@@ -49,9 +49,9 @@ Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
     Set Projekt = pProjekt
 End Function
 
-Public Function Planköpfe() As Collection
+Public Function planköpfe() As Collection
     If pPlanköpfe Is Nothing Then GetPlanköpfe
-    Set Planköpfe = pPlanköpfe
+    Set planköpfe = pPlanköpfe
 End Function
 
 Public Function GetPlanköpfe(Optional ByVal Gewerk As String = vbNullString, Optional ByVal Planart As String = vbNullString) As Collection

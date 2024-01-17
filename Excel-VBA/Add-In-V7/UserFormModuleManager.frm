@@ -5,17 +5,15 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormModuleManager
    ClientTop       =   465
    ClientWidth     =   6480
    OleObjectBlob   =   "UserFormModuleManager.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormModuleManager"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-'@Folder("Excel-Items")
-
 Option Explicit
+'@Folder("Excel-Items")
 
 Public pModules              As New Collection
 
@@ -28,6 +26,7 @@ End Sub
 Private Sub UserForm_Initialize()
 
     Me.TitleLabel.Caption = "Module-Manager"
+    Me.LabelSystemTime.Caption = Now
 
 End Sub
 

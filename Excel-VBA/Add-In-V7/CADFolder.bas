@@ -26,6 +26,7 @@ Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz 
     If Schemata Then CreateFoldersES
     If Türfachplanung Then CreateFoldersTF
     If Brandschutz Then CreateFoldersBR
+    If Pläne Or Prinzip Or Türfachplanung Or Brandschutz Then CreateFolderXRef
     Select Case MsgBox("Pfad im Explorer öffnen?", vbYesNo, "Projekt TinLine erstellt")
     Case vbYes
         ' open explorer
@@ -36,6 +37,14 @@ Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz 
         Exit Sub
     End Select
 End Sub
+
+Private Function CreateFolderXRef() As Boolean
+
+    Dim fso As New FileSystemObject
+    MkDir Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
+    fso.CopyFolder "H:\TinLine\01_Standards\00_Vorlageordner\00_Xref", Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
+
+End Function
 
 Private Function CreateFoldersTinLine() As Boolean
     On Error GoTo ErrHandler
@@ -59,7 +68,6 @@ Private Sub CreateFoldersEP()
     Globals.shProjekt.range("A1").value = True
     Dim Folder               As String
     Folder = Globals.Projekt.ProjektOrdnerCAD & "\01_EP"
-    MkDir Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
     MkDir Folder
     MkDir Globals.Projekt.ProjektOrdnerCAD & "\04_DE"
     GebäudeFolders Folder, "Elektro"
@@ -123,7 +131,7 @@ End Sub
 Private Sub CreateFoldersBR()
     Globals.shProjekt.range("A5").value = True
     Dim Folder               As String
-    Folder = Globals.Projekt.ProjektOrdnerCAD & "\06_BR"
+    Folder = Globals.Projekt.ProjektOrdnerCAD & "\06_BS"
     MkDir Folder
     GebäudeFolders Folder, "Brandschutzplanung"
 End Sub
@@ -254,7 +262,7 @@ Private Sub TinLineFloorXML(ByVal Plan As IPlankopf)
         NodChild.appendChild NodGrandChild
 
         ' XML formatieren
-Debug.Print Plan.FolderName & "\TinPlanFloor.xml"
+        Debug.Print Plan.FolderName & "\TinPlanFloor.xml"
         oXml.Save Plan.FolderName & "\TinPlanFloor.xml"
         oXml.transformNodeToObject oXsl, oXml
         oXml.Save Plan.FolderName & "\TinPlanFloor.xml"
@@ -295,7 +303,7 @@ Private Sub TinLinePlan(ByVal Plan As IPlankopf)
     NodGrandChild.Text = vbNullString
     NodChild.appendChild NodGrandChild
     ' XML formatieren
-Debug.Print Plan.XMLFile
+    Debug.Print Plan.XMLFile
     oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
     oXml.Save Plan.XMLFile
@@ -336,7 +344,7 @@ Private Sub TinLinePrinzip(ByVal Plan As IPlankopf)
     NodGrandChild.Text = vbNullString
     NodChild.appendChild NodGrandChild
     ' XML formatieren
-Debug.Print Plan.XMLFile
+    Debug.Print Plan.XMLFile
     oXml.Save Plan.XMLFile
     oXml.transformNodeToObject oXsl, oXml
     oXml.Save Plan.XMLFile

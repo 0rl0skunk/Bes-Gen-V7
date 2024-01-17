@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormMessage
    ClientTop       =   450
    ClientWidth     =   5160
    OleObjectBlob   =   "UserFormMessage.frx":0000
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   3  'Windows-Standard
 End
 Attribute VB_Name = "UserFormMessage"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +13,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Erster Versuch für eine Custom Fehlermeldung. Implementierung folgt zu einem späteren Zeitpunkt."
+
 
 '@Folder "Templates"
 '@ModuleDescription "Erster Versuch für eine Custom Fehlermeldung. Implementierung folgt zu einem späteren Zeitpunkt."
@@ -31,17 +32,17 @@ End Enum
 Public Sub Typ(ByVal MessageType As MSGTyp, ByVal MessageText As String, Optional ByVal Title As String = "Ein Fehler ist aufgetreten!", Optional ByVal OpenLog As Boolean = False)
 
     Select Case MessageType
-    Case 0                                                                ' Error
-        Me.TitleIcon.Picture = icons.IconError.Picture                    ' Icon setzen
-        Me.TitleLabel.Caption = Title                                     ' Titel gemäss Eingabe
-        Me.LabelMessage.value = MessageText                               ' Message gemäss Eingabe
-        If OpenLog Then Me.CommandButtonLog.Visible = True                ' der Button für die Anzeige vom Log kann über den TYP definiert werden.
-    Case 1                                                                ' Warning
+    Case 0                                       ' Error
+        Me.TitleIcon.Picture = icons.IconError.Picture ' Icon setzen
+        Me.TitleLabel.Caption = Title            ' Titel gemäss Eingabe
+        Me.LabelMessage.value = MessageText      ' Message gemäss Eingabe
+        If OpenLog Then Me.CommandButtonLog.Visible = True ' der Button für die Anzeige vom Log kann über den TYP definiert werden.
+    Case 1                                       ' Warning
         Me.TitleIcon.Picture = icons.IconWarning.Picture
         Me.TitleLabel.Caption = Title
         Me.LabelMessage.value = MessageText
         If OpenLog Then Me.CommandButtonLog.Visible = True
-    Case 2                                                                ' Info
+    Case 2                                       ' Info
         Me.TitleIcon.Picture = icons.IconInfo.Picture
         Me.TitleLabel.Caption = Title
         Me.LabelMessage.value = MessageText

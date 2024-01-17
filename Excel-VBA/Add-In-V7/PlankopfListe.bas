@@ -7,53 +7,59 @@ Option Explicit
 
 Public Sub LoadListViewPlan(ByRef control As ListView)
 
-    Dim Pla                  As IPlankopf
+    Dim pla                  As IPlankopf
     Dim li                   As ListItem
-
     Dim row                  As Long
     Dim lastrow              As Long
-
 
     With control
         .ListItems.Clear
         .View = lvwReport
-        .CheckBoxES = True
-        .Gridlines = True
+        .Gridlines = False
         .FullRowSelect = True
+        .FlatScrollBar = False
         With .ColumnHeaders
             .Clear
-            .Add , , vbNullString, 20                                     ' 0
-            .Add , , "ID", 0                                              ' 1
-            .Add , , "Plannummer"                                         ' 2
-            .Add , , "Geschoss"                                           ' 3
-            .Add , , "Gebäude"                                            ' 4
-            .Add , , "Gebäudeteil"                                        ' 5
-            .Add , , "Gewerk", 0                                          ' 6
-            .Add , , "Untergewerk", 0                                     ' 7
-            .Add , , "Planart", 0                                         ' 8
-            .Add , , "Gezeichnet"                                         ' 9
-            .Add , , "Geprüft"                                            ' 10
-            .Add , , "Index"                                              ' 11
+            If control.CheckBoxES Then
+            .Add , , vbNullString, 20            ' 0
+            Else
+            .Add , , vbNullString, 0    '0
+            End If
+            .Add , , "ID", 0                     ' 1
+            .Add , , "Plannummer", 70               ' 2
+            .Add , , "Geschoss", 70                 ' 3
+            .Add , , "Gebäude", 70                  ' 4
+            .Add , , "Gebäudeteil", 70              ' 5
+            .Add , , "Gewerk", 70                 ' 6
+            .Add , , "Untergewerk", 70            ' 7
+            .Add , , "Planart", 70                ' 8
+            .Add , , "Gezeichnet", 70               ' 9
+            .Add , , "Geprüft", 70                  ' 10
+            .Add , , "Index", 20                    ' 11
         End With
         If Globals.shStoreData Is Nothing Then Globals.SetWBs
         lastrow = Globals.shStoreData.range("A1").CurrentRegion.rows.Count
         For row = 3 To lastrow
-            Set Pla = PlankopfFactory.LoadFromDataBase(row)
+            Application.StatusBar = "Lädt Plankopf " & row - 2 & " von " & lastrow - 2
+            Set pla = PlankopfFactory.LoadFromDataBase(row)
             'Planköpfe.Add Pla                    ', Pla.ID
             Set li = .ListItems.Add()
-            li.ListSubItems.Add , , Pla.ID
-            li.ListSubItems.Add , , Pla.Plannummer
-            li.ListSubItems.Add , , Pla.Geschoss
-            li.ListSubItems.Add , , Pla.Gebäude
-            li.ListSubItems.Add , , Pla.Gebäudeteil
-            li.ListSubItems.Add , , Pla.Gewerk
-            li.ListSubItems.Add , , Pla.UnterGewerk
-            li.ListSubItems.Add , , Pla.Planart
-            li.ListSubItems.Add , , Pla.Gezeichnet
-            li.ListSubItems.Add , , Pla.Geprüft
-            li.ListSubItems.Add , , Pla.CurrentIndex.Index
+            li.ListSubItems.Add , , pla.ID
+            li.ListSubItems.Add , , pla.Plannummer
+            li.ListSubItems.Add , , pla.Geschoss
+            li.ListSubItems.Add , , pla.Gebäude
+            li.ListSubItems.Add , , pla.Gebäudeteil
+            li.ListSubItems.Add , , pla.Gewerk
+            li.ListSubItems.Add , , pla.UnterGewerk
+            li.ListSubItems.Add , , pla.Planart
+            li.ListSubItems.Add , , pla.Gezeichnet
+            li.ListSubItems.Add , , pla.Geprüft
+            li.ListSubItems.Add , , pla.CurrentIndex.Index
         Next row
+        .Refresh
     End With
+    
+    Application.StatusBar = False
 
 End Sub
 

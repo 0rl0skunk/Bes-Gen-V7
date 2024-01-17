@@ -17,16 +17,16 @@ Public Sub TemplateErrorHandler()
         "Code:   "
 
     ' vv something could go wrong here vv
-    If Not Dev Then On Error GoTo Err1                                    ' show the fancy error messages for the Users and the functional one for the developers
+    If Not Dev Then On Error GoTo Err1           ' show the fancy error messages for the Users and the functional one for the developers
     writelog LogError, "trying to divide 9/0"
-Debug.Print 9 / 0
+    Debug.Print 9 / 0
 
     GoTo noerr1
 
 Err1:
     ' the "SOMETHING" happened
-    On Error GoTo -1                                                      ' reset error code from excel to create a own one
-    On Error GoTo ErrHandler                                              ' goto the fancy error messages
+    On Error GoTo -1                             ' reset error code from excel to create a own one
+    On Error GoTo ErrHandler                     ' goto the fancy error messages
     err.Raise 83, , "A good Description of what happened" & vbNewLine & _
                    "maybe even on two seperate Lines"
 
@@ -48,7 +48,7 @@ ErrHandler:
         ' if it is NOT solvable then display the error message
         errFrm.Typ TypWarning, ErrSource & err.Number & vbNewLine & "Decsription:" & vbNewLine & err.Description
         errFrm.Show 1
-    Case Else                                                             'a "unhandled" error occured
+    Case Else                                    'a "unhandled" error occured
         errFrm.Typ typError, ErrSource & err.Number & vbNewLine & "Decsription:" & vbNewLine & err.Description, , True
         errFrm.Show 1
     End Select
