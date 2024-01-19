@@ -3,7 +3,6 @@ Attribute VB_Description = "Beinhaltet nützliche Funktionen welche nicht einem M
 
 '@IgnoreModule VariableNotUsed
 '@ModuleDescription "Beinhaltet nützliche Funktionen welche nicht einem Modul zugeordnet werden können."
-'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -511,11 +510,16 @@ Public Function getUserName() As String
 
     Dim arrUsername()        As String
     Dim UserName             As String
+    
+    On Error GoTo ErrHandler
+    
     UserName = Application.UserName
     
     arrUsername = Split(UserName, " ")
     getUserName = Left(arrUsername(1), 2) & Left(arrUsername(0), 2)
-    'getUserName = UserName
+    
+ErrHandler:
+    getUserName = UserName
 
 End Function
 

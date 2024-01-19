@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopfübersicht
    ClientTop       =   465
    ClientWidth     =   17280
    OleObjectBlob   =   "UserFormPlankopfübersicht.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormPlankopfübersicht"
 Attribute VB_GlobalNameSpace = False
@@ -15,20 +15,8 @@ Attribute VB_Exposed = False
 Attribute VB_Description = "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
 
 
-
-
-
-
-
-
-
-
-
-
-
 '@Folder "Plankopf"
 '@ModuleDescription "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
-'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -175,7 +163,11 @@ Private Sub CommandButtonDelete_Click()
 
     With Globals.shStoreData
         Dim info             As String
-        info = vbNewLine & .Cells(row, 14).value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Indexe"
+        If IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count > 1 Then
+            info = vbNewLine & .Cells(row, 14).value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Indexe"
+        Else
+            info = vbNewLine & .Cells(row, 14).value & vbNewLine & IndexFactory.GetIndexes(PlankopfFactory.LoadFromDataBase(row)).Count & " Index"
+        End If
     End With
 
     Select Case MsgBox("Bist du sicher dass du den Plankopf löschen willst?" & info, vbYesNo, "Plankopf löschen")
@@ -230,6 +222,7 @@ End Sub
 Private Sub ListViewPlankopf_DblClick()
 
     Dim row                  As Long
+    If Me.ListViewPlankopf.SelectedItem Is Nothing Then Exit Sub
     If Globals.shStoreData.Cells(4, 1).value = vbNullString Then
         row = 3
     Else

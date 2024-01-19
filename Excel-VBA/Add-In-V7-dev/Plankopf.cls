@@ -11,7 +11,6 @@ Attribute VB_Description = "Plankopf Objekt für einfacheres Management von Plank
 
 '@Folder "Plankopf"
 '@ModuleDescription "Plankopf Objekt für einfacheres Management von Planköpfen."
-'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -68,9 +67,6 @@ Private This                 As TPlankopf
 Private Inputs               As TPlankopf
 Private pProjekt             As IProjekt
 
-' -------------------------------
-' --- Properties
-' -------------------------------
 Private Property Get IPlankopf_Gewerk() As String
     IPlankopf_Gewerk = This.Gewerk
 End Property
@@ -232,9 +228,7 @@ Private Property Get IPlankopf_AnlageNummer() As String
     IPlankopf_AnlageNummer = This.AnlageNummer
 End Property
 
-' -------------------------------
-' --- Functions
-' -------------------------------
+' --- Functions ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Public Function Filldata( _
        ByVal Projekt As IProjekt, _
@@ -537,6 +531,7 @@ Private Sub GetPlanüberschrift()
         Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Gewerk, This.AnlageTyp, This.Gebäude, This.Geschoss, This.Gebäudeteil, "Anlagenummer:", This.AnlageNummer)
     End Select
 
+    ' wurde die Planüberschrift bearbeitet oder nicht?
     If This.Planüberschrift <> Planüberschrift And This.Planüberschrift <> vbNullString Then
         Select Case MsgBox("Die Beschriftung: " & This.Planüberschrift & " ist nicht Standard." & vbNewLine & "Soll diese mit der Standardmässigen Überschrift ersetzt werden?" & vbNewLine & Planüberschrift, vbYesNo, "Beschriftung Überschreiben?")
         Case vbYes
@@ -611,9 +606,6 @@ Public Sub Refresh()
     writelog LogInfo, "Planablage-Namen aktualisiert: " & This.PDFFileName
 End Sub
 
-' -------------------------------
-' --- Subs
-' -------------------------------
 Private Sub IPlankopf_AddIndex(NewValue As IIndex)
 
     This.Indexes.Add NewValue

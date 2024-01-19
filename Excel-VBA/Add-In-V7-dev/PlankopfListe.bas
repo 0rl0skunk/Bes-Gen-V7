@@ -1,7 +1,7 @@
 Attribute VB_Name = "PlankopfListe"
 
 '@Folder("Plankopf")
-'@Version "Release V1.0.0"
+'@ModuleDescription "Alle Plankopflisten werden über dieses Modul geladen, damit alle gleich aussehen."
 
 Option Explicit
 

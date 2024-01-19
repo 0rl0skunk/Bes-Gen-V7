@@ -12,7 +12,6 @@ Attribute VB_Description = "Interface für 'Plankopf.cls'."
 '@Folder "Plankopf"
 '@Interface
 '@ModuleDescription "Interface für 'Plankopf.cls'."
-'@Version "Release V1.0.0"
 
 Option Explicit
 

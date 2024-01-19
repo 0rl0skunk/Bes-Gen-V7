@@ -4,7 +4,6 @@ Attribute VB_Description = "Handelt die Interaktion mit dem 'Custom Ribbon' welc
 '@Folder "Custom UI"
 '@IgnoreModule ProcedureNotUsed, VariableNotUsed
 '@ModuleDescription "Handelt die Interaktion mit dem 'Custom Ribbon' welches beim öffnen von Excel erstellt wird."
-'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -35,6 +34,7 @@ Set objRibbon = Nothing
 End Function
 
 Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
+    ' ist das Projekt schon erstellt. Pläne etc. sollen erst erstellt werden können wenn das Projekt auch vorhanden ist.
     If Application.ActiveWorkbook.FileFormat <> 50 Then
         returnedVal = False
         If control.ID = "customGroupNoBesGen" Then returnedVal = True Else returnedVal = False
@@ -55,6 +55,8 @@ Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
                 returnedVal = True
             Case "customGroupNoBesGen"
                 returnedVal = False
+            Case "customGroupQuickAdd"
+                returnedVal = False
             Case Else
                 returnedVal = False
             End Select
@@ -73,6 +75,8 @@ Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
                 returnedVal = False
             Case "customGroupNoBesGen"
                 returnedVal = False
+            Case "customGroupQuickAdd"
+                returnedVal = True
             End Select
         End If
     End If
@@ -126,6 +130,7 @@ Sub onActionButton(control As IRibbonControl)
     writelog LogInfo, " CUSTOM UI | " & "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
     If Globals.shPData Is Nothing Then Globals.SetWBs
     Dim folderpath       As String
+    Dim frmPKadd                  As New UserFormPlankopf
     Select Case control.ID
     Case "Objektdaten"
         ActiveWorkbook.Sheets("Gebäude").Activate
@@ -181,6 +186,23 @@ Sub onActionButton(control As IRibbonControl)
         frmUpgrade.Show 1
     Case "OneNote"
         ActiveWorkbook.FollowHyperlink Address:=OneNoteAppLink
+    Case "PlotFolder"
+        folderpath = Environ("localappdata") & "\Bes-Gen-V7\Plot"
+        writelog LogInfo, "Opening Plot-Folder" & vbNewLine & folderpath
+        Shell "explorer.exe " & folderpath, vbNormalFocus
+        ' Quick-Add
+    Case "Plan"
+        frmPKadd.setIcons Add
+        frmPKadd.MultiPageTyp.value = 0
+        frmPKadd.Show 1
+    Case "Schema"
+        frmPKadd.setIcons Add
+        frmPKadd.MultiPageTyp.value = 1
+        frmPKadd.Show 1
+    Case "Prinzip"
+        frmPKadd.setIcons Add
+        frmPKadd.MultiPageTyp.value = 2
+        frmPKadd.Show 1
     End Select
     CustomUI.RefreshRibbon
 End Sub

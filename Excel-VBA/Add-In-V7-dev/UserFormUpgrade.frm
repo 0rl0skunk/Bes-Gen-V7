@@ -6,7 +6,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormUpgrade
    ClientTop       =   465
    ClientWidth     =   4680
    OleObjectBlob   =   "UserFormUpgrade.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormUpgrade"
 Attribute VB_GlobalNameSpace = False
@@ -15,19 +15,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
-
-
-
-
-
-
-
-
-
-
-
 '@Folder("Upgrade")
-'@Version "Release V1.0.0"
+'@ModuleDescription "Alte Versionen auf die neuste Version upgraden"
+'TODO werte für Untergewerk in PLA und PRI welche manuell in den alten Versionen ergänzt wurden suchen und in die neue Version einfügen
 
 Option Explicit
 

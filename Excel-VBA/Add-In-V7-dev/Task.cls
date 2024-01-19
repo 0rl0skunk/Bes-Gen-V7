@@ -12,7 +12,6 @@ Attribute VB_Description = "Task Objekt für einfacheres Management von Tasks im 
 '@Folder "Tasks"
 '@IgnoreModule VariableNotUsed
 '@ModuleDescription "Task Objekt für einfacheres Management von Tasks im Projekt."
-'@Version "Release V1.0.0"
 
 Option Explicit
 

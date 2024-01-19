@@ -1,11 +1,11 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopf 
-   ClientHeight    =   13200
+   ClientHeight    =   11760
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9960.001
    OleObjectBlob   =   "UserFormPlankopf.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormPlankopf"
 Attribute VB_GlobalNameSpace = False
@@ -15,20 +15,8 @@ Attribute VB_Exposed = False
 Attribute VB_Description = "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
 
 
-
-
-
-
-
-
-
-
-
-
-
 '@Folder "Plankopf"
 '@ModuleDescription "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
-'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -57,8 +45,90 @@ Public Sub setIcons(ByVal icon As EnumIcon)
 
 End Sub
 
+Private Function validateUserForm(Optional skipIndex As Boolean = False) As Boolean
+    ' sind alle wichtigen Infos mitgegeben, nicht korrekt ausgefüllte Infos werden markiert
+    Dim oControl As MSForms.control
+    Dim oComboBox As MSForms.ComboBox
+    Dim oTextBox As MSForms.TextBox
+    
+    Dim warningColor: warningColor = RGB(255, 255, 0)
+    Dim errorColor: errorColor = RGB(255, 0, 0)
+    
+    validateUserForm = True
+    
+    Select Case Me.MultiPageTyp.value
+    Case 0                                       ' Plan
+        For Each oControl In Me.Frame11.Controls
+            If oControl.Name Like "*ComboBox*" Then
+                Set oComboBox = oControl
+                If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+            End If
+        Next oControl
+    Case 1                                       ' Schema
+        For Each oControl In Me.Frame10.Controls
+            If oControl.Name Like "*ComboBox*" Then
+                Set oComboBox = oControl
+                If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+            ElseIf oControl.Name Like "*TextBox*" Then
+                Set oTextBox = oControl
+                If oTextBox.value = vbNullString Then oTextBox.BackColor = errorColor: validateUserForm = False
+            End If
+        Next oControl
+    Case 2                                       ' Prinzip
+        For Each oControl In Me.Frame12.Controls
+            If oControl.Name Like "*ComboBox*" Then
+                Set oComboBox = oControl
+                If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+            End If
+        Next oControl
+    End Select
+    
+    ' Projektinfos
+    For Each oControl In Me.Frame3.Controls
+        If oControl.Name Like "*ComboBox*" Then
+            Set oComboBox = oControl
+            If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+        End If
+    Next oControl
+    
+    ' Layout
+    For Each oControl In Me.FrameLayout.Controls
+        If oControl.Name Like "*ComboBox*" Then
+            Set oComboBox = oControl
+            If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+        End If
+    Next oControl
+        
+    ' Allgemeine Infos
+    For Each oControl In Me.Frame6.Controls
+        If oControl.Name Like "*ComboBox*" Then
+            Set oComboBox = oControl
+            If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+        End If
+    Next oControl
+        
+    ' Geprüft
+    For Each oControl In Me.FramePlaninfo.Controls
+        If oControl.Name Like "*TextBox*" Then
+            Set oTextBox = oControl
+            If oTextBox.value = vbNullString Then oTextBox.BackColor = warningColor
+        End If
+    Next oControl
+    
+    If Not Me.TextBoxIndexKlartext.value = vbNullString Then
+        ' Wenn ein Index erstellt wurde aber nicht hinzugefügt ist.
+        Select Case MsgBox("Es wurde ein Index erstellt jedoch nicht korrekt erfasst." & vbNewLine & "Soll der Index hinzugefügt werden?", vbYesNo, "Index erfassen")
+        Case vbYes
+            CommandButtonIndexErstellen_Click    ' Index erstellen
+        Case vbNo
+        End Select
+    End If
+End Function
+
 Private Sub CommandButtonCreate_Click()
     ' Plankopf in Datenbank schreiben
+    If Not validateUserForm Then: MsgBox "Einige Angaben sind nicht korrekt ausgefüllt!" & vbNewLine & "Bitte Prüfe deine Eingaben.", vbCritical, "Eingaben prüfen": Exit Sub
+    
     If Me.CommandButtonCreate.Caption = "Update" Then
         ' Ersetzen / Updaten
         If PlankopfFactory.ReplaceInDatabase(FormToPlankopf) Then Unload Me
@@ -71,6 +141,8 @@ End Sub
 
 Private Sub CommandButtonBeschriftungAktualisieren_Click()
     ' Beschriftungen und Plannummer neu erstellen
+    If Not validateUserForm(True) Then: Me.TextBoxBeschriftungDateiname.value = vbNullString: Me.TextBoxBeschriftungPlannummer.value = vbNullString: Me.TextBoxPlanüberschrift.value = vbNullString: Exit Sub
+    
     Set pPlankopf = FormToPlankopf
     Me.TextBoxBeschriftungPlannummer.value = pPlankopf.Plannummer
     Me.TextBoxBeschriftungDateiname.value = pPlankopf.PDFFileName
@@ -109,9 +181,9 @@ Private Sub CommandButtonIndexLöschen_Click()
     Dim li As ListItem
     
     For Each li In Me.ListViewIndex.ListItems
-    If li.Checked Then
-        ID = li.ListSubItems(1)
-        IndexFactory.DeleteFromDatabase ID
+        If li.Checked Then
+            ID = li.ListSubItems(1)
+            IndexFactory.DeleteFromDatabase ID
         End If
     Next
 
@@ -195,6 +267,14 @@ Private Sub Preview_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, B
 
 End Sub
 
+Private Sub TextBoxPlanInfoDatumGeprüft_Change()
+    Me.TextBoxPlanInfoDatumGeprüft.BackColor = SystemColorConstants.vbWindowBackground
+End Sub
+
+Private Sub TextBoxPlanInfoKürzelGeprüft_Change()
+    Me.TextBoxPlanInfoKürzelGeprüft.BackColor = SystemColorConstants.vbWindowBackground
+End Sub
+
 Private Sub UserForm_Initialize()
 
     Set icons = New UserFormIconLibrary
@@ -257,6 +337,9 @@ Private Sub UserForm_Initialize()
 
     Me.TextBoxPlanInfoDatumGezeichnet.value = Format$(Now, "DD.MM.YYYY")
     Me.TextBoxPlanInfoKürzelGezeichnet.value = getUserName
+    
+    Me.TextBoxIndexGez = getUserName
+    Me.TextBoxIndexGezDatum = Format$(Now, "DD.MM.YYYY")
 
     writelog LogInfo, "UserFormPlankopf > Inizialise complete"
     
@@ -702,6 +785,14 @@ Private Sub ComboBoxGeschoss_Change()
 
     Me.ComboBoxGeschoss.BackColor = SystemColorConstants.vbWindowBackground
 
+End Sub
+
+Private Sub ComboBoxStand_Change()
+    Me.ComboBoxStand.BackColor = SystemColorConstants.vbWindowBackground
+End Sub
+
+Private Sub ComboBoxGebäudeTeil_Change()
+    Me.ComboBoxGebäudeTeil.BackColor = SystemColorConstants.vbWindowBackground
 End Sub
 
 

@@ -12,7 +12,6 @@ Attribute VB_Description = "Index Objekt für einfacheres Management von Indexen.
 '@Folder("Index")
 '@IgnoreModule VariableNotUsed, EmptyStringLiteral
 '@ModuleDescription "Index Objekt für einfacheres Management von Indexen."
-'@Version "Release V1.0.0"
 
 Option Explicit
 

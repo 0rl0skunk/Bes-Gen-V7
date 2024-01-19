@@ -1,6 +1,7 @@
 Attribute VB_Name = "Planverzeichnis"
+
 '@Folder("Planverzeichnis")
-'@Version "Release V1.0.0"
+'@ModuleDescription "Erstellt ein Planverzeichnis mit allen zur Zeit erstellten Plänen, Prinzipe und sSchemata. Kann für Revisionen oder als Anhang für Lieferscheine verwendet werden."
 
 Option Explicit
 Private Enum Sorting

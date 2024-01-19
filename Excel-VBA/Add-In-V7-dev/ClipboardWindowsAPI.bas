@@ -2,7 +2,6 @@ Attribute VB_Name = "ClipboardWindowsAPI"
 Attribute VB_Description = "Handle 64-bit and 32-bit Office"
 
 '@Folder "Excel-Items"
-'@Version "Release V1.0.0"
 '@ModuleDescription "Handle 64-bit and 32-bit Office"
 
 Option Explicit

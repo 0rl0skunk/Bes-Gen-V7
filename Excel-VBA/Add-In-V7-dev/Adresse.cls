@@ -11,7 +11,6 @@ Attribute VB_Description = "Adress Objekt für einfacheres Management einer Adres
 
 '@Folder "Adresse"
 '@ModuleDescription "Adress Objekt für einfacheres Management einer Adresse."
-'@Version "Release V1.0.0"
 
 Implements IAdresse
 

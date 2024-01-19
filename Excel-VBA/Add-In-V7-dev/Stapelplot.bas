@@ -1,7 +1,7 @@
 Attribute VB_Name = "Stapelplot"
 
 '@Folder("Print")
-'@Version "Release V1.0.0"
+'@ModuleDescription "Erstellt ein script und eine Stapelplot-Datei *.dsd welche dann über die accoreconsole gedruckt wird."
 
 Option Explicit
 
@@ -11,6 +11,7 @@ Private OutputFolder         As String
 Private NewFiles             As Long
 Private OldFiles             As Long
 Private pPlanköpfe           As Collection
+Const acCoreConsole = "C:\Program Files\TinLine\TinLine 23-Deu\accoreconsole.exe"
 
 Public Property Get Planliste() As Collection
     Set Planliste = pPlanköpfe
@@ -25,7 +26,17 @@ Sub plotPlanliste()
 
     Set fs = CreateObject("Scripting.FileSystemObject")
     Dim scr                  As String
-    scr = "C:\Users\Public\Documents\plotter.scr"
+    scr = Environ("localappdata") & "\Bes-Gen-V7\Plot\plotter.scr"
+    
+    Dim fso As New FileSystemObject
+    
+    If Not fso.FolderExists(Environ("localappdata") & "\Bes-Gen-V7\Plot") Then
+        If Not fso.FolderExists(Environ("localappdata") & "\Bes-Gen-V7") Then
+            MkDir Environ("localappdata") & "\Bes-Gen-V7"
+        End If
+        MkDir Environ("localappdata") & "\Bes-Gen-V7\Plot"
+    End If
+    
     Set a = fs.CreateTextFile(scr, True)
     a.WriteLine ("-PUBLISH")
     a.WriteLine (dsd)
@@ -39,9 +50,9 @@ Sub plotPlanliste()
 
     OldFiles = CountFiles(OutputFolder)
 
-    wsh.Run """C:\Program Files\TinLine\TinLine 23-Deu\accoreconsole.exe"" /i ""H:\TinLine\01_Standards\TinBlank.dwg"" /s ""C:\Users\Public\Documents\plotter.scr"" /l EN-US", windowStyle, waitOnReturn
+    wsh.Run "" & acCoreConsole & " /i ""H:\TinLine\01_Standards\TinBlank.dwg"" /s " & scr & " /l EN-US", windowStyle, waitOnReturn
 
-    ' File Counting
+    ' wurden alle Pläne geplottet
     If Not CountFiles(OutputFolder) = OldFiles + NewFiles Then
         Select Case MsgBox("Es wurden nicht alle Pläne geplottet." & vbNewLine & "Soll geprüft werden welche Pläne fehlen?", vbYesNo, "Fehler beim plotten")
         Case vbYes
@@ -65,6 +76,7 @@ Sub plotPlanliste()
 End Sub
 
 Public Sub Checkplot()
+    ' welche Pläne wurden nicht geplottet
     Dim fso                  As New FileSystemObject
     Dim File                 As scripting.File
     Dim PDFFile              As IPlankopf
@@ -92,7 +104,7 @@ Public Sub Checkplot()
 End Sub
 
 Public Function CreatePlotList(ByVal planköpfe As Collection) As String
-
+    ' Stapelplotliste mit den Plänen / Layouts und den Dateinamen erstellen.
     Application.Cursor = xlWait
     Dim Folder               As String
     Dim strFolderExists      As String
@@ -117,16 +129,21 @@ Public Function CreatePlotList(ByVal planköpfe As Collection) As String
     
     Folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
     strFolderExists = dir(Folder)
+    
+    ' Standard Publizierpfad
+    OutputFolder = Environ("localappdata") & "\Bes-Gen-V7\Plot\" & Format(Now, "YYMMDD-HH.mm")
 
-    'If strFolderExists = "" Then MkDir folder
-    ' Open the select folder prompt
-    With Application.FileDialog(msoFileDialogFolderPicker)
-        If .Show = -1 Then                       ' if OK is pressed
-            OutputFolder = .SelectedItems(1)
+    Dim fso As New FileSystemObject
+    If Not fso.FolderExists(OutputFolder) Then
+        If Not fso.FolderExists(Environ("localappdata") & "\Bes-Gen-V7\Plot") Then
+            If Not fso.FolderExists(Environ("localappdata") & "\Bes-Gen-V7") Then
+                MkDir Environ("localappdata") & "\Bes-Gen-V7"
+            End If
+            MkDir Environ("localappdata") & "\Bes-Gen-V7\Plot"
         End If
-    End With
-
-
+        MkDir OutputFolder
+    End If
+    
     Dim FileName             As String: FileName = Format$(Now, "YYMMDDhhmmss")
     Dim i                    As Long
     Dim search               As String
@@ -144,7 +161,7 @@ Public Function CreatePlotList(ByVal planköpfe As Collection) As String
 
 
 
-
+    ' --- *.dsd ---
     a.WriteLine ( _
                 "[Target]" & vbLf & _
                 "Type=2" & vbLf & _
@@ -198,6 +215,7 @@ Public Function CreatePlotList(ByVal planköpfe As Collection) As String
 End Function
 
 Private Sub Eintrag(ByVal Plan As IPlankopf)
+    ' Jeder Plan kriegt so ein Eintrag
     a.WriteLine ("[DWF6Sheet:" & Plan.PDFFileName & "]") ' PDF Ablage
     a.WriteLine ("DWG=" & Plan.dwgFile)          ' DWG Ablage
     a.WriteLine ("Layout=" & Plan.LayoutName)    ' Plannummer / Layoutname

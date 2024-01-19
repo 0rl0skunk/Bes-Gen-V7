@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 
 '@Folder("Person")
-'@Version "Release V1.0.0"
+'@ModuleDescription "Objektklasse für Personen, wird für den Planversand genutzt."
 
 Option Explicit
 

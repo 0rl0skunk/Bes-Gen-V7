@@ -1,34 +1,22 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormOutlook 
-   ClientHeight    =   9240.001
+   ClientHeight    =   8880.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9720.001
    OleObjectBlob   =   "UserFormOutlook.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormOutlook"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Attribute VB_Description = "E-Mails direkt vom Beschriftungsgenerator erstellen und versenden."
-
-
-
-
-
-
-
-
-
-
-
+Attribute VB_Description = "E-Mails direkt vom Beschriftungsgenerator erstellen und Anzeigen."
 
 
 '@Folder("Outlook")
 '@ModuleDescription "E-Mails direkt vom Beschriftungsgenerator erstellen und versenden."
-'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -37,11 +25,25 @@ Private pMailCC              As New Collection
 Private pPlanköpfe           As New Collection
 Private icons                As UserFormIconLibrary
 
+Private Sub CheckBoxSelectAll_Click()
+    ' alle Pläne auswählen
+    Dim li As ListItem
+    If Me.CheckBoxSelectAll.value Then
+        For Each li In Me.ListViewPlankopf.ListItems
+            li.Checked = Me.CheckBoxSelectAll.value
+            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).row)
+        Next li
+    End If
+End Sub
+
 Private Sub CommandButton1_Click()
 
     Dim PrintPath            As String
     Dim appOutlook           As New Outlook.Application
     Dim Mail                 As MailItem
+    Dim mailBody As String * 2048
+    Dim mailStyle As String
+    Dim strFreitext As String * 2048
     Set Mail = appOutlook.CreateItem(olMailItem)
 
     If Me.CheckBoxPlot Then
@@ -52,12 +54,20 @@ Private Sub CommandButton1_Click()
             Mail.Attachments.Add PrintPath & "\" & pPlankopf.PDFFileName & ".pdf"
         Next
     End If
+    strFreitext = Replace(Me.TextBoxFreitext.value, vbNewLine, "<br/>")
+    mailStyle = "<p STYLE='font-family:Calibri;font-size:11pt'/>"
+    mailBody = "<p>" & Anrede & "</p>" & _
+               "<p></p>" & _
+               "<p>" & strFreitext & "</p>" & _
+               "<p></p>"
     With Mail
-    .To = MailRecepientsTO
-    .CC = MailRecepientsCC
-    .Subject = Me.TextBoxBetreff.value
-    .Display 0
-    .HTMLBody = "<P STYLE='font-family:Calibri;font-size:11pt'>" & Anrede & vbNewLine & vbNewLine & Me.TextBoxFreitext.value & vbNewLine & vbNewLine & Planliste & .HTMLBody
+        .To = MailRecepientsTO
+        .CC = MailRecepientsCC
+        .Subject = Me.TextBoxBetreff.value
+        .Display 0
+        .BodyFormat = olFormatHTML
+        .HTMLBody = "<HTML><BODY>" & mailStyle & mailBody & "<p>" & Planliste & "</p>" & "</BODY></HTML>" & .HTMLBody
+    
     End With
     writeToVersandliste
     Unload Me
@@ -90,26 +100,29 @@ End Function
 Private Function Planliste() As String
 
     Dim e                    As IPlankopf
+    Dim str As String
+    Dim strPlanliste As String
+    ' Pläne im Anhang als liste formatieren
     For Each e In pPlanköpfe
-        Planliste = Planliste & "- " & e.Plannummer & vbTab & e.PlanBeschrieb & vbNewLine
+        strPlanliste = strPlanliste & "<li>" & e.Plannummer & " | " & e.PlanBeschrieb & "</li>"
     Next
-    
-    Planliste = "Im Anhang finden sie Folgende Pläne: " & vbNewLine & Planliste
+    strPlanliste = "<ul>" & strPlanliste & "</ul>"
     
     On Error GoTo ErrHandler
     If pMailTo.Count > 1 Then
-        Planliste = "Im Anhang finden Sie Folgende Pläne: " & vbNewLine & Planliste
-    Else
+        str = "<p>Im Anhang finden Sie Folgende Pläne:</p>"
+    ElseIf pMailTo.Count = 1 Then
         If pMailTo.Item(1).Anrede = "Du" Then
-            Planliste = "Im Anhang findest du Folgende Pläne: " & vbNewLine & Planliste
+            str = "<p>Im Anhang findest du Folgende Pläne:</p>"
         Else
-            Planliste = "Im Anhang finden Sie Folgende Pläne: " & vbNewLine & Planliste
+            str = "<p>Im Anhang finden Sie Folgende Pläne:</p>"
         End If
     End If
+    Planliste = str & vbNewLine & strPlanliste
     Exit Function
 
 ErrHandler:
-    Planliste = "Im Anhang sind Folgende Pläne: " & vbNewLine & Planliste
+    Planliste = "<p>Im Anhang sind Folgende Pläne:</p>" & vbNewLine & strPlanliste
 
 End Function
 
@@ -191,6 +204,7 @@ Private Sub ListViewPlankopf_ItemCheck(ByVal Item As MSComctlLib.ListItem)
             pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(Globals.shStoreData.range("A:A").Find(li.ListSubItems.Item(1).Text).row)
         End If
     Next
+    Me.CheckBoxSelectAll.value = False
 
 End Sub
 
@@ -246,4 +260,5 @@ Private Sub LoadListViewMail(ByVal control As ListView)
     End With
 
 End Sub
+
 

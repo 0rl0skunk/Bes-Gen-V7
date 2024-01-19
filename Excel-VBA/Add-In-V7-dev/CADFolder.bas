@@ -1,7 +1,7 @@
 Attribute VB_Name = "CADFolder"
 
 '@Folder("Projekt")
-'@Version "Release V1.0.0"
+'@ModuleDescription "Projektordner CAD erstellen und XML-Dateien neu erstellen."
 
 Option Explicit
 
@@ -9,6 +9,7 @@ Public Const OrdnerVorlage   As String = "H:\TinLine\01_Standards\00_Vorlageordn
 Public Const VorlageEPDWG    As String = "H:\TinLine\01_Standards\EP-Vorlage.dwg"
 Public Const VorlageEPDWGGEB As String = "H:\TinLine\01_Standards\EP-Vorlage_GEB.dwg"
 Public Const VorlagePRDWG    As String = "H:\TinLine\01_Standards\PR-Vorlage.dwg"
+Public Const VorlagePRDWGOBJ As String = "H:\TinLine\01_Standards\PR-Vorlage_OBJ.dwg"
 
 Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean, ByVal SharePointLink As String)
     Globals.shPData.range("ADM_ProjektPfadSharePoint").value = SharePointLink
@@ -109,7 +110,11 @@ Private Sub CreateFoldersPR()
                                                               )
         MkDir Folder & "\" & iStr & "_" & Plan.UnterGewerkKF
         TinLinePrinzip Plan
-        FileCopy VorlagePRDWG, Plan.dwgFile
+        If UGewerke(i) = "Objekt" Then
+            FileCopy VorlagePRDWGOBJ, Plan.dwgFile
+        Else
+            FileCopy VorlagePRDWG, Plan.dwgFile
+        End If
     Next
 
 End Sub
@@ -431,4 +436,5 @@ Public Sub RenameFolders()
         Next
     End If
 End Sub
+
 

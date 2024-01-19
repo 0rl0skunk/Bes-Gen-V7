@@ -3,7 +3,7 @@ Attribute VB_Description = "Funktionen welche das TinLine Betreffen."
 
 '@Folder("TinLine")
 '@ModuleDescription "Funktionen welche das TinLine Betreffen."
-'@Version "Release V1.0.0"
+
 
 Option Explicit
 

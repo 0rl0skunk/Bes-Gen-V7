@@ -1,7 +1,7 @@
 Attribute VB_Name = "XMLFile"
 
 '@Folder("TinLine")
-'@Version "Release V1.0.0"
+'@ModuleDescription "TinLine Spezifische XML-Formatierung"
 
 Option Explicit
 

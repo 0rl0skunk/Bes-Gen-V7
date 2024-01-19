@@ -3,7 +3,6 @@ Attribute VB_Description = "Erstellt ein Projekt-Objekt von welchem die daten ei
 
 '@Folder "Projekt"
 '@ModuleDescription "Erstellt ein Projekt-Objekt von welchem die daten einfach ausgelesen werden können."
-'@Version "Release V1.0.0"
 
 Option Explicit
 

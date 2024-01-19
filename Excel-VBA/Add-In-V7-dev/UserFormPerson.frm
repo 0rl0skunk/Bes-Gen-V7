@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPerson
    ClientTop       =   465
    ClientWidth     =   3720
    OleObjectBlob   =   "UserFormPerson.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormPerson"
 Attribute VB_GlobalNameSpace = False
@@ -15,20 +15,8 @@ Attribute VB_Exposed = False
 Attribute VB_Description = "Einfaches Auswählen und definieren eines Layouts für Plan und Prinzip Planköpfe."
 
 
-
-
-
-
-
-
-
-
-
-
-
 '@Folder("Person")
 '@ModuleDescription "Einfaches Auswählen und definieren eines Layouts für Plan und Prinzip Planköpfe."
-'@Version "Release V1.0.0"
 
 Option Explicit
 

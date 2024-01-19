@@ -4,7 +4,6 @@ Attribute VB_Description = "Logging Module."
 '@Folder "Debug Logger"
 '@IgnoreModule EmptyStringLiteral
 '@ModuleDescription "Logging Module."
-'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -25,7 +24,7 @@ Const LogDepth = 3
 ' 0 = Errors
 
 Public Property Get LogFile() As String
-LogFile = pLogFile
+    LogFile = pLogFile
 End Property
 
 Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
@@ -34,7 +33,7 @@ Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
     pLogFile = pLogFolder & "\Bes-Gen_V7.log"
     Dim fso As New FileSystemObject
     If Not fso.FolderExists(pLogFolder) Then
-    MkDir pLogFolder
+        MkDir pLogFolder
     End If
     ' prepare date
     Dim l_StringDateTimeNow  As String
@@ -75,8 +74,6 @@ Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
     l_StringToday = Format$(l_StringDateTimeNow, "YYYY-MM-DD hh:mm:ss")
     ' concatenate date and what the user wants logged
     l_StringLogStatement = Join(Array(l_StringToday, l_StringSource, Typstr, a_stringLogThis), " | ")
-    ' send to TTY
-    Debug.Print (l_StringLogStatement)
     ' append (not write) to disk
     Open LogFile For Append As #1
     Print #1, l_StringLogStatement
@@ -89,5 +86,4 @@ Public Sub LogClear()
     Print #1, ""
     Close #1
 End Sub
-
 

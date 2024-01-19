@@ -4,7 +4,6 @@ Attribute VB_Description = "Erstellt ein Plankopf-Objekt von welchem die daten e
 '@IgnoreModule VariableNotUsed
 '@Folder "Plankopf"
 '@ModuleDescription "Erstellt ein Plankopf-Objekt von welchem die daten einfach ausgelesen werden können."
-'@Version "Release V1.0.0"
 
 Option Explicit
 
@@ -146,41 +145,68 @@ Public Function AddToDatabase(ByVal Plankopf As IPlankopf) As Boolean
     AddToDatabase = False
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
     Dim row                  As Long: row = ws.range("A1").CurrentRegion.rows.Count + 1
+    Dim planCreatedTinLine As Boolean
+    
+    planCreatedTinLine = False
 
     CopyToClipBoard Plankopf.LayoutName
-
-    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A1").value And Plankopf.PLANTYP = "PLA" Then NewTinLinePlankopf Plankopf Else writelog LogWarning, "Das Projekt wurde ohne Elektropläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Elektroplan
-    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A2").value And Plankopf.PLANTYP = "PRI" Then NewTinLinePlankopf Plankopf Else writelog LogWarning, "Das Projekt wurde ohne Elektro Prinzipschemas erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Elektro Prinzipschema
-    If Plankopf.Gewerk = "Türfachplanung" And Globals.shProjekt.range("A4").value Then NewTinLinePlankopf Plankopf Else writelog LogWarning, "Das Projekt wurde ohne Türfachpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Türfachplanung
-    If Plankopf.Gewerk = "Brandschutzplanung" And Globals.shProjekt.range("A5").value Then NewTinLinePlankopf Plankopf Else writelog LogWarning, "Das Projekt wurde ohne Brandschutzpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren" ' Brandschutzplanung
-    With ws
-        .Cells(row, 1).value = Plankopf.ID
-        .Cells(row, 2).value = Plankopf.IDTinLine
-        .Cells(row, 3).value = Plankopf.Gewerk
-        .Cells(row, 4).value = Plankopf.UnterGewerk
-        .Cells(row, 5).value = Plankopf.Planart
-        .Cells(row, 6).value = Plankopf.PLANTYP
-        .Cells(row, 7).value = Plankopf.Gebäude
-        .Cells(row, 8).value = Plankopf.Gebäudeteil
-        .Cells(row, 9).value = Plankopf.Geschoss
-        .Cells(row, 10).value = Plankopf.CustomPlanüberschrift
-        .Cells(row, 11).value = Plankopf.dwgFile
-        .Cells(row, 13).value = Plankopf.Planüberschrift
-        .Cells(row, 14).value = Plankopf.Plannummer
-        .Cells(row, 15).value = Plankopf.LayoutGrösse
-        .Cells(row, 16).value = Plankopf.LayoutMasstab
-        .Cells(row, 17).value = Plankopf.LayoutPlanstand
-        .Cells(row, 18).value = Plankopf.GezeichnetPerson
-        .Cells(row, 19).value = Replace(Plankopf.GezeichnetDatum, ".", "/")
-        .Cells(row, 20).value = Plankopf.GeprüftPerson
-        .Cells(row, 21).value = Replace(Plankopf.GeprüftDatum, ".", "/")
-        .Cells(row, 12).value = Plankopf.CurrentIndex.Index
-        .Cells(row, 22).value = Plankopf.TinLinePKNr
-        .Cells(row, 23).value = Plankopf.AnlageTyp
-        .Cells(row, 24).value = Plankopf.AnlageNummer
-    End With
-    AddToDatabase = True
-    writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
+    ' Elektroplan
+    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A1").value And Plankopf.PLANTYP = "PLA" Then
+        If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
+    Else
+        writelog LogWarning, "Das Projekt wurde ohne Elektropläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+    End If
+    ' Elektro Prinzipschema
+    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A2").value And Plankopf.PLANTYP = "PRI" Then
+        If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
+    Else
+        writelog LogWarning, "Das Projekt wurde ohne Elektro Prinzipschemas erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+    End If
+    ' Türfachplanung
+    If Plankopf.Gewerk = "Türfachplanung" And Globals.shProjekt.range("A4").value Then
+        If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
+    Else
+        writelog LogWarning, "Das Projekt wurde ohne Türfachpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+    End If
+    ' Brandschutzplanung
+    If Plankopf.Gewerk = "Brandschutzplanung" And Globals.shProjekt.range("A5").value Then
+        If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
+    Else
+        writelog LogWarning, "Das Projekt wurde ohne Brandschutzpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+    End If
+    
+    If planCreatedTinLine Then
+        With ws
+            .Cells(row, 1).value = Plankopf.ID
+            .Cells(row, 2).value = Plankopf.IDTinLine
+            .Cells(row, 3).value = Plankopf.Gewerk
+            .Cells(row, 4).value = Plankopf.UnterGewerk
+            .Cells(row, 5).value = Plankopf.Planart
+            .Cells(row, 6).value = Plankopf.PLANTYP
+            .Cells(row, 7).value = Plankopf.Gebäude
+            .Cells(row, 8).value = Plankopf.Gebäudeteil
+            .Cells(row, 9).value = Plankopf.Geschoss
+            .Cells(row, 10).value = Plankopf.CustomPlanüberschrift
+            .Cells(row, 11).value = Plankopf.dwgFile
+            .Cells(row, 13).value = Plankopf.Planüberschrift
+            .Cells(row, 14).value = Plankopf.Plannummer
+            .Cells(row, 15).value = Plankopf.LayoutGrösse
+            .Cells(row, 16).value = Plankopf.LayoutMasstab
+            .Cells(row, 17).value = Plankopf.LayoutPlanstand
+            .Cells(row, 18).value = Plankopf.GezeichnetPerson
+            .Cells(row, 19).value = Replace(Plankopf.GezeichnetDatum, ".", "/")
+            .Cells(row, 20).value = Plankopf.GeprüftPerson
+            .Cells(row, 21).value = Replace(Plankopf.GeprüftDatum, ".", "/")
+            .Cells(row, 12).value = Plankopf.CurrentIndex.Index
+            .Cells(row, 22).value = Plankopf.TinLinePKNr
+            .Cells(row, 23).value = Plankopf.AnlageTyp
+            .Cells(row, 24).value = Plankopf.AnlageNummer
+        End With
+        AddToDatabase = True
+        writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
+    Else
+        Exit Function
+    End If
 
 End Function
 

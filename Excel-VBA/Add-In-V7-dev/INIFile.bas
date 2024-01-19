@@ -1,8 +1,8 @@
 Attribute VB_Name = "INIFile"
+
 '@IgnoreModule
 '@Folder "TinLine"
 '@ModuleDescription "Interface to work with *.ini Files from TinLine."
-'@Version "Release V1.0.0"
 
 Option Explicit
 

@@ -1,9 +1,9 @@
 Attribute VB_Name = "Globals"
 Attribute VB_Description = "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
+
 '@Folder "Excel-Items"
 '@IgnoreModule VariableNotUsed
 '@ModuleDescription "Beinhaltet Globale Variabeln und Funktionen auf welche von mehreren orten zugriff gewärt sein muss."
-'@Version "Release V1.0.0"
 
 Option Explicit
 

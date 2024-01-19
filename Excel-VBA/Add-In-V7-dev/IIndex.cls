@@ -12,7 +12,6 @@ Attribute VB_Description = "Interface für 'Index.cls'."
 '@Folder("Index")
 '@Interface
 '@ModuleDescription "Interface für 'Index.cls'."
-'@Version "Release V1.0.0"
 
 Option Explicit
 
