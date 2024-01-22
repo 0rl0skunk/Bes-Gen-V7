@@ -23,7 +23,9 @@ Public shPlanListe           As Worksheet
 Public shGebäude             As Worksheet
 Public shSPSync              As Worksheet
 Public shProjekt             As Worksheet
-Public xlsmPages             As Workbook
+Public shPZM As Worksheet
+Public shAnsichten As Worksheet
+
 Public CopyrightSTR          As String
 Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection
@@ -87,6 +89,7 @@ End Function
 Public Function SetWBs() As Boolean
     ' Setzt alle Workbooks und Worksheets welche vom Add-In verwendet werden.
     SetWBs = False
+    On Error Resume Next
     If WB Is Nothing Then Set WB = Application.ActiveWorkbook
     Dim i                    As Long
     Set shAdress = WB.Sheets("Adressverzeichnis")
@@ -98,7 +101,9 @@ Public Function SetWBs() As Boolean
     Set shPData = WB.Sheets("Projektdaten")
     Set shSPSync = WB.Sheets("SharePointSync")
     Set shProjekt = WB.Sheets("Projekterstellen")
-
+    Set shPZM = WB.Sheets("PZM")
+    Set shAnsichten = WB.Sheets("Ansichten-Schnitte")
+    On Error GoTo 0
     Globals.Projekt
     SetWBs = True
     writelog LogInfo, "Loaded all Workbooks in Globals Module"

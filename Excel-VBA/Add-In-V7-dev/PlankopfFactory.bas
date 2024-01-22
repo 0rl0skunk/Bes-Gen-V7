@@ -256,7 +256,7 @@ load:                                            ' load xml file
     ' select all PK nodes
     Set oSeqNodes = oXml.SelectNodes("//tinPlan1/PK")
 
-    If oSeqNodes.length = 0 Then
+    If oSeqNodes.Length = 0 Then
         GoTo err
     End If
 
@@ -428,7 +428,7 @@ load:                                            ' load xml file
     ' select all PK nodes
     Set oSeqNodes = oXml.SelectNodes("//tinPlan1/PK")
 
-    If oSeqNodes.length = 0 Then
+    If oSeqNodes.Length = 0 Then
         GoTo err
     End If
 

@@ -17,6 +17,8 @@ Attribute VB_Description = "Erstellen von Planköpfen für alle Gewerke. Automatis
 
 
 
+
+
 '@Folder "Plankopf"
 '@ModuleDescription "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
 
@@ -44,6 +46,13 @@ Public Sub setIcons(ByVal icon As EnumIcon)
         Me.TitleIcon.Picture = icons.IconEditProperties.Picture
         Me.TitleLabel.Caption = "Plankopf bearbeiten"
     End Select
+    
+        Call FormToTaskBar( _
+                        Form:=Me, _
+                        IconFromPic:=Me.TitleIcon.Picture, _
+                        ThumbnailTooltip:=Me.TitleLabel.Caption, _
+                        HideExcel:=False _
+                    )
 
 End Sub
 
@@ -153,6 +162,8 @@ Private Sub CommandButtonBeschriftungAktualisieren_Click()
     Me.LabelDWGFileName.Caption = pPlankopf.DWGFileName
     Me.LabelXMLFileName.Caption = pPlankopf.XMLFileName
     Me.LabelFolderName.Caption = pPlankopf.FolderName
+    
+    Me.Caption = Me.TextBoxBeschriftungPlannummer
 
 End Sub
 
@@ -357,7 +368,6 @@ Private Sub UserForm_Initialize()
     writelog LogInfo, "UserFormPlankopf > Inizialise complete"
     
     Application.Cursor = xlDefault
-
 End Sub
 
 Private Sub CommandButtonClose_Click()
@@ -811,4 +821,6 @@ Private Sub ComboBoxGebäudeTeil_Change()
     Me.ComboBoxGebäudeTeil.BackColor = SystemColorConstants.vbWindowBackground
 End Sub
 
-
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+Call ResetTaskbar
+End Sub

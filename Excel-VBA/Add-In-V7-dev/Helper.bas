@@ -269,25 +269,25 @@ End Function
 
 Public Function getNewID(ByVal Typ As IDType) As String
     ' get a new unique ID for a PK
-    Dim length               As Long
+    Dim Length               As Long
     Dim ws                   As Worksheet
     Dim Region               As range
     Dim IDcol                As Long
 
     Select Case Typ
     Case 0                                       ' Plan
-        length = 6
+        Length = 6
         Set ws = Globals.shStoreData
         Set Region = shStoreData.range("A1").CurrentRegion
         IDcol = 1
     Case 1                                       ' Index
-        length = 4
+        Length = 4
         Set ws = Globals.shIndex
         Set Region = Globals.shIndex.range("A1").CurrentRegion
         IDcol = 1
     Case 2                                       ' Task
     Case 3                                       ' Person
-        length = 6
+        Length = 6
         Set ws = Globals.shAdress
         Set Region = Globals.shAdress.range("ADR_Adressen")
         IDcol = 9
@@ -301,7 +301,7 @@ Public Function getNewID(ByVal Typ As IDType) As String
 
     rows = rg.rows.Count
 
-    i = 4 * length
+    i = 4 * Length
     Randomize
 newID:
     getNewID = Hex$(Int(2 ^ i * Rnd(Rnd)))

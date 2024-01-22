@@ -17,6 +17,8 @@ Attribute VB_Description = "Übersicht aller erstellten Planköpfe im Projekt. Die
 
 
 
+
+
 '@Folder "Plankopf"
 '@ModuleDescription "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
 
@@ -30,7 +32,7 @@ Private Sub CommandButtonAdd_Click()
     ' neuer Plankopf erstellen
     Dim frm                  As New UserFormPlankopf
     frm.setIcons Add
-    frm.Show 1
+    frm.Show 0
 
     ' nach dem schliessen die Planliste aktualisieren
     LoadListViewPlan Me.ListViewPlankopf
@@ -46,7 +48,7 @@ Private Sub CommandButtonEdit_Click()
     Dim frm                  As New UserFormPlankopf
     frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt ' ein Plankopf-Objekt aus der Reihe erstellen und im UserForm laden
     frm.setIcons Edit
-    frm.Show 1
+    frm.Show 0
 
     ' nach dem schliessen die Planliste aktualisieren
     LoadListViewPlan Me.ListViewPlankopf
@@ -143,7 +145,8 @@ Private Sub CommandButtonCopy_Click()
 
     Set frm.PlankopfCopyFrom = Plankopf
     frm.CopyPlankopf Plankopf, Projekt, answer
-    frm.Show 1
+    frm.setIcons Add
+    frm.Show 0
 
     ' nach dem schliessen die Planliste aktualisieren
     LoadListViewPlan Me.ListViewPlankopf
@@ -210,10 +213,6 @@ StartOver:
 
 End Sub
 
-Private Sub CommandButtonIndex_Click()
-
-End Sub
-
 Private Sub CommandButtonSetFilter_Click()
 
     FilterListView 3, Me.ComboBoxFilterGeschoss.value
@@ -237,7 +236,7 @@ Private Sub ListViewPlankopf_DblClick()
     Dim frm                  As New UserFormPlankopf
     frm.LoadClass PlankopfFactory.LoadFromDataBase(row), Projekt
     frm.setIcons Edit
-    frm.Show 1
+    frm.Show 0
 
 End Sub
 
@@ -253,6 +252,15 @@ Private Sub UserForm_Initialize()
 
     If Me.ListViewPlankopf.ListItems.Count < 1 Then CommandButtonAdd_Click
     Application.Cursor = xlDefault
+    
+    Me.Caption = Globals.Projekt.Projektnummer & " | " & Globals.Projekt.ProjektBezeichnung
+    
+    Call FormToTaskBar( _
+                        Form:=Me, _
+                        IconFromPic:=Me.TitleIcon.Picture, _
+                        ThumbnailTooltip:=Me.TitleLabel.Caption, _
+                        HideExcel:=False _
+                    )
 
 End Sub
 

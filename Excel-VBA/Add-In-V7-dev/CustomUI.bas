@@ -136,7 +136,7 @@ Sub onActionButton(control As IRibbonControl)
         ActiveWorkbook.Sheets("Gebäude").Activate
     Case "Person"
         Dim frmAdresse       As New UserFormPerson
-        frmAdresse.Show 1
+        frmAdresse.Show 0
     Case "CADFolder"
         folderpath = Globals.Projekt.ProjektOrdnerCAD
         writelog LogInfo, "Opening CAD-Folder" & vbNewLine & folderpath
@@ -156,17 +156,17 @@ Sub onActionButton(control As IRibbonControl)
         End If
     Case "Drucken"
         Dim frmPrint         As New UserFormPrint
-        frmPrint.Show 1
+        frmPrint.Show 0
     Case "Repair"
         Dim frmRepair        As New UserFormRepair
-        frmRepair.Show 1
+        frmRepair.Show 0
     Case "Übersicht"
         Globals.shPData.Activate
         Dim frmÜbersicht     As New UserFormPlankopfübersicht
-        frmÜbersicht.Show
+        frmÜbersicht.Show 0
     Case "Version"
         Dim frmVersion       As New UserFormInfo
-        frmVersion.Show 1
+        frmVersion.Show
     Case "Chat"
         'TODO E-Mail oder Teams öffnen
     Case "Adresse"
@@ -177,13 +177,13 @@ Sub onActionButton(control As IRibbonControl)
         'TODO ChatbotIntegration / URL öffnen
     Case "Mail"
         Dim frmOutlook       As New UserFormOutlook
-        frmOutlook.Show 1
+        frmOutlook.Show 0
     Case "CADElektro"
         Dim frmCreateElektro As New UserFormProjektErstellen
-        frmCreateElektro.Show 1
+        frmCreateElektro.Show 0
     Case "Upgrade"
         Dim frmUpgrade       As New UserFormUpgrade
-        frmUpgrade.Show 1
+        frmUpgrade.Show 0
     Case "OneNote"
         ActiveWorkbook.FollowHyperlink Address:=OneNoteAppLink
     Case "PlotFolder"
@@ -194,15 +194,15 @@ Sub onActionButton(control As IRibbonControl)
     Case "Plan"
         frmPKadd.setIcons Add
         frmPKadd.MultiPageTyp.value = 0
-        frmPKadd.Show 1
+        frmPKadd.Show 0
     Case "Schema"
         frmPKadd.setIcons Add
         frmPKadd.MultiPageTyp.value = 1
-        frmPKadd.Show 1
+        frmPKadd.Show 0
     Case "Prinzip"
         frmPKadd.setIcons Add
         frmPKadd.MultiPageTyp.value = 2
-        frmPKadd.Show 1
+        frmPKadd.Show 0
     Case "UpdateProject"
         ' Dim frmUpdateProjekt
         ' frmUpdateProjekt.Show 1
