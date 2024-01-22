@@ -138,3 +138,6 @@ End Property
 Public Property Get AnlageNummer() As String
 End Property
 
+Public Property Get UnterProjekt() As String
+End Property
+

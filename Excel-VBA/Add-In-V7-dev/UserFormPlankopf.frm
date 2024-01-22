@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopf
    ClientTop       =   465
    ClientWidth     =   9960.001
    OleObjectBlob   =   "UserFormPlankopf.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormPlankopf"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +13,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
+
+
 
 
 '@Folder "Plankopf"
@@ -211,14 +213,25 @@ Private Sub EditDWG_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, B
     ' DWG-Datei im TinLine öffnen
     TinLine.setTinProject pProjekt.ProjektOrdnerCAD
     Select Case Me.MultiPageTyp.value
-    Case 0                                       'Plan
-        TinLine.setTinPlanBibliothek
-    Case 1                                       'Prinzip
-        TinLine.setTinPrinzipBibiothek
+    Case 1                                       'Plan
+        Select Case Me.ComboBoxEPHGewerk
+        Case "Elektro"
+            TinLine.setBibliothek EP
+        Case "Türfachplanung"
+            TinLine.setBibliothek TF
+        Case "Brandschutzplanung"
+            TinLine.setBibliothek BS
+        End Select
+    Case 2                                       'Prinzip
+        TinLine.setBibliothek PR
     End Select
 
     CreateObject("Shell.Application").Open (FormToPlankopf.dwgFile)
 
+End Sub
+
+Private Sub ImageCheckInputs_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    validateUserForm
 End Sub
 
 Private Sub MultiPageTyp_Change()
@@ -430,6 +443,7 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
     Me.LabelFolderName.Caption = pPlankopf.FolderName
     Me.TBAnlageteil.value = pPlankopf.AnlageNummer
     Me.ComboBoxESAnlageTyp.value = pPlankopf.AnlageTyp
+    Me.ComboBoxUnterprojekt.value = pPlankopf.UnterProjekt
     LoadIndexes
 
     Me.ComboBoxStand.value = pPlankopf.LayoutPlanstand
@@ -448,6 +462,7 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
         Me.ComboBoxGeschoss.Enabled = False
         Me.ComboBoxPRHGewerk.Enabled = False
         Me.ComboBoxPRUGewerk.Enabled = False
+        Me.ComboBoxUnterprojekt.Enabled = False
 
         Me.CommandButtonCreate.Caption = "Update"
         Me.BesID.Caption = pPlankopf.ID
@@ -527,7 +542,8 @@ Private Function FormToPlankopf() As IPlankopf
                          Planüberschrift:=Me.TextBoxPlanüberschrift.value, _
                          ID:=Me.BesID.Caption, _
                          AnlageTyp:=Me.ComboBoxESAnlageTyp.value, _
-                         AnlageNummer:=Me.TBAnlageteil.value _
+                         AnlageNummer:=Me.TBAnlageteil.value, _
+                         UnterProjekt:=Me.ComboBoxUnterprojekt.value _
                                         )
 
 End Function

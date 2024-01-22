@@ -61,6 +61,8 @@ Private Type TPlankopf
     '--- Schema / Verteilung ---
     AnlageTyp As String: AnlageTypKF As String
     AnlageNummer As String
+    '--- Projekt ---
+    UnterProjekt As String
 End Type
 
 Private This                 As TPlankopf
@@ -73,6 +75,10 @@ End Property
 
 Private Property Get IPlankopf_UnterGewerk() As String
     IPlankopf_UnterGewerk = This.UnterGewerk
+End Property
+
+Private Property Get IPlankopf_UnterProjekt() As String
+    IPlankopf_UnterProjekt = This.UnterProjekt
 End Property
 
 Private Property Get IPlankopf_UnterGewerkKF() As String
@@ -252,7 +258,8 @@ Public Function Filldata( _
        Optional ByVal ID As String = "ID", _
        Optional ByVal Custom‹berschrift As Boolean = False, _
        Optional ByVal AnlageTyp As String, _
-       Optional ByVal AnlageNummer As String _
+       Optional ByVal AnlageNummer As String, _
+       Optional ByVal UnterProjekt As String _
        ) As Boolean
     ' SkipValidation ist zu debug zwecken zu gebrauchen
     With Inputs
@@ -276,6 +283,7 @@ Public Function Filldata( _
         .SkipValidation = SkipValidation
         .AnlageNummer = AnlageNummer
         .AnlageTyp = AnlageTyp
+        .UnterProjekt = UnterProjekt
     End With
     Set pProjekt = Projekt
     'On Error GoTo NotValid

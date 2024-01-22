@@ -38,7 +38,8 @@ Public Function Create( _
        Optional ByVal ID As String = "NEW", _
        Optional ByVal CustomÜberschrift As Boolean = False, _
        Optional ByVal AnlageTyp As String, _
-       Optional ByVal AnlageNummer As String _
+       Optional ByVal AnlageNummer As String, _
+       Optional ByVal UnterProjekt As String _
        ) As IPlankopf
 
     Dim NewPlankopf          As New Plankopf
@@ -64,7 +65,8 @@ Public Function Create( _
        ID:=ID, _
        CustomÜberschrift:=CustomÜberschrift, _
        AnlageTyp:=AnlageTyp, _
-       AnlageNummer:=AnlageNummer _
+       AnlageNummer:=AnlageNummer, _
+ UnterProjekt:=UnterProjekt _
                       ) Then
         Dim row              As Long
         Set Create = NewPlankopf
@@ -105,7 +107,8 @@ Public Function LoadFromDataBase(ByVal row As Long) As IPlankopf
            SkipValidation:=False, _
            CustomÜberschrift:=.Cells(row, 10).value, _
            AnlageTyp:=.Cells(row, 23).value, _
-           AnlageNummer:=.Cells(row, 24).value _
+           AnlageNummer:=.Cells(row, 24).value, _
+           UnterProjekt:=.Cells(row, 25).value _
                           ) Then
             Set LoadFromDataBase = NewPlankopf
             LoadFromDataBase.TinLinePKNr = .Cells(row, 22).value
@@ -201,6 +204,11 @@ Public Function AddToDatabase(ByVal Plankopf As IPlankopf) As Boolean
             .Cells(row, 22).value = Plankopf.TinLinePKNr
             .Cells(row, 23).value = Plankopf.AnlageTyp
             .Cells(row, 24).value = Plankopf.AnlageNummer
+            If Plankopf.UnterProjekt = vbNullString Then
+            .Cells(row, 25).value = "Hauptprojekt"
+            Else
+            .Cells(row, 25).value = Plankopf.UnterProjekt
+            End If
         End With
         AddToDatabase = True
         writelog LogInfo, "Plankopf " & Plankopf.Plannummer & " in Datenbank gespeichert"
@@ -305,6 +313,22 @@ err:
     writelog LogTrace, "Kein leerer Plankopf in XML " & Plankopf.XMLFile
     Select Case MsgBox("Es besteht kein Leerer Plankopf in der Datei: " & vbNewLine & vbNewLine & Plankopf.XMLFile & vbNewLine & vbNewLine & "Datei im TinLine öffnen?", vbYesNo, "Kein Plankopf!")
     Case vbYes
+    
+    TinLine.setTinProject Globals.Projekt.ProjektOrdnerCAD
+    Select Case Plankopf.PLANTYP
+    Case "PLA"                                       'Plan
+        Select Case Plankopf.UnterGewerk
+        Case "Elektro"
+            TinLine.setBibliothek EP
+        Case "Türfachplanung"
+            TinLine.setBibliothek TF
+        Case "Brandschutzplanung"
+            TinLine.setBibliothek BS
+        End Select
+    Case "PRI"                                       'Prinzip
+        TinLine.setBibliothek PR
+    End Select
+   
         CreateObject("Shell.Application").Open (Plankopf.dwgFile)
         writelog LogTrace, "DWG Geöffnet im TinLine " & Plankopf.dwgFile
         Select Case MsgBox("Plankopf im TinLine erstellt?", vbYesNo)

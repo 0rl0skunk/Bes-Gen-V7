@@ -5,13 +5,15 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormTemplates
    ClientTop       =   450
    ClientWidth     =   9600.001
    OleObjectBlob   =   "UserFormTemplates.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormTemplates"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 
 
 '@Folder "Templates"

@@ -203,6 +203,9 @@ Sub onActionButton(control As IRibbonControl)
         frmPKadd.setIcons Add
         frmPKadd.MultiPageTyp.value = 2
         frmPKadd.Show 1
+    Case "UpdateProject"
+        ' Dim frmUpdateProjekt
+        ' frmUpdateProjekt.Show 1
     End Select
     CustomUI.RefreshRibbon
 End Sub
