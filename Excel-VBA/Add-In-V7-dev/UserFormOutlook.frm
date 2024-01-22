@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormOutlook
    ClientTop       =   465
    ClientWidth     =   9720.001
    OleObjectBlob   =   "UserFormOutlook.frx":0000
-   StartUpPosition =   1  'Fenstermitte
+   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UserFormOutlook"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +13,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "E-Mails direkt vom Beschriftungsgenerator erstellen und Anzeigen."
+
 
 
 

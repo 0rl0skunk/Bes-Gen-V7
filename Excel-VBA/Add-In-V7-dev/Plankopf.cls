@@ -353,14 +353,14 @@ Private Sub GetKF()
     ErrSource = ErrSourceModule & " > " & "GetKF"
     On Error GoTo ErrHandler
     GebCol = Globals.shGebäude.range("1:1").Find(This.Gebäude).Column
-    This.GebäudeKF = Globals.shGebäude.Cells(row, 2).value
+    This.GebäudeKF = Globals.shGebäude.Cells(2, GebCol).value
     If This.GebäudeKF = "GES" And Globals.shGebäude.range("D1").value = vbNullString Then
         This.GebäudeKF = vbNullString
     End If
     If This.GebäudeKF = vbNullString Then
         This.GebäudeCode = vbNullString
     Else
-        This.GebäudeCode = Globals.shGebäude.Cells(row, 3).value
+        This.GebäudeCode = Globals.shGebäude.Cells(3, GebCol).value
     End If
     This.GebäudeAdresse = AdressFactory.Create(Globals.shGebäude.Cells(4, GebCol).value, Globals.shGebäude.Cells(5, GebCol).value, Globals.shGebäude.Cells(6, GebCol).value) ' Gebäudeadresse
     
