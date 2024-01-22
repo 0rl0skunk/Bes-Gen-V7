@@ -21,7 +21,7 @@ End Property
 Public Property Get ProjektXML() As String
 End Property
 
-Public Property Get Projektadresse() As IAdresse
+Public Property Get ProjektAdresse() As IAdresse
 End Property
 
 Public Property Get ProjektBezeichnung() As String

@@ -14,6 +14,7 @@ Public Const VorlagePRDWGOBJ As String = "H:\TinLine\01_Standards\PR-Vorlage_OBJ
 Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz As Boolean, ByVal Türfachplanung As Boolean, ByVal Prinzip As Boolean, ByVal Schemata As Boolean, ByVal SharePointLink As String)
     Globals.shPData.range("ADM_ProjektPfadSharePoint").value = SharePointLink
     Globals.Projekt True
+      
     If Globals.shGebäude Is Nothing Then Globals.SetWBs
     Globals.shProjekt.range("A1").value = False
     Globals.shProjekt.range("A2").value = False
@@ -162,6 +163,7 @@ Public Sub GebäudeFolders(ByVal Folder As String, ByVal Gewerk As String, Option
     arrGeb() = getList("PRO_Gebäude")
     For i = LBound(arrGeb) To UBound(arrGeb)
         'get all Geschosse from the current Building
+        ' Check Adressen und Kpoiert von Gesamt
         larrGeb(0) = arrGeb(i)
         Set rng = ws.range("PRO_Gebäude")
         Set rng = rng.Resize(1, rng.Columns.Count)
@@ -264,6 +266,9 @@ Private Sub TinLineFloorXML(ByVal Plan As IPlankopf)
     Set NodGrandChild = oXml.createElement("Wert")
     If Plan.Gebäude = "Gesamt" And Globals.shGebäude.range("D1").value = vbNullString Then: NodGrandChild.Text = vbNullString: Else: NodGrandChild.Text = Plan.Gebäude
         NodChild.appendChild NodGrandChild
+    CreateXmlAttribute "PA02", "Projekt Adresse [Strasse]", Globals.Projekt.ProjektAdresse.Strasse, "PA", NodChild, oXml, NodElement
+    CreateXmlAttribute "PA03", "Projekt Adresse [PLZ]", Globals.Projekt.ProjektAdresse.PLZ, "PA", NodChild, oXml, NodElement
+    CreateXmlAttribute "PA04", "Projekt Adresse [Ort]", Globals.Projekt.ProjektAdresse.Ort, "PA", NodChild, oXml, NodElement
 
         ' XML formatieren
         Debug.Print Plan.FolderName & "\TinPlanFloor.xml"
@@ -388,9 +393,9 @@ Private Sub TinLineProjectXML()
     NodChild.appendChild NodGrandChild
     ' Infos für auf den Plankopf
     CreateXmlAttribute "PA01", "Projekt Name", Globals.Projekt.ProjektBezeichnung, "PA", NodChild, oXml, NodElement
-    CreateXmlAttribute "PA02", "Projekt Adresse [Strasse]", Globals.Projekt.Projektadresse.Strasse, "PA", NodChild, oXml, NodElement
-    CreateXmlAttribute "PA03", "Projekt Adresse [PLZ]", Globals.Projekt.Projektadresse.PLZ, "PA", NodChild, oXml, NodElement
-    CreateXmlAttribute "PA04", "Projekt Adresse [Ort]", Globals.Projekt.Projektadresse.Ort, "PA", NodChild, oXml, NodElement
+    'CreateXmlAttribute "PA02", "Projekt Adresse [Strasse]", Globals.Projekt.ProjektAdresse.Strasse, "PA", NodChild, oXml, NodElement
+    'CreateXmlAttribute "PA03", "Projekt Adresse [PLZ]", Globals.Projekt.ProjektAdresse.PLZ, "PA", NodChild, oXml, NodElement
+    'CreateXmlAttribute "PA04", "Projekt Adresse [Ort]", Globals.Projekt.ProjektAdresse.Ort, "PA", NodChild, oXml, NodElement
     CreateXmlAttribute "PA05", "Projektnummer", Globals.Projekt.Projektnummer, "PA", NodChild, oXml, NodElement
     CreateXmlAttribute "PA06", "Projektphase", Globals.Projekt.Projektphase, "PA", NodChild, oXml, NodElement
     ' XML formatieren

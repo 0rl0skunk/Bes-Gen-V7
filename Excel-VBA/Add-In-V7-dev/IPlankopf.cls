@@ -24,6 +24,9 @@ End Property
 Public Property Get IDTinLine() As String
 End Property
 
+Public Property Get GebäudeAdresse() As IAdresse
+End Property
+
 Public Property Get TinLinePKNr() As String
 End Property
 

@@ -8,7 +8,7 @@ Option Explicit
 
 Public Function Create( _
        ByVal Projektnummer As String, _
-       ByVal Projektadresse As IAdresse, _
+       ByVal ProjektAdresse As IAdresse, _
        ByVal ProjektBezeichnung As String, _
        ByVal Projektphase As String, _
        ByVal ProjektOrdnerSharePoint As String _
@@ -17,7 +17,7 @@ Public Function Create( _
     Dim NewProjekt           As New Projekt
     NewProjekt.Filldata _
         Projektnummer, _
-        Projektadresse, _
+        ProjektAdresse, _
         ProjektBezeichnung, _
         Projektphase, _
         ProjektOrdnerSharePoint

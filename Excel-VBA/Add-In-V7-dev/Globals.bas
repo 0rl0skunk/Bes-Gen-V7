@@ -31,15 +31,16 @@ Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection
 
 Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
-    With Application.ActiveWorkbook.Sheets("Projektdaten")
+If shPData Is Nothing Then Globals.SetWBs
+    With shPData
         If pProjekt Is Nothing Or ForceNew Then
             Set pProjekt = _
                          ProjektFactory.Create( _
                          .range("ADM_Projektnummer").value, _
                          AdressFactory.Create _
-                         (.range("ADM_ADR_Strasse").value, _
-                          .range("ADM_ADR_PLZ").value, _
-                          .range("ADM_ADR_Ort").value), _
+                         (shGebäude.range("ADM_ADR_Strasse").value, _
+                          shGebäude.range("ADM_ADR_PLZ").value, _
+                          shGebäude.range("ADM_ADR_Ort").value), _
                          .range("ADM_Projektbezeichnung").value, _
                          .range("ADM_Projektphase").value, _
                          .range("ADM_ProjektpfadSharePoint").value)

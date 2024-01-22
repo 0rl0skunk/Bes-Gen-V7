@@ -18,7 +18,7 @@ Implements IProjekt
 
 Private Type TProjekt
     Projektnummer As String
-    Projektadresse As IAdresse
+    ProjektAdresse As IAdresse
     ProjektBezeichnung As String
     Projektphase As String
     ProjektphaseNummer As Long
@@ -31,17 +31,17 @@ Private This                 As TProjekt
 
 Public Sub Filldata( _
        ByVal Projektnummer As String, _
-       ByVal Projektadresse As IAdresse, _
+       ByVal ProjektAdresse As IAdresse, _
        ByVal ProjektBezeichnung As String, _
        ByVal Projektphase As String, _
        ByVal ProjektOrdnerSharePoint As String _
        )
 
     This.Projektnummer = Projektnummer
-    Set This.Projektadresse = Projektadresse
+    Set This.ProjektAdresse = ProjektAdresse
     This.ProjektBezeichnung = ProjektBezeichnung
     This.Projektphase = Projektphase
-    This.ProjektphaseNummer = Globals.shPData.range("PRO_Projektphase").Find(This.Projektphase).Offset(0, 1).value
+    This.ProjektphaseNummer = Globals.shPZM.range("PRO_Projektphase").Find(This.Projektphase).Offset(0, 1).value
     This.ProjektOrdnerSharePoint = ProjektOrdnerSharePoint
     GetCADPath
 
@@ -56,7 +56,7 @@ Private Property Get IProjekt_ProjektXML() As String
 End Property
 
 Private Property Get IProjekt_Projektadresse() As IAdresse
-    Set IProjekt_Projektadresse = This.Projektadresse
+    Set IProjekt_Projektadresse = This.ProjektAdresse
 End Property
 
 Private Property Get IProjekt_ProjektBezeichnung() As String

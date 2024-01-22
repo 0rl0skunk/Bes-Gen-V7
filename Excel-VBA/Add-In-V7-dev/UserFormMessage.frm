@@ -19,6 +19,7 @@ Attribute VB_Description = "Erster Versuch für eine Custom Fehlermeldung. Implem
 
 
 
+
 '@Folder "Templates"
 '@ModuleDescription "Erster Versuch für eine Custom Fehlermeldung. Implementierung folgt zu einem späteren Zeitpunkt."
 

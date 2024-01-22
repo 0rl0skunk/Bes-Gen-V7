@@ -19,6 +19,7 @@ Attribute VB_Description = "Zeigt eine Vorschau des erstellten Plankopfes an. Di
 
 
 
+
 '@Folder "Plankopf"
 '@ModuleDescription "Zeigt eine Vorschau des erstellten Plankopfes an. Dies dient zur überprüfung, ob ein Plankopf richtig ausgefüllt wurde und zur Fehlerfindung."
 
@@ -49,7 +50,7 @@ Public Sub LoadClass(ByVal Plankopf As IPlankopf, ByVal Projekt As IProjekt)
     Me.PA33.Caption = Split(Plankopf.Geprüft, " ; ")(1)
 
     '--- Projektaddresse
-    Me.LabelProjektAdresse.Caption = Projekt.ProjektBezeichnung & vbNewLine & Projekt.Projektadresse.Komplett
+    Me.LabelProjektAdresse.Caption = Projekt.ProjektBezeichnung & vbNewLine & Projekt.ProjektAdresse.Komplett
     Me.Projektnummer.Caption = Projekt.Projektnummer
     Me.Projektphase.Caption = Projekt.ProjektphaseNummer & " - " & Projekt.Projektphase
     Me.Plot.Caption = Format$(Now(), "DD.MM.YYYY HH:mm")
