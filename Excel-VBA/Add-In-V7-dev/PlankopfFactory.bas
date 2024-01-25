@@ -30,7 +30,7 @@ Public Function Create( _
        ByVal Format As String, _
        ByVal Masstab As String, _
        ByVal Stand As String, _
-       ByVal Planart As String, _
+       ByVal Planart As String, Ansicht As String, _
        Optional ByVal PLANTYP As String, _
        Optional ByVal TinLineID As String, _
        Optional ByVal SkipValidation As Boolean = False, _
@@ -57,7 +57,7 @@ Public Function Create( _
        Format:=Format, _
        Masstab:=Masstab, _
        Stand:=Stand, _
-       Planart:=Planart, _
+       Planart:=Planart, Ansicht:=Ansicht, _
        PLANTYP:=PLANTYP, _
        TinLineID:=TinLineID, _
        SkipValidation:=SkipValidation, _

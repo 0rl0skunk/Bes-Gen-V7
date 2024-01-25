@@ -337,6 +337,10 @@ Public Function getList(ByVal RangeName As String) As Variant()
         Set tmprng = Globals.shPData.range(RangeName)
         arr() = tmprng.Resize(tmprng.rows.Count, 1)
         tmparr() = RemoveBlanksFromStringArray(arr())
+    Case "DET_Ansichten"
+        Set tmprng = Globals.shAnsichten.range(RangeName)
+        arr() = tmprng.Resize(tmprng.rows.Count, 1)
+        tmparr() = RemoveBlanksFromStringArray(arr())
     Case Else
         Set tmprng = Globals.shPZM.range(RangeName)
         arr() = tmprng.Resize(tmprng.rows.Count, 1)

@@ -61,6 +61,8 @@ Private Type TPlankopf
     '--- Schema / Verteilung ---
     AnlageTyp As String: AnlageTypKF As String
     AnlageNummer As String
+    '--- Ansicht / Schnitt ---
+    Ansicht As String: AnsichtKF As String: AnsichtCode As String
     '--- Projekt ---
     UnterProjekt As String
 End Type
@@ -254,7 +256,7 @@ Public Function Filldata( _
        ByVal Format As String, _
        ByVal Masstab As String, _
        ByVal Stand As String, _
-       ByVal Planart As String, _
+       ByVal Planart As String, Optional ByVal Ansicht As String, _
        Optional ByVal PLANTYP As String, _
        Optional ByVal TinLineID As String = "NEW", _
        Optional ByVal SkipValidation As Boolean = False, _
@@ -288,6 +290,7 @@ Public Function Filldata( _
         .AnlageNummer = AnlageNummer
         .AnlageTyp = AnlageTyp
         .UnterProjekt = UnterProjekt
+        .Ansicht = Ansicht
     End With
     Set pProjekt = Projekt
     'On Error GoTo NotValid
@@ -362,34 +365,37 @@ Private Sub GetKF()
     Else
         This.GebäudeCode = Globals.shGebäude.Cells(3, GebCol).value
     End If
-    This.GebäudeAdresse = AdressFactory.Create(Globals.shGebäude.Cells(4, GebCol).value, Globals.shGebäude.Cells(5, GebCol).value, Globals.shGebäude.Cells(6, GebCol).value) ' Gebäudeadresse
+    Set This.GebäudeAdresse = AdressFactory.Create(Globals.shGebäude.Cells(4, GebCol).value, Globals.shGebäude.Cells(5, GebCol).value, Globals.shGebäude.Cells(6, GebCol).value) ' Gebäudeadresse
     
+    ' Geschoss
     ErrSourceLog = ErrSource & " > " & "Geschoss-Code": ErrDescription = This.Geschoss & " nicht in Range Globals.shGebäude.Range(B:AQ) gefunden"
 1   This.GeschossCode = Globals.shGebäude.Cells(Globals.shGebäude.range("B:AQ").Find(This.Geschoss).row, 1).value
     
     ErrSourceLog = ErrSource & " > " & "Geschoss KF": ErrDescription = This.Geschoss & " nicht in Range Globals.shGebäude.Range(B:AQ) gefunden"
 2   This.GeschossKF = Globals.shGebäude.range("B:AQ").Find(This.Geschoss).Offset(, 1).value
     
+    'Gebäude
     ErrSourceLog = ErrSource & " > " & "Gebäudeteil KF": ErrDescription = This.Gebäudeteil & " nicht in Range Globals.shPData.range(PRO_Gebäudeteil) gefunden"
 3   This.GebäudeTeilKF = Globals.shPData.range("PRO_Gebäudeteil").Find(This.Gebäudeteil).Offset(0, 1).value
     
     ErrSourceLog = ErrSource & " > " & "Gewerk KF": ErrDescription = This.Gewerk & " nicht in Range Globals.shPData.range(PRO_Hauptgewerk) gefunden"
-4   This.GewerkKF = Globals.shPData.range("PRO_Hauptgewerk").Find(This.Gewerk).Offset(0, 1).value
+4   This.GewerkKF = Globals.shPZM.range("PRO_Hauptgewerk").Find(This.Gewerk).Offset(0, 1).value
 
     Dim col                  As Long
+    ' Hauptgewerk, Untergewerk
     Select Case This.PLANTYP
     Case "PLA"
-        ErrSourceLog = ErrSource & " > " & "PLA > Column UnterGewerk KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(10:10) gefunden"
-5       col = Application.Match(This.GewerkKF & " PLA", Globals.shPData.range("10:10"), 0)
+        ErrSourceLog = ErrSource & " > " & "PLA > Column UnterGewerk KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(3:3) gefunden"
+5       col = Application.Match(This.GewerkKF & " PLA", Globals.shPZM.range("3:3"), 0)
 
         ErrSourceLog = ErrSource & " > " & "PLA > UnterGewerk KF": ErrDescription = This.UnterGewerk & " nicht in Range Globals.shPData.Columns(" & col & ") gefunden"
-6       This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
+6       This.UnterGewerkKF = Globals.shPZM.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
 
-        ErrSourceLog = ErrSource & " > " & "PLA > Column Planart KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(9:9) gefunden"
-7       col = Application.Match(This.GewerkKF, Globals.shPData.range("9:9"), 0)
+        ErrSourceLog = ErrSource & " > " & "PLA > Column Planart KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(2:2) gefunden"
+7       col = Application.Match(This.GewerkKF, Globals.shPZM.range("2:2"), 0)
 
         ErrSourceLog = ErrSource & " > " & "PLA > Planart KF": ErrDescription = This.Planart & " nicht in Range Globals.shPData.Columns(" & col & ") gefunden"
-8       This.PlanartKF = Globals.shPData.Columns(col).Find(This.Planart).Offset(0, 1).value
+8       This.PlanartKF = Globals.shPZM.Columns(col).Find(This.Planart).Offset(0, 1).value
         ' Welcher Kürzel kommt vor die Stockwerkbezeichnung beim DWG?
         Select Case This.GewerkKF
         Case "ELE"
@@ -401,30 +407,35 @@ Private Sub GetKF()
         End Select
     Case "SCH"
     
-        ErrSourceLog = ErrSource & " > " & "SCH > Column UnterGewerk KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(10:10) gefunden"
-9       col = Application.Match(This.GewerkKF & " SCH", Globals.shPData.range("10:10"), 0)
+        ErrSourceLog = ErrSource & " > " & "SCH > Column UnterGewerk KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(3:3) gefunden"
+9       col = Application.Match(This.GewerkKF & " SCH", Globals.shPZM.range("3:3"), 0)
 
         ErrSourceLog = ErrSource & " > " & "SCH > UnterGewerk KF": ErrDescription = This.UnterGewerk & " nicht in Range Globals.shPData.Columns(" & col & ") gefunden"
-10      This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
+10      This.UnterGewerkKF = Globals.shPZM.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
         This.TinLineTyp = vbNullString
         ' Kurzform für Anlagetyp
         
-        ErrSourceLog = ErrSource & " > " & "SCH > Column Planart KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(12:12) gefunden"
-11      col = Application.Match("Anlagetyp " & This.UnterGewerk, Globals.shPData.range("12:12"), 0)
+        ErrSourceLog = ErrSource & " > " & "SCH > Column Planart KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(5:5) gefunden"
+11      col = Application.Match("Anlagetyp " & This.UnterGewerk, Globals.shPZM.range("5:5"), 0)
 
         ErrSourceLog = ErrSource & " > " & "SCH > Anlagetyp KF": ErrDescription = This.AnlageTyp & " nicht in Range Globals.shPData.Columns(" & col & ") gefunden"
-12      This.AnlageTypKF = Globals.shPData.Columns(col).Find(This.AnlageTyp).Offset(0, 1).value
+12      This.AnlageTypKF = Globals.shPZM.Columns(col).Find(This.AnlageTyp).Offset(0, 1).value
     Case "PRI"
-        ErrSourceLog = ErrSource & " > " & "PRI > Column UnterGewerk KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(10:10) gefunden"
-13      col = Application.Match(This.GewerkKF & " PRI", Globals.shPData.range("10:10"), 0)
+        ErrSourceLog = ErrSource & " > " & "PRI > Column UnterGewerk KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(3:3) gefunden"
+13      col = Application.Match(This.GewerkKF & " PRI", Globals.shPZM.range("3:3"), 0)
 
         ErrSourceLog = ErrSource & " > " & "PRI > UnterGewerk KF": ErrDescription = This.UnterGewerk & " nicht in Range Globals.shPData.Columns(" & col & ") gefunden"
-14      This.UnterGewerkKF = Globals.shPData.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
+14      This.UnterGewerkKF = Globals.shPZM.Columns(col).Find(This.UnterGewerk).Offset(0, 1).value
 
-        ErrSourceLog = ErrSource & " > " & "PRI > Column Planart KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(9:9) gefunden"
-15      col = Application.Match(This.GewerkKF, Globals.shPData.range("9:9"), 0)
+        ErrSourceLog = ErrSource & " > " & "PRI > Column Planart KF": ErrDescription = This.GewerkKF & " nicht in Range Globals.shPData.range(2:2) gefunden"
+15      col = Application.Match(This.GewerkKF, Globals.shPZM.range("2:2"), 0)
         This.PlanartKF = "PR"
         This.TinLineTyp = "PR"
+    Case "DET"
+        This.AnsichtKF = Globals.shAnsichten.range("B:B").Find(This.Ansicht).Offset(0, 1).value
+        This.AnsichtCode = Globals.shAnsichten.range("B:B").Find(This.Ansicht).Offset(0, -1).value
+        This.PlanartKF = "DE"
+        This.TinLineTyp = "DE"
     End Select
 
     writelog LogInfo, "Kurzformen erstellt"
@@ -447,6 +458,8 @@ Private Function GetFileNames()
         This.DWGFileName = "1"
     Case "PRI"
         This.DWGFileName = This.TinLineTyp & "_" & This.UnterGewerkKF
+    Case "DET"
+        This.DWGFileName = This.TinLineTyp & "_" & This.AnsichtKF
     End Select
     ' --- XML FileName
     Select Case This.PLANTYP
@@ -456,6 +469,8 @@ Private Function GetFileNames()
         This.XMLFileName = "1.xml"
     Case "PRI"
         This.XMLFileName = "TinPlan_" & This.TinLineTyp & "_" & This.UnterGewerkKF & ".xml"
+    Case "DET"
+        This.XMLFileName = "TinPlan_" & This.TinLineTyp & "_" & This.AnsichtKF & ".xml"
     End Select
     ' --- Pfad
     Select Case This.PLANTYP
@@ -494,6 +509,10 @@ Private Function GetFileNames()
         This.Pfad = pProjekt.ProjektOrdnerCAD & "\03_PR"
         This.DWGFilePath = This.Pfad & "\" & indStr & "_" & This.UnterGewerkKF
         This.XMLFilePath = This.DWGFilePath
+    Case "DET"
+        This.Pfad = pProjekt.ProjektOrdnerCAD & "\04_DE"
+        This.DWGFilePath = This.Pfad
+        This.XMLFilePath = This.DWGFilePath
     End Select
     ' --- FilePath
 End Function
@@ -504,6 +523,10 @@ Private Sub GetPlanüberschrift()
     If This.CustomPlanüberschrift Then Exit Sub
     Dim Gebäudeteil As String
     Dim GebäudeTeilKF As String
+    Dim Geschoss As String
+    Dim GeschossKF As String
+    Dim Gebäude As String
+    Dim GebäudeKF As String
     If This.Gebäudeteil = "Gesamt" Then
         Gebäudeteil = vbNullString
         GebäudeTeilKF = vbNullString
@@ -511,19 +534,33 @@ Private Sub GetPlanüberschrift()
         Gebäudeteil = This.Gebäudeteil
         GebäudeTeilKF = This.GebäudeTeilKF
     End If
+    If This.Geschoss = "Gesamt" Then
+        Geschoss = vbNullString
+        GeschossKF = vbNullString
+    Else
+        Geschoss = This.Geschoss
+        GeschossKF = This.GeschossKF
+    End If
+    If This.Gebäude = "Gesamt" Then
+        Gebäude = vbNullString
+        GebäudeKF = vbNullString
+    Else
+        Gebäude = This.Gebäude
+        GebäudeKF = This.GebäudeKF
+    End If
     Select Case This.PLANTYP
     Case "PLA"
         ' Überschrift für Elektropläne
-        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.Geschoss, Gebäudeteil)
+        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, Geschoss, Gebäudeteil)
         This.PlanBeschrieb = Planüberschrift
         If Len(Planüberschrift) > Globals.maxlen Then
-            Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.GeschossKF, Gebäudeteil)
+            Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, GeschossKF, Gebäudeteil)
             If Len(Planüberschrift) > maxlen Then
-                Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, This.GeschossKF, GebäudeTeilKF)
+                Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerk, GeschossKF, GebäudeTeilKF)
                 If Len(Planüberschrift) > maxlen Then
-                    Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerkKF, This.GeschossKF, GebäudeTeilKF)
+                    Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Planart, This.UnterGewerkKF, GeschossKF, GebäudeTeilKF)
                     If Len(Planüberschrift) > maxlen Then
-                        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.PlanartKF, This.UnterGewerkKF, This.GeschossKF, GebäudeTeilKF)
+                        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.PlanartKF, This.UnterGewerkKF, GeschossKF, GebäudeTeilKF)
                     End If
                 End If
             End If
@@ -541,7 +578,9 @@ Private Sub GetPlanüberschrift()
 
     Case "SCH"
         ' Überschrift für Schemas
-        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Gewerk, This.AnlageTyp, This.Gebäude, This.Geschoss, This.Gebäudeteil, "Anlagenummer:", This.AnlageNummer)
+        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Gewerk, This.AnlageTyp, Gebäude, Geschoss, Gebäudeteil, "Anlagenummer:", This.AnlageNummer)
+    Case "DET"
+        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Gewerk, This.Ansicht, Gebäude, Geschoss, Gebäudeteil)
     End Select
 
     ' wurde die Planüberschrift bearbeitet oder nicht?
@@ -606,6 +645,12 @@ Public Sub Refresh()
     Case "PRI"
         This.LayoutName = WorksheetFunction.TextJoin _
                           ("-", True, This.GebäudeKF, This.GebäudeTeilKF, This.GeschossKF, This.PlanartKF, This.UnterGewerkKF)
+
+        This.PDFFileName = WorksheetFunction.TextJoin _
+                           ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
+    Case "DET"
+        This.LayoutName = WorksheetFunction.TextJoin _
+                          ("-", True, This.GebäudeKF, This.GebäudeTeilKF, This.GeschossKF, This.AnsichtKF)
 
         This.PDFFileName = WorksheetFunction.TextJoin _
                            ("_", True, shPData.range("ADM_Projektnummer").value, "04" & This.GewerkKF, This.GeschossCode, This.LayoutName, dateToday)
