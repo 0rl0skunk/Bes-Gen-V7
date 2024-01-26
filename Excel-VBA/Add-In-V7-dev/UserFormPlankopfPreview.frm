@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopfPreview
    ClientTop       =   450
    ClientWidth     =   11880
    OleObjectBlob   =   "UserFormPlankopfPreview.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormPlankopfPreview"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +13,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Zeigt eine Vorschau des erstellten Plankopfes an. Dies dient zur überprüfung, ob ein Plankopf richtig ausgefüllt wurde und zur Fehlerfindung."
+
+
+
+
+
+
+
 
 
 
@@ -76,15 +83,15 @@ Public Sub LoadXML(ByVal filepath As String, ByVal Plankopfnummer As Long)
         If ChildNode.HasChildNodes And ChildNode.BaseName = PKNr Then
             For Each GrandChildNode In ChildNode.ChildNodes
                 Select Case GrandChildNode.Text
-                Case "PA40": Me.PA40.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                Case "PA41": Me.PA41.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                Case "PA42": Me.PA42.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                Case "PA43": Me.PA43.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                Case "PA44": Me.PA44.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                Case "PA30": Me.PA30.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                Case "PA31": Me.PA31.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                Case "PA32": Me.PA32.Caption = GrandChildNode.NextSibling.NextSibling.Text
-                Case "PA33": Me.PA33.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                    Case "PA40": Me.PA40.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                    Case "PA41": Me.PA41.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                    Case "PA42": Me.PA42.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                    Case "PA43": Me.PA43.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                    Case "PA44": Me.PA44.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                    Case "PA30": Me.PA30.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                    Case "PA31": Me.PA31.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                    Case "PA32": Me.PA32.Caption = GrandChildNode.NextSibling.NextSibling.Text
+                    Case "PA33": Me.PA33.Caption = GrandChildNode.NextSibling.NextSibling.Text
                 End Select
             Next
         End If

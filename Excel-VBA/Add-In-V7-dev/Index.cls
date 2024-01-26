@@ -119,7 +119,6 @@ End Property
 Private Property Get IIndex_Index() As String
     IIndex_Index = This.Index
 End Property
-
 Private Property Let IIndex_Index(ByVal NewValue As String)
     This.Index = NewValue
 End Property
@@ -139,7 +138,6 @@ End Property
 Private Property Get IIndex_PlanID() As String
     IIndex_PlanID = This.IDPlan
 End Property
-
 Private Property Let IIndex_PlanID(ByVal NewValue As String)
     This.IDPlan = NewValue
 End Property

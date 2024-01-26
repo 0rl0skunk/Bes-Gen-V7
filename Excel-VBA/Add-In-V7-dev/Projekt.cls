@@ -86,13 +86,13 @@ Private Sub GetCADPath()
 
     Dim Jahr                 As String
     Jahr = "20" & Left$(This.Projektnummer, 2)
-    
+
     If Globals.shPData.range("ADM_ProjektPfadCAD").value = vbNullString Then
         This.ProjektOrdnerCAD = TinLinePath & "\" & Jahr & "\" & This.Projektnummer & "_" & This.ProjektBezeichnung
     Else
         This.ProjektOrdnerCAD = Globals.shPData.range("ADM_ProjektPfadCAD").value
     End If
-    
+
     This.ProjektXML = This.ProjektOrdnerCAD & "\99 TinConfiguration\TinPlanProject.xml"
 
     writelog LogInfo, "CAD-Pfad für Projekt " & This.Projektnummer & " > " & This.ProjektOrdnerCAD

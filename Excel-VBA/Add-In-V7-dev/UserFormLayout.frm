@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormLayout
    ClientTop       =   465
    ClientWidth     =   5880
    OleObjectBlob   =   "UserFormLayout.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormLayout"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +13,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Einfaches Auswählen und definieren eines Layouts für Plan und Prinzip Planköpfe."
+
+
+
+
+
+
+
 
 
 
@@ -121,85 +128,85 @@ Private Sub ChangeFormat()
     legende.Top = 0
     ' Auswahl für die korrekte darstellung von Plankopf und Legenden
     Select Case H
-    Case 1
-        Select Case B
         Case 1
-            legende.Visible = False
-            Plankopf.height = (tHeight / H) / 3
-            Plankopf.Top = (tHeight / H) * (H - 1) + 2 * (tHeight / H) / 3
+            Select Case B
+                Case 1
+                    legende.Visible = False
+                    Plankopf.height = (tHeight / H) / 3
+                    Plankopf.Top = (tHeight / H) * (H - 1) + 2 * (tHeight / H) / 3
 
-            mHeight = ((height - 5 - 2) * pMasstab) / 100
-            mWidth = ((width - 2) * pMasstab) / 100
+                    mHeight = ((height - 5 - 2) * pMasstab) / 100
+                    mWidth = ((width - 2) * pMasstab) / 100
+                Case 2
+                    legende.Visible = False
+                    Plankopf.height = (tHeight / H) / 3
+                    Plankopf.Top = (tHeight / H) * (H - 1) + 2 * (tHeight / H) / 3
+                    mHeight = ((height - 5 - 2) * pMasstab) / 100
+                    mWidth = ((width - 2) * pMasstab) / 100
+                Case Is >= 3
+                    legende.Visible = True
+                    legende.width = (tWidth / B)
+                    legende.height = (tHeight / H)
+                    legende.Left = (tWidth / B) * (B - 2)
+                    Plankopf.height = tHeight / H
+                    Plankopf.Top = (tHeight / H) * (H - 1) + (H - 1) * (tHeight / H)
+                    mHeight = ((height - 2) * pMasstab) / 100
+                    mWidth = ((width - 4) * pMasstab) / 100
+            End Select
         Case 2
-            legende.Visible = False
-            Plankopf.height = (tHeight / H) / 3
-            Plankopf.Top = (tHeight / H) * (H - 1) + 2 * (tHeight / H) / 3
-            mHeight = ((height - 5 - 2) * pMasstab) / 100
-            mWidth = ((width - 2) * pMasstab) / 100
-        Case Is >= 3
-            legende.Visible = True
-            legende.width = (tWidth / B)
-            legende.height = (tHeight / H)
-            legende.Left = (tWidth / B) * (B - 2)
-            Plankopf.height = tHeight / H
-            Plankopf.Top = (tHeight / H) * (H - 1) + (H - 1) * (tHeight / H)
-            mHeight = ((height - 2) * pMasstab) / 100
-            mWidth = ((width - 4) * pMasstab) / 100
-        End Select
-    Case 2
-        Select Case B
-        Case 1
-            legende.Visible = False
-            Plankopf.height = (tHeight / H) / 3
-            Plankopf.Top = (tHeight / H) * (H - 1) + 2 * (tHeight / H) / 3
-            mHeight = ((height - 5 - 2) * pMasstab) / 100
-            mWidth = ((width - 2) * pMasstab) / 100
-        Case 2
-            legende.Visible = True
-            legende.width = (tWidth / B)
-            legende.height = (tHeight / H) * (H - 1)
-            legende.Left = (tWidth / B) * (B - 1)
-            Plankopf.height = tHeight / H
-            Plankopf.Top = (tHeight / H) + (H - 1)
-            mHeight = ((height - 2) * pMasstab) / 100
-            mWidth = ((width - 23) * pMasstab) / 100
-        Case Is >= 3
-            legende.Visible = True
-            legende.width = (tWidth / B)
-            legende.height = (tHeight / H) * (H - 1)
-            legende.Left = (tWidth / B) * (B - 1)
-            Plankopf.height = tHeight / H
-            Plankopf.Top = (tHeight / H) * (H - 1)
-            mHeight = ((height - 2) * pMasstab) / 100
-            mWidth = ((width - 23) * pMasstab) / 100
-        End Select
-    Case 3
-        Select Case B
-        Case 1
-            legende.Visible = False
-            Plankopf.height = (tHeight / H) / 3
-            Plankopf.Top = (tHeight / H) * (H - 1) + 2 * (tHeight / H) / 3
-            mHeight = ((height - 5 - 2) * pMasstab) / 100
-            mWidth = ((width - 2) * pMasstab) / 100
-        Case 2
-            legende.Visible = True
-            legende.width = (tWidth / B)
-            legende.height = (tHeight / H) * (H - 1)
-            legende.Left = (tWidth / B) * (B - 1)
-            Plankopf.height = tHeight / H
-            Plankopf.Top = (tHeight / H) * (H - 1)
-            mHeight = ((height - 2) * pMasstab) / 100
-            mWidth = ((width - 23) * pMasstab) / 100
-        Case Is >= 3
-            legende.Visible = True
-            legende.width = (tWidth / B)
-            legende.height = (tHeight / H) * (H - 1)
-            legende.Left = (tWidth / B) * (B - 1)
-            Plankopf.height = tHeight / H
-            Plankopf.Top = (tHeight / H) * (H - 1)
-            mHeight = ((height - 2) * pMasstab) / 100
-            mWidth = ((width - 23) * pMasstab) / 100
-        End Select
+            Select Case B
+                Case 1
+                    legende.Visible = False
+                    Plankopf.height = (tHeight / H) / 3
+                    Plankopf.Top = (tHeight / H) * (H - 1) + 2 * (tHeight / H) / 3
+                    mHeight = ((height - 5 - 2) * pMasstab) / 100
+                    mWidth = ((width - 2) * pMasstab) / 100
+                Case 2
+                    legende.Visible = True
+                    legende.width = (tWidth / B)
+                    legende.height = (tHeight / H) * (H - 1)
+                    legende.Left = (tWidth / B) * (B - 1)
+                    Plankopf.height = tHeight / H
+                    Plankopf.Top = (tHeight / H) + (H - 1)
+                    mHeight = ((height - 2) * pMasstab) / 100
+                    mWidth = ((width - 23) * pMasstab) / 100
+                Case Is >= 3
+                    legende.Visible = True
+                    legende.width = (tWidth / B)
+                    legende.height = (tHeight / H) * (H - 1)
+                    legende.Left = (tWidth / B) * (B - 1)
+                    Plankopf.height = tHeight / H
+                    Plankopf.Top = (tHeight / H) * (H - 1)
+                    mHeight = ((height - 2) * pMasstab) / 100
+                    mWidth = ((width - 23) * pMasstab) / 100
+            End Select
+        Case 3
+            Select Case B
+                Case 1
+                    legende.Visible = False
+                    Plankopf.height = (tHeight / H) / 3
+                    Plankopf.Top = (tHeight / H) * (H - 1) + 2 * (tHeight / H) / 3
+                    mHeight = ((height - 5 - 2) * pMasstab) / 100
+                    mWidth = ((width - 2) * pMasstab) / 100
+                Case 2
+                    legende.Visible = True
+                    legende.width = (tWidth / B)
+                    legende.height = (tHeight / H) * (H - 1)
+                    legende.Left = (tWidth / B) * (B - 1)
+                    Plankopf.height = tHeight / H
+                    Plankopf.Top = (tHeight / H) * (H - 1)
+                    mHeight = ((height - 2) * pMasstab) / 100
+                    mWidth = ((width - 23) * pMasstab) / 100
+                Case Is >= 3
+                    legende.Visible = True
+                    legende.width = (tWidth / B)
+                    legende.height = (tHeight / H) * (H - 1)
+                    legende.Left = (tWidth / B) * (B - 1)
+                    Plankopf.height = tHeight / H
+                    Plankopf.Top = (tHeight / H) * (H - 1)
+                    mHeight = ((height - 2) * pMasstab) / 100
+                    mWidth = ((width - 23) * pMasstab) / 100
+            End Select
     End Select
 
     ' Beschriftung für die Vorlage und welche Grösse ca. in dieses Layout passt.
@@ -208,23 +215,23 @@ Private Sub ChangeFormat()
                              height & "x" & width & "cm"
 
     Select Case MultiPageType
-    Case 0                                       'Plan
-        Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
-                                 "Höhe: " & mHeight & "m" & vbLf & _
-                                 "Beite: " & mWidth & "m"
-    Case 1                                       'Schema
-        Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
-                                 "Höhe: " & mHeight & "m" & vbLf & _
-                                 "Beite: " & mWidth & "m"
-    Case 2                                       'Prinzip
-        Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
-                                 "Höhe: " & Application.WorksheetFunction.RoundDown(mHeight / 3, 0) & " Geschosse" & vbLf & _
-                                 "Beite: " & mWidth & "m"
+        Case 0                                   'Plan
+            Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
+                                     "Höhe: " & mHeight & "m" & vbLf & _
+                                     "Beite: " & mWidth & "m"
+        Case 1                                   'Schema
+            Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
+                                     "Höhe: " & mHeight & "m" & vbLf & _
+                                     "Beite: " & mWidth & "m"
+        Case 2                                   'Prinzip
+            Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
+                                     "Höhe: " & Application.WorksheetFunction.RoundDown(mHeight / 3, 0) & " Geschosse" & vbLf & _
+                                     "Beite: " & mWidth & "m"
 
-    Case 3                                       'Detail
-        Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
-                                 "Höhe: " & mHeight & "m" & vbLf & _
-                                 "Beite: " & mWidth & "m"
+        Case 3                                   'Detail
+            Me.TextBoxModell.value = "Modellbereich: " & vbLf & _
+                                     "Höhe: " & mHeight & "m" & vbLf & _
+                                     "Beite: " & mWidth & "m"
     End Select
 
 End Sub

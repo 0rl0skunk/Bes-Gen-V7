@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormOutlook
    ClientTop       =   465
    ClientWidth     =   9720.001
    OleObjectBlob   =   "UserFormOutlook.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormOutlook"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +13,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "E-Mails direkt vom Beschriftungsgenerator erstellen und Anzeigen."
+
+
+
+
+
+
+
 
 
 
@@ -34,7 +41,7 @@ Private icons                As UserFormIconLibrary
 
 Private Sub CheckBoxSelectAll_Click()
     ' alle Pläne auswählen
-    Dim li As ListItem
+    Dim li                   As ListItem
     If Me.CheckBoxSelectAll.value Then
         For Each li In Me.ListViewPlankopf.ListItems
             li.Checked = Me.CheckBoxSelectAll.value
@@ -48,9 +55,9 @@ Private Sub CommandButton1_Click()
     Dim PrintPath            As String
     Dim appOutlook           As New Outlook.Application
     Dim Mail                 As MailItem
-    Dim mailBody As String * 2048
-    Dim mailStyle As String
-    Dim strFreitext As String * 2048
+    Dim mailBody             As String * 2048
+    Dim mailStyle            As String
+    Dim strFreitext          As String * 2048
     Set Mail = appOutlook.CreateItem(olMailItem)
 
     If Me.CheckBoxPlot Then
@@ -74,7 +81,7 @@ Private Sub CommandButton1_Click()
         .Display 0
         .BodyFormat = olFormatHTML
         .HTMLBody = "<HTML><BODY>" & mailStyle & mailBody & "<p>" & Planliste & "</p>" & "</BODY></HTML>" & .HTMLBody
-    
+
     End With
     writeToVersandliste
     Unload Me
@@ -83,7 +90,7 @@ End Sub
 
 Private Sub writeToVersandliste()
 
-    Dim lastrow As Long
+    Dim lastrow              As Long
     With Globals.shVersand
         lastrow = .ListObjects("Versandliste").range.rows.Count + 4
         If lastrow = 6 And .Cells(6, 1).value <> vbNullString Then lastrow = 7
@@ -96,8 +103,8 @@ Private Sub writeToVersandliste()
 End Sub
 
 Private Function JoinCollection(planköpfe As Collection) As String
-    Dim pla As IPlankopf
-    Dim str As String
+    Dim pla                  As IPlankopf
+    Dim str                  As String
     For Each pla In planköpfe
         str = str & pla.Plannummer & " | " & pla.CurrentIndex.Index & vbNewLine
     Next
@@ -107,14 +114,14 @@ End Function
 Private Function Planliste() As String
 
     Dim e                    As IPlankopf
-    Dim str As String
-    Dim strPlanliste As String
+    Dim str                  As String
+    Dim strPlanliste         As String
     ' Pläne im Anhang als liste formatieren
     For Each e In pPlanköpfe
         strPlanliste = strPlanliste & "<li>" & e.Plannummer & " | " & e.PlanBeschrieb & "</li>"
     Next
     strPlanliste = "<ul>" & strPlanliste & "</ul>"
-    
+
     On Error GoTo ErrHandler
     If pMailTo.Count > 1 Then
         str = "<p>Im Anhang finden Sie Folgende Pläne:</p>"

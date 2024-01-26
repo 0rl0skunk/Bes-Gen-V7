@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPrint
    ClientTop       =   465
    ClientWidth     =   13440
    OleObjectBlob   =   "UserFormPrint.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormPrint"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +13,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Planköpfe als PDF publizieren. Momentan nur für TinLine Pläne / Elektro"
+
+
+
+
+
+
+
 
 
 
@@ -31,7 +38,7 @@ Private icons                As UserFormIconLibrary
 Private pPlanköpfe           As Collection
 
 Private Sub CheckBoxSelectAll_Click()
-    Dim li As ListItem
+    Dim li                   As ListItem
     For Each li In Me.ListViewPlankopf.ListItems
         li.Checked = Me.CheckBoxSelectAll.value
     Next li

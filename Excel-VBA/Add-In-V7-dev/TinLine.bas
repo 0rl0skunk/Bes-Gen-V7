@@ -28,15 +28,16 @@ End Sub
 Public Sub setBibliothek(ByVal Bibliothek As TinBibliothek)
     ' SymbolBibliothek auf Plan Symbole setzen
     Select Case Bibliothek
-    Case 1
-    WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "181-EP-PZM"
-    Case 2
-    WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "181-PR-PZM"
-    Case 3
-    WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "182-Elektroschema"
-    Case 5
-    WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "181-TF-PZM"
-    Case 6
-    WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "181-Brandschutz"
+        Case 1
+            WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "181-EP-PZM"
+        Case 2
+            WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "181-PR-PZM"
+        Case 3
+            WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "182-Elektroschema"
+        Case 5
+            WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "181-TF-PZM"
+        Case 6
+            WriteIni Environ$("APPDATA") & "\TinLine\TinLine 23-Deu\R23\deu\TinLine\tinlokal.ini", "ProgrammPath", "SymbolleistePlan", "181-Brandschutz"
     End Select
 End Sub
+

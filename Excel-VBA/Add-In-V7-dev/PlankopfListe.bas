@@ -58,7 +58,7 @@ Public Sub LoadListViewPlan(ByRef control As ListView)
         Next row
         .Refresh
     End With
-    
+
     Application.StatusBar = False
 
 End Sub

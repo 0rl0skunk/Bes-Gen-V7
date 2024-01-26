@@ -20,7 +20,6 @@ End Property
 
 Public Property Get Index() As String
 End Property
-
 Public Property Let Index(ByVal NewValue As String)
 End Property
 
@@ -35,7 +34,6 @@ End Property
 
 Public Property Get PlanID() As String
 End Property
-
 Public Property Let PlanID(ByVal NewValue As String)
 End Property
 

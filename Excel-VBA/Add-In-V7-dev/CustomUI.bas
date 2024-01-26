@@ -25,7 +25,7 @@ Function GetRibbon(ByVal lRibbonPointer As LongPtr) As Object
 Function GetRibbon(ByVal lRibbonPointer As Long) As Object
 #End If
 
-Dim objRibbon            As Object
+Dim objRibbon                As Object
 
 CopyMemory objRibbon, lRibbonPointer, LenB(lRibbonPointer)
 Set GetRibbon = objRibbon
@@ -43,40 +43,40 @@ Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
         If Globals.shPData.range("ADM_ProjektPfadCAD").value = vbNullString Then
             ' Projekt nicht erstellt ---
             Select Case control.ID
-            Case "customGroupPanels"
-                returnedVal = False
-            Case "customGroupBuildings"
-                returnedVal = True
-            Case "customGroupExplorer"
-                returnedVal = False
-            Case "customGroupHelp"
-                returnedVal = True
-            Case "customGroupCreateProject"
-                returnedVal = True
-            Case "customGroupNoBesGen"
-                returnedVal = False
-            Case "customGroupQuickAdd"
-                returnedVal = False
-            Case Else
-                returnedVal = False
+                Case "customGroupPanels"
+                    returnedVal = False
+                Case "customGroupBuildings"
+                    returnedVal = True
+                Case "customGroupExplorer"
+                    returnedVal = False
+                Case "customGroupHelp"
+                    returnedVal = True
+                Case "customGroupCreateProject"
+                    returnedVal = True
+                Case "customGroupNoBesGen"
+                    returnedVal = False
+                Case "customGroupQuickAdd"
+                    returnedVal = False
+                Case Else
+                    returnedVal = False
             End Select
         Else
             ' Projekt erstellt ---
             Select Case control.ID
-            Case "customGroupPanels"
-                returnedVal = True
-            Case "customGroupBuildings"
-                returnedVal = False
-            Case "customGroupExplorer"
-                returnedVal = True
-            Case "customGroupHelp"
-                returnedVal = True
-            Case "customGroupCreateProject"
-                returnedVal = False
-            Case "customGroupNoBesGen"
-                returnedVal = False
-            Case "customGroupQuickAdd"
-                returnedVal = True
+                Case "customGroupPanels"
+                    returnedVal = True
+                Case "customGroupBuildings"
+                    returnedVal = False
+                Case "customGroupExplorer"
+                    returnedVal = True
+                Case "customGroupHelp"
+                    returnedVal = True
+                Case "customGroupCreateProject"
+                    returnedVal = False
+                Case "customGroupNoBesGen"
+                    returnedVal = False
+                Case "customGroupQuickAdd"
+                    returnedVal = True
             End Select
         End If
     End If
@@ -85,11 +85,11 @@ End Sub
 
 Sub onLoad(ribbon As IRibbonUI)
     'PURPOSE: Run code when Ribbon loads the UI to store Ribbon Object's Pointer ID code
-    #If VBA7 Then
-        Dim StoreRibbonPointer   As LongPtr
-    #Else
-        Dim StoreRibbonPointer   As Long
-    #End If
+#If VBA7 Then
+        Dim StoreRibbonPointer As LongPtr
+#Else
+        Dim StoreRibbonPointer As Long
+#End If
 
     'Store Ribbon Object to Public variable
     Set myRibbon = ribbon
@@ -129,93 +129,97 @@ End Sub
 Sub onActionButton(control As IRibbonControl)
     writelog LogInfo, " CUSTOM UI | " & "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
     If Globals.shPData Is Nothing Then Globals.SetWBs
-    Dim folderpath       As String
-    Dim frmPKadd                  As New UserFormPlankopf
+    Dim folderpath           As String
+    Dim frmPKadd             As New UserFormPlankopf
     Select Case control.ID
-    Case "Objektdaten"
-        ActiveWorkbook.Sheets("Gebäude").Activate
-    Case "Person"
-        Dim frmAdresse       As New UserFormPerson
-        frmAdresse.Show 0
-    Case "CADFolder"
-        folderpath = Globals.Projekt.ProjektOrdnerCAD
-        writelog LogInfo, "Opening CAD-Folder" & vbNewLine & folderpath
-        Shell "explorer.exe " & folderpath, vbNormalFocus
-    Case "XREFFolder"
-        folderpath = Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
-        writelog LogInfo, "Opening CAD-Folder" & vbNewLine & folderpath
-        Shell "explorer.exe " & folderpath, vbNormalFocus
-    Case "SharePoint"
-        Dim folderSP         As String: folderSP = Globals.Projekt.ProjektOrdnerSharePoint
-        writelog LogInfo, " CUSTOM UI | " & "Opening SharePoint-Folder" & vbNewLine & folderSP
-        If folderSP <> vbNullString Then
-            ActiveWorkbook.FollowHyperlink Address:=folderSP
-        Else
-            MsgBox "Es ist kein SharePoint Pfad beim erstellen des Projektes eingefügt worden." & vbNewLine & _
-                   "Dieser Kann nachträglich in der Zelle 'D8' im Blatt 'Projektdaten' eingefügt werden", vbInformation, "Kein SharePoint Ordner"
-        End If
-    Case "Drucken"
-        Dim frmPrint         As New UserFormPrint
-        frmPrint.Show 0
-    Case "Repair"
-        Dim frmRepair        As New UserFormRepair
-        frmRepair.Show 0
-    Case "Übersicht"
-        Globals.shPData.Activate
-        Dim frmÜbersicht     As New UserFormPlankopfübersicht
-        frmÜbersicht.Show 0
-    Case "Version"
-        Dim frmVersion       As New UserFormInfo
-        frmVersion.Show
-    Case "Chat"
-        'TODO E-Mail oder Teams öffnen
-    Case "Adresse"
-        Globals.shAdress.Activate
-        Dim frmPerson        As New UserFormPerson
-        frmPerson.Show 0
-    Case "Bot"
-        'TODO ChatbotIntegration / URL öffnen
-    Case "Mail"
-        Dim frmOutlook       As New UserFormOutlook
-        frmOutlook.Show 0
-    Case "CADElektro"
-        Dim frmCreateElektro As New UserFormProjektErstellen
-        frmCreateElektro.Show 0
-    Case "Upgrade"
-        Dim frmUpgrade       As New UserFormUpgrade
-        frmUpgrade.Show 0
-    Case "OneNote"
-        ActiveWorkbook.FollowHyperlink Address:=OneNoteAppLink
-    Case "PlotFolder"
-        folderpath = Environ("localappdata") & "\Bes-Gen-V7\Plot"
-        writelog LogInfo, "Opening Plot-Folder" & vbNewLine & folderpath
-        Shell "explorer.exe " & folderpath, vbNormalFocus
-        ' Quick-Add
-    Case "Plan"
-        frmPKadd.setIcons Add
-        frmPKadd.MultiPageTyp.value = 0
-        frmPKadd.Show 0
-    Case "Schema"
-        frmPKadd.setIcons Add
-        frmPKadd.MultiPageTyp.value = 1
-        frmPKadd.Show 0
-    Case "Prinzip"
-        frmPKadd.setIcons Add
-        frmPKadd.MultiPageTyp.value = 2
-        frmPKadd.Show 0
-    Case "UpdateProject"
-        ' Dim frmUpdateProjekt
-        ' frmUpdateProjekt.Show 1
+        Case "Objektdaten"
+            ActiveWorkbook.Sheets("Gebäude").Activate
+        Case "Person"
+            Dim frmAdresse   As New UserFormPerson
+            frmAdresse.Show 0
+        Case "CADFolder"
+            folderpath = Globals.Projekt.ProjektOrdnerCAD
+            writelog LogInfo, "Opening CAD-Folder" & vbNewLine & folderpath
+            Shell "explorer.exe " & folderpath, vbNormalFocus
+        Case "XREFFolder"
+            folderpath = Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
+            writelog LogInfo, "Opening CAD-Folder" & vbNewLine & folderpath
+            Shell "explorer.exe " & folderpath, vbNormalFocus
+        Case "SharePoint"
+            Dim folderSP     As String: folderSP = Globals.Projekt.ProjektOrdnerSharePoint
+            writelog LogInfo, " CUSTOM UI | " & "Opening SharePoint-Folder" & vbNewLine & folderSP
+            If folderSP <> vbNullString Then
+                ActiveWorkbook.FollowHyperlink Address:=folderSP
+            Else
+                MsgBox "Es ist kein SharePoint Pfad beim erstellen des Projektes eingefügt worden." & vbNewLine & _
+                       "Dieser Kann nachträglich in der Zelle 'D8' im Blatt 'Projektdaten' eingefügt werden", vbInformation, "Kein SharePoint Ordner"
+            End If
+        Case "Drucken"
+            Dim frmPrint     As New UserFormPrint
+            frmPrint.Show 0
+        Case "Repair"
+            Dim frmRepair    As New UserFormRepair
+            frmRepair.Show 0
+        Case "Übersicht"
+            Globals.shPData.Activate
+            Dim frmÜbersicht As New UserFormPlankopfübersicht
+            frmÜbersicht.Show 0
+        Case "Version"
+            Dim frmVersion   As New UserFormInfo
+            frmVersion.Show
+        Case "Chat"
+            'TODO E-Mail oder Teams öffnen
+        Case "Adresse"
+            Globals.shAdress.Activate
+            Dim frmPerson    As New UserFormPerson
+            frmPerson.Show 0
+        Case "Bot"
+            'TODO ChatbotIntegration / URL öffnen
+        Case "Mail"
+            Dim frmOutlook   As New UserFormOutlook
+            frmOutlook.Show 0
+        Case "CADElektro"
+            Dim frmCreateElektro As New UserFormProjektErstellen
+            frmCreateElektro.Show 0
+        Case "Upgrade"
+            Dim frmUpgrade   As New UserFormUpgrade
+            frmUpgrade.Show 0
+        Case "OneNote"
+            ActiveWorkbook.FollowHyperlink Address:=OneNoteAppLink
+        Case "PlotFolder"
+            folderpath = Environ("localappdata") & "\Bes-Gen-V7\Plot"
+            writelog LogInfo, "Opening Plot-Folder" & vbNewLine & folderpath
+            Shell "explorer.exe " & folderpath, vbNormalFocus
+            ' Quick-Add
+        Case "Plan"
+            frmPKadd.setIcons Add
+            frmPKadd.MultiPageTyp.value = 0
+            frmPKadd.Show 0
+        Case "Schema"
+            frmPKadd.setIcons Add
+            frmPKadd.MultiPageTyp.value = 1
+            frmPKadd.Show 0
+        Case "Prinzip"
+            frmPKadd.setIcons Add
+            frmPKadd.MultiPageTyp.value = 2
+            frmPKadd.Show 0
+        Case "Detail"
+            frmPKadd.setIcons Add
+            frmPKadd.MultiPageTyp.value = 3
+            frmPKadd.Show 0
+        Case "UpdateProject"
+            Dim frmUpdateProjekt As New UserFormUpdateProjekt
+            frmUpdateProjekt.Show 1
     End Select
     CustomUI.RefreshRibbon
 End Sub
 
 Sub isButtonEnabled(control As IRibbonControl, ByRef returnedVal As Variant)
     Select Case control.ID
-    Case "Objektdaten"
-        returnedVal = Not isUILocked
-    Case Else
-        returnedVal = True
+        Case "Objektdaten"
+            returnedVal = Not isUILocked
+        Case Else
+            returnedVal = True
     End Select
     writelog LogInfo, " CUSTOM UI | " & control.ID & " is enabled = " & returnedVal
 End Sub

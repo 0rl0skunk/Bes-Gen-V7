@@ -30,7 +30,7 @@ Public Function Create( _
        ByVal Format As String, _
        ByVal Masstab As String, _
        ByVal Stand As String, _
-       ByVal Planart As String, Ansicht As String, _
+       ByVal Planart As String, Optional ByVal Ansicht As String, _
        Optional ByVal PLANTYP As String, _
        Optional ByVal TinLineID As String, _
        Optional ByVal SkipValidation As Boolean = False, _
@@ -66,7 +66,7 @@ Public Function Create( _
        CustomÜberschrift:=CustomÜberschrift, _
        AnlageTyp:=AnlageTyp, _
        AnlageNummer:=AnlageNummer, _
- UnterProjekt:=UnterProjekt _
+       UnterProjekt:=UnterProjekt _
                       ) Then
         Dim row              As Long
         Set Create = NewPlankopf
@@ -148,36 +148,55 @@ Public Function AddToDatabase(ByVal Plankopf As IPlankopf) As Boolean
     AddToDatabase = False
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
     Dim row                  As Long: row = ws.range("A1").CurrentRegion.rows.Count + 1
-    Dim planCreatedTinLine As Boolean
-    
-    planCreatedTinLine = False
+    Dim planCreatedTinLine   As Boolean
+
+    planCreatedTinLine = True
 
     CopyToClipBoard Plankopf.LayoutName
     ' Elektroplan
-    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A1").value And Plankopf.PLANTYP = "PLA" Then
-        If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
-    Else
-        writelog LogWarning, "Das Projekt wurde ohne Elektropläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
-    End If
-    ' Elektro Prinzipschema
-    If Plankopf.Gewerk = "Elektro" And Globals.shProjekt.range("A2").value And Plankopf.PLANTYP = "PRI" Then
-        If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
-    Else
-        writelog LogWarning, "Das Projekt wurde ohne Elektro Prinzipschemas erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
-    End If
-    ' Türfachplanung
-    If Plankopf.Gewerk = "Türfachplanung" And Globals.shProjekt.range("A4").value Then
-        If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
-    Else
-        writelog LogWarning, "Das Projekt wurde ohne Türfachpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
-    End If
-    ' Brandschutzplanung
-    If Plankopf.Gewerk = "Brandschutzplanung" And Globals.shProjekt.range("A5").value Then
-        If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
-    Else
-        writelog LogWarning, "Das Projekt wurde ohne Brandschutzpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+    If Plankopf.Gewerk = "Elektro" Then
+        If Globals.shProjekt.range("A1").value And Plankopf.PLANTYP = "PLA" Then
+            If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
+        Else
+            writelog LogWarning, "Das Projekt wurde ohne Elektropläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+        End If
     End If
     
+    ' Elektro Detail
+    If Plankopf.Gewerk = "Elektro" Then
+        If Globals.shProjekt.range("A6").value And Plankopf.PLANTYP = "DET" Then
+            If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
+        Else
+            writelog LogWarning, "Das Projekt wurde ohne Details erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+        End If
+    End If
+
+    ' Elektro Prinzipschema
+    If Plankopf.Gewerk = "Elektro" Then
+        If Globals.shProjekt.range("A2").value And Plankopf.PLANTYP = "PRI" Then
+            If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
+        Else
+            writelog LogWarning, "Das Projekt wurde ohne Elektro Prinzipschemas erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+        End If
+    End If
+        
+    ' Türfachplanung
+    If Plankopf.Gewerk = "Türfachplanung" Then
+        If Globals.shProjekt.range("A4").value Then
+            If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
+        Else
+            writelog LogWarning, "Das Projekt wurde ohne Türfachpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+        End If
+    End If
+    ' Brandschutzplanung
+    If Plankopf.Gewerk = "Brandschutzplanung" Then
+        If Globals.shProjekt.range("A5").value Then
+            If NewTinLinePlankopf(Plankopf) Then planCreatedTinLine = True Else planCreatedTinLine = False
+        Else
+            writelog LogWarning, "Das Projekt wurde ohne Brandschutzpläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
+        End If
+    End If
+
     If planCreatedTinLine Then
         With ws
             .Cells(row, 1).value = Plankopf.ID
@@ -205,9 +224,9 @@ Public Function AddToDatabase(ByVal Plankopf As IPlankopf) As Boolean
             .Cells(row, 23).value = Plankopf.AnlageTyp
             .Cells(row, 24).value = Plankopf.AnlageNummer
             If Plankopf.UnterProjekt = vbNullString Then
-            .Cells(row, 25).value = "Hauptprojekt"
+                .Cells(row, 25).value = "Hauptprojekt"
             Else
-            .Cells(row, 25).value = Plankopf.UnterProjekt
+                .Cells(row, 25).value = Plankopf.UnterProjekt
             End If
         End With
         AddToDatabase = True
@@ -312,39 +331,39 @@ err:
     ' there s no Plankopf in the specified file
     writelog LogTrace, "Kein leerer Plankopf in XML " & Plankopf.XMLFile
     Select Case MsgBox("Es besteht kein Leerer Plankopf in der Datei: " & vbNewLine & vbNewLine & Plankopf.XMLFile & vbNewLine & vbNewLine & "Datei im TinLine öffnen?", vbYesNo, "Kein Plankopf!")
-    Case vbYes
-    
-    TinLine.setTinProject Globals.Projekt.ProjektOrdnerCAD
-    Select Case Plankopf.PLANTYP
-    Case "PLA"                                       'Plan
-        Select Case Plankopf.UnterGewerk
-        Case "Elektro"
-            TinLine.setBibliothek EP
-        Case "Türfachplanung"
-            TinLine.setBibliothek TF
-        Case "Brandschutzplanung"
-            TinLine.setBibliothek BS
-        End Select
-    Case "PRI"                                       'Prinzip
-        TinLine.setBibliothek PR
-    End Select
-   
-        CreateObject("Shell.Application").Open (Plankopf.dwgFile)
-        writelog LogTrace, "DWG Geöffnet im TinLine " & Plankopf.dwgFile
-        Select Case MsgBox("Plankopf im TinLine erstellt?", vbYesNo)
         Case vbYes
-            writelog LogTrace, "Plankopf erstellt "
-            oXml.load Plankopf.XMLFile
-            GoTo load
+
+            TinLine.setTinProject Globals.Projekt.ProjektOrdnerCAD
+            Select Case Plankopf.PLANTYP
+                Case "PLA"                       'Plan
+                    Select Case Plankopf.UnterGewerk
+                        Case "Elektro"
+                            TinLine.setBibliothek EP
+                        Case "Türfachplanung"
+                            TinLine.setBibliothek TF
+                        Case "Brandschutzplanung"
+                            TinLine.setBibliothek BS
+                    End Select
+                Case "PRI"                       'Prinzip
+                    TinLine.setBibliothek PR
+            End Select
+
+            CreateObject("Shell.Application").Open (Plankopf.dwgFile)
+            writelog LogTrace, "DWG Geöffnet im TinLine " & Plankopf.dwgFile
+            Select Case MsgBox("Plankopf im TinLine erstellt?", vbYesNo)
+                Case vbYes
+                    writelog LogTrace, "Plankopf erstellt "
+                    oXml.load Plankopf.XMLFile
+                    GoTo load
+                Case Else
+                    writelog LogTrace, "Plankopf NICHT erstellt "
+                    CheckEmptyPlankopf = False
+                    Exit Function
+            End Select
         Case Else
-            writelog LogTrace, "Plankopf NICHT erstellt "
+            writelog LogTrace, "DWG NICHT Geöffnet im TinLine " & Plankopf.dwgFile
             CheckEmptyPlankopf = False
             Exit Function
-        End Select
-    Case Else
-        writelog LogTrace, "DWG NICHT Geöffnet im TinLine " & Plankopf.dwgFile
-        CheckEmptyPlankopf = False
-        Exit Function
     End Select
 
 End Function
@@ -355,19 +374,19 @@ Public Function ReplaceInDatabase(ByVal Plankopf As IPlankopf) As Boolean
     Dim ws                   As Worksheet: Set ws = Globals.shStoreData
     Dim row                  As Long: row = ws.range("A:A").Find(ID).row
     With ws
-        '.Cells(Row, 1).Value = Plankopf.ID
-        '.Cells(Row, 2).Value = Plankopf.IDTinLine
-        '.Cells(Row, 3).Value = Plankopf.Gewerk
-        '.Cells(Row, 4).Value = Plankopf.UnterGewerk
-        '.Cells(Row, 5).Value = Plankopf.Planart
-        '.Cells(Row, 6).Value = Plankopf.Plantyp
-        '.Cells(Row, 7).Value = Plankopf.Gebäude
-        '.Cells(Row, 8).Value = Plankopf.GebäudeTeil
-        '.Cells(Row, 9).Value = Plankopf.Geschoss
+        .Cells(row, 1).value = Plankopf.ID
+        .Cells(row, 2).value = Plankopf.IDTinLine
+        .Cells(row, 3).value = Plankopf.Gewerk
+        .Cells(row, 4).value = Plankopf.UnterGewerk
+        .Cells(row, 5).value = Plankopf.Planart
+        .Cells(row, 6).value = Plankopf.PLANTYP
+        .Cells(row, 7).value = Plankopf.Gebäude
+        .Cells(row, 8).value = Plankopf.Gebäudeteil
+        .Cells(row, 9).value = Plankopf.Geschoss
         .Cells(row, 10).value = Plankopf.CustomPlanüberschrift
         .Cells(row, 11).value = Plankopf.dwgFile
         .Cells(row, 13).value = Plankopf.Planüberschrift
-        '.Cells(Row, 14).Value = Plankopf.Plannummer
+        .Cells(row, 14).value = Plankopf.Plannummer
         .Cells(row, 15).value = Plankopf.LayoutGrösse
         .Cells(row, 16).value = Plankopf.LayoutMasstab
         .Cells(row, 17).value = Plankopf.LayoutPlanstand
@@ -459,23 +478,23 @@ err:
     ' there s no Plankopf in the specified file
     writelog LogTrace, "Kein leerer Plankopf in XML " & Plankopf.XMLFile
     Select Case MsgBox("Es besteht kein Leerer Plankopf in der Datei: " & vbNewLine & vbNewLine & Plankopf.XMLFile & vbNewLine & vbNewLine & "Datei im TinLine öffnen?", vbYesNo, "Kein Plankopf!")
-    Case vbYes
-        CreateObject("Shell.Application").Open (Plankopf.dwgFile)
-        writelog LogTrace, "DWG Geöffnet im TinLine " & Plankopf.dwgFile
-        Select Case MsgBox("Plankopf im TinLine erstellt?", vbYesNo)
         Case vbYes
-            writelog LogTrace, "Plankopf erstellt "
-            oXml.load Plankopf.XMLFile
-            GoTo load
+            CreateObject("Shell.Application").Open (Plankopf.dwgFile)
+            writelog LogTrace, "DWG Geöffnet im TinLine " & Plankopf.dwgFile
+            Select Case MsgBox("Plankopf im TinLine erstellt?", vbYesNo)
+                Case vbYes
+                    writelog LogTrace, "Plankopf erstellt "
+                    oXml.load Plankopf.XMLFile
+                    GoTo load
+                Case Else
+                    writelog LogTrace, "Plankopf NICHT erstellt "
+                    CheckChangePlankopf = False
+                    Exit Function
+            End Select
         Case Else
-            writelog LogTrace, "Plankopf NICHT erstellt "
+            writelog LogTrace, "DWG NICHT Geöffnet im TinLine " & Plankopf.dwgFile
             CheckChangePlankopf = False
             Exit Function
-        End Select
-    Case Else
-        writelog LogTrace, "DWG NICHT Geöffnet im TinLine " & Plankopf.dwgFile
-        CheckChangePlankopf = False
-        Exit Function
     End Select
 
 End Function
@@ -527,5 +546,23 @@ Public Function RewritePlankopf(ByVal Plankopf As IPlankopf) As Boolean
     oXml.Save Plankopf.XMLFile
 
 End Function
+
+Public Sub RefreshPlanköpfe()
+
+    Globals.SetWBs
+
+    Dim Plankopf             As IPlankopf
+    Dim i                    As Long
+    Dim pPlanköpfe           As New Collection
+    Set pPlanköpfe = Globals.GetPlanköpfe("Elektro")
+    i = 1
+
+    For Each Plankopf In pPlanköpfe
+        ' für jeden Plankopf in den zu reparierenden Planköpfe ...
+        Application.StatusBar = "Updating Plankopf " & Plankopf.ID & " | " & i & " von " & pPlanköpfe.Count ' ... schreibt eine Statusmeldung
+        PlankopfFactory.ReplaceInDatabase Plankopf ' ... schreibt den Plankopf neu in die *.xml Datei
+        i = i + 1
+    Next
+End Sub
 
 

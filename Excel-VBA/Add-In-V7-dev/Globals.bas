@@ -23,15 +23,32 @@ Public shPlanListe           As Worksheet
 Public shGebäude             As Worksheet
 Public shSPSync              As Worksheet
 Public shProjekt             As Worksheet
-Public shPZM As Worksheet
-Public shAnsichten As Worksheet
+Public shPZM                 As Worksheet
+Public shAnsichten           As Worksheet
 
 Public CopyrightSTR          As String
 Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection
 
+Public Sub Unprotect()
+    SetWBs
+    shPData.Unprotect "Reb$1991"
+    shGebäude.Unprotect "Reb$1991"
+    shProjekt.Unprotect "Reb$1991"
+    shIndex.Unprotect "Reb$1991"
+    shStoreData.Unprotect "Reb$1991"
+    shVersand.Unprotect "Reb$1991"
+End Sub
+
+Public Sub Protect()
+    SetWBs
+    shPData.Protect "Reb$1991"
+    shPZM.Protect "Reb$1991"
+    shGebäude.Protect "Reb$1991"
+End Sub
+
 Public Function Projekt(Optional ByVal ForceNew As Boolean = False) As IProjekt
-If shPData Is Nothing Then Globals.SetWBs
+    If shPData Is Nothing Then Globals.SetWBs
     With shPData
         If pProjekt Is Nothing Or ForceNew Then
             Set pProjekt = _
@@ -64,23 +81,27 @@ Public Function GetPlanköpfe(Optional ByVal Gewerk As String = vbNullString, Opt
     Dim ResizeRows           As Long
     Dim rng                  As range
     Set rng = shStoreData.range("A1").CurrentRegion.Offset(2, 0)
-    If rng.rows.Count - 3 = 0 Then ResizeRows = 1 Else ResizeRows = rng.rows.Count - 3
+    If rng.rows.Count - 3 = 0 Then ResizeRows = 1 Else ResizeRows = rng.rows.Count - 2
     'select what filters matter
     Dim bGewerk              As Boolean: If Gewerk = vbNullString Then bGewerk = False Else bGewerk = True
     Dim bPlanart             As Boolean: If Planart = vbNullString Then bPlanart = False Else Planart = True
     ' if it is a Prinzipschema
-    If Planart = "Prinzipschema" Then
+    If bPlanart Then
         For Each row In rng.Resize(ResizeRows, 1)
-            If bPlanart And Globals.shStoreData.Cells(row.row, 5).value = Gewerk Then pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
+            If Globals.shStoreData.Cells(row.row, 5).value = Planart Then pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
         Next
         GoTo Loaded
-    End If
-    ' check if the Gewerk is applicable
-    If bGewerk Then
+
+        ' check if the Gewerk is applicable
+    ElseIf bGewerk Then
         For Each row In rng.Resize(ResizeRows, 1)
             If Globals.shStoreData.Cells(row.row, 3).value = Gewerk Then pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
         Next
         GoTo Loaded
+    Else
+        For Each row In rng.Resize(ResizeRows, 1)
+            pPlanköpfe.Add PlankopfFactory.LoadFromDataBase(row.row)
+        Next
     End If
 Loaded:
     Set GetPlanköpfe = pPlanköpfe

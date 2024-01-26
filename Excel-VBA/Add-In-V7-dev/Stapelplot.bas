@@ -11,7 +11,6 @@ Private OutputFolder         As String
 Private NewFiles             As Long
 Private OldFiles             As Long
 Private pPlanköpfe           As Collection
-Const acCoreConsole = "C:\Program Files\TinLine\TinLine 23-Deu\accoreconsole.exe"
 
 Public Property Get Planliste() As Collection
     Set Planliste = pPlanköpfe
@@ -27,16 +26,16 @@ Sub plotPlanliste()
     Set fs = CreateObject("Scripting.FileSystemObject")
     Dim scr                  As String
     scr = Environ("localappdata") & "\Bes-Gen-V7\Plot\plotter.scr"
-    
-    Dim fso As New FileSystemObject
-    
+
+    Dim fso                  As New FileSystemObject
+
     If Not fso.FolderExists(Environ("localappdata") & "\Bes-Gen-V7\Plot") Then
         If Not fso.FolderExists(Environ("localappdata") & "\Bes-Gen-V7") Then
-            MkDir Environ("localappdata") & "\Bes-Gen-V7"
+            mkdir Environ("localappdata") & "\Bes-Gen-V7"
         End If
-        MkDir Environ("localappdata") & "\Bes-Gen-V7\Plot"
+        mkdir Environ("localappdata") & "\Bes-Gen-V7\Plot"
     End If
-    
+
     Set a = fs.CreateTextFile(scr, True)
     a.WriteLine ("-PUBLISH")
     a.WriteLine (dsd)
@@ -50,27 +49,27 @@ Sub plotPlanliste()
 
     OldFiles = CountFiles(OutputFolder)
 
-    wsh.Run "" & acCoreConsole & " /i ""H:\TinLine\01_Standards\TinBlank.dwg"" /s " & scr & " /l EN-US", windowStyle, waitOnReturn
+    wsh.Run """C:\Program Files\TinLine\TinLine 23-Deu\accoreconsole.exe"" /i ""H:\TinLine\01_Standards\TinBlank.dwg"" /s " & scr & " /l EN-US", windowStyle, waitOnReturn
 
     ' wurden alle Pläne geplottet
     If Not CountFiles(OutputFolder) = OldFiles + NewFiles Then
         Select Case MsgBox("Es wurden nicht alle Pläne geplottet." & vbNewLine & "Soll geprüft werden welche Pläne fehlen?", vbYesNo, "Fehler beim plotten")
-        Case vbYes
-            Checkplot
-        Case vbNo
+            Case vbYes
+                Checkplot
+            Case vbNo
         End Select
     End If
     Dim CreatedFiles         As Long
     CreatedFiles = CountFiles(OutputFolder) - OldFiles
 
     Select Case MsgBox("Es wurden " & CreatedFiles & " von " & NewFiles & " Plänen erstellt." & vbNewLine & "Pfad im Explorer öffnen?", vbYesNo, "Pläne erstellt")
-    Case vbYes
-        ' open explorer
-        Shell "explorer.exe" & " " & OutputFolder, vbNormalFocus
-        Exit Sub
-    Case vbNo
-        ' exit sub
-        Exit Sub
+        Case vbYes
+            ' open explorer
+            Shell "explorer.exe" & " " & OutputFolder, vbNormalFocus
+            Exit Sub
+        Case vbNo
+            ' exit sub
+            Exit Sub
     End Select
 
 End Sub
@@ -111,39 +110,39 @@ Public Function CreatePlotList(ByVal planköpfe As Collection) As String
 
     Dim outputCol            As New Collection
     Dim Plan                 As IPlankopf
-    
+
     ' Planköpfe Filtern um nur AutoCAD-Dateien zu beinhalten
-    Dim e As IPlankopf
+    Dim e                    As IPlankopf
     Set pPlanköpfe = New Collection
     For Each e In planköpfe
         If e.Gewerk = "Elektro" Or e.Gewerk = "Türfachplanung" Or e.Gewerk = "Brandschutzplanung" Then
             pPlanköpfe.Add e
         End If
     Next e
-    
+
     Set planköpfe = Nothing
-    
+
     NewFiles = pPlanköpfe.Count
 
     If Globals.shPData Is Nothing Then Globals.SetWBs
-    
+
     Folder = Globals.Projekt.ProjektOrdnerCAD & "\99_Planlisten"
     strFolderExists = dir(Folder)
-    
+
     ' Standard Publizierpfad
     OutputFolder = Environ("localappdata") & "\Bes-Gen-V7\Plot\" & Format(Now, "YYMMDD-HH.mm")
 
-    Dim fso As New FileSystemObject
+    Dim fso                  As New FileSystemObject
     If Not fso.FolderExists(OutputFolder) Then
         If Not fso.FolderExists(Environ("localappdata") & "\Bes-Gen-V7\Plot") Then
             If Not fso.FolderExists(Environ("localappdata") & "\Bes-Gen-V7") Then
-                MkDir Environ("localappdata") & "\Bes-Gen-V7"
+                mkdir Environ("localappdata") & "\Bes-Gen-V7"
             End If
-            MkDir Environ("localappdata") & "\Bes-Gen-V7\Plot"
+            mkdir Environ("localappdata") & "\Bes-Gen-V7\Plot"
         End If
-        MkDir OutputFolder
+        mkdir OutputFolder
     End If
-    
+
     Dim FileName             As String: FileName = Format$(Now, "YYMMDDhhmmss")
     Dim i                    As Long
     Dim search               As String
@@ -209,7 +208,7 @@ Public Function CreatePlotList(ByVal planköpfe As Collection) As String
     plotPlanliste
 
     CreatePlotList = OutputFolder
-    
+
     Application.Cursor = xlDefault
 
 End Function

@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormPlankopf
    ClientTop       =   465
    ClientWidth     =   9960.001
    OleObjectBlob   =   "UserFormPlankopf.frx":0000
-   StartUpPosition =   1  'CenterOwner
+   StartUpPosition =   1  'Fenstermitte
 End
 Attribute VB_Name = "UserFormPlankopf"
 Attribute VB_GlobalNameSpace = False
@@ -13,11 +13,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
-
-
-
-
-
 
 
 
@@ -42,68 +37,68 @@ Private shGebäude            As Worksheet
 Public Sub setIcons(ByVal icon As EnumIcon)
     ' Icon anpassen für erstellen oder Bearbeiten
     Select Case icon
-    Case 0
-        Me.TitleIcon.Picture = icons.IconAddProperties.Picture
-        Me.TitleLabel.Caption = "Plankopf erstellen"
-    Case 1
-        Me.TitleIcon.Picture = icons.IconEditProperties.Picture
-        Me.TitleLabel.Caption = "Plankopf bearbeiten"
+        Case 0
+            Me.TitleIcon.Picture = icons.IconAddProperties.Picture
+            Me.TitleLabel.Caption = "Plankopf erstellen"
+        Case 1
+            Me.TitleIcon.Picture = icons.IconEditProperties.Picture
+            Me.TitleLabel.Caption = "Plankopf bearbeiten"
     End Select
-    
-        Call FormToTaskBar( _
-                        Form:=Me, _
-                        IconFromPic:=Me.TitleIcon.Picture, _
-                        ThumbnailTooltip:=Me.TitleLabel.Caption, _
-                        HideExcel:=False _
-                    )
+
+    Call FormToTaskBar( _
+         Form:=Me, _
+         IconFromPic:=Me.TitleIcon.Picture, _
+         ThumbnailTooltip:=Me.TitleLabel.Caption, _
+         HideExcel:=False _
+                     )
 
 End Sub
 
 Private Function validateUserForm(Optional skipIndex As Boolean = False) As Boolean
     ' sind alle wichtigen Infos mitgegeben, nicht korrekt ausgefüllte Infos werden markiert
-    Dim oControl As MSForms.control
-    Dim oComboBox As MSForms.ComboBox
-    Dim oTextBox As MSForms.TextBox
-    
+    Dim oControl             As MSForms.control
+    Dim oComboBox            As MSForms.ComboBox
+    Dim oTextBox             As MSForms.TextBox
+
     Dim warningColor: warningColor = RGB(255, 255, 0)
     Dim errorColor: errorColor = RGB(255, 0, 0)
-    
+
     validateUserForm = True
-    
+
     Select Case Me.MultiPageTyp.value
-    Case 0                                       ' Plan
-        For Each oControl In Me.Frame11.Controls
-            If oControl.Name Like "*ComboBox*" Then
-                Set oComboBox = oControl
-                If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
-            End If
-        Next oControl
-    Case 1                                       ' Schema
-        For Each oControl In Me.Frame10.Controls
-            If oControl.Name Like "*ComboBox*" Then
-                Set oComboBox = oControl
-                If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
-            ElseIf oControl.Name Like "*TextBox*" Then
-                Set oTextBox = oControl
-                If oTextBox.value = vbNullString Then oTextBox.BackColor = errorColor: validateUserForm = False
-            End If
-        Next oControl
-    Case 2                                       ' Prinzip
-        For Each oControl In Me.Frame12.Controls
-            If oControl.Name Like "*ComboBox*" Then
-                Set oComboBox = oControl
-                If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
-            End If
-        Next oControl
-    Case 3                                       ' Details
-        For Each oControl In Me.Frame13.Controls
-            If oControl.Name Like "*ComboBox*" Then
-                Set oComboBox = oControl
-                If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
-            End If
-        Next oControl
+        Case 0                                   ' Plan
+            For Each oControl In Me.Frame11.Controls
+                If oControl.Name Like "*ComboBox*" Then
+                    Set oComboBox = oControl
+                    If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+                End If
+            Next oControl
+        Case 1                                   ' Schema
+            For Each oControl In Me.Frame10.Controls
+                If oControl.Name Like "*ComboBox*" Then
+                    Set oComboBox = oControl
+                    If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+                ElseIf oControl.Name Like "*TextBox*" Then
+                    Set oTextBox = oControl
+                    If oTextBox.value = vbNullString Then oTextBox.BackColor = errorColor: validateUserForm = False
+                End If
+            Next oControl
+        Case 2                                   ' Prinzip
+            For Each oControl In Me.Frame12.Controls
+                If oControl.Name Like "*ComboBox*" Then
+                    Set oComboBox = oControl
+                    If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+                End If
+            Next oControl
+        Case 3                                   ' Details
+            For Each oControl In Me.Frame13.Controls
+                If oControl.Name Like "*ComboBox*" Then
+                    Set oComboBox = oControl
+                    If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
+                End If
+            Next oControl
     End Select
-    
+
     ' Projektinfos
     For Each oControl In Me.Frame3.Controls
         If oControl.Name Like "*ComboBox*" Then
@@ -111,7 +106,7 @@ Private Function validateUserForm(Optional skipIndex As Boolean = False) As Bool
             If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
         End If
     Next oControl
-    
+
     ' Layout
     For Each oControl In Me.FrameLayout.Controls
         If oControl.Name Like "*ComboBox*" Then
@@ -119,7 +114,7 @@ Private Function validateUserForm(Optional skipIndex As Boolean = False) As Bool
             If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
         End If
     Next oControl
-        
+
     ' Allgemeine Infos
     For Each oControl In Me.Frame6.Controls
         If oControl.Name Like "*ComboBox*" Then
@@ -127,7 +122,7 @@ Private Function validateUserForm(Optional skipIndex As Boolean = False) As Bool
             If oComboBox.value = "-- Bitte wählen --" Then oComboBox.BackColor = errorColor: validateUserForm = False
         End If
     Next oControl
-        
+
     ' Geprüft
     For Each oControl In Me.FramePlaninfo.Controls
         If oControl.Name Like "*TextBox*" Then
@@ -135,13 +130,13 @@ Private Function validateUserForm(Optional skipIndex As Boolean = False) As Bool
             If oTextBox.value = vbNullString Then oTextBox.BackColor = warningColor
         End If
     Next oControl
-    
+
     If Not Me.TextBoxIndexKlartext.value = vbNullString Then
         ' Wenn ein Index erstellt wurde aber nicht hinzugefügt ist.
         Select Case MsgBox("Es wurde ein Index erstellt jedoch nicht korrekt erfasst." & vbNewLine & "Soll der Index hinzugefügt werden?", vbYesNo, "Index erfassen")
-        Case vbYes
-            CommandButtonIndexErstellen_Click    ' Index erstellen
-        Case vbNo
+            Case vbYes
+                CommandButtonIndexErstellen_Click ' Index erstellen
+            Case vbNo
         End Select
     End If
 End Function
@@ -149,7 +144,7 @@ End Function
 Private Sub CommandButtonCreate_Click()
     ' Plankopf in Datenbank schreiben
     If Not validateUserForm Then: MsgBox "Einige Angaben sind nicht korrekt ausgefüllt!" & vbNewLine & "Bitte Prüfe deine Eingaben.", vbCritical, "Eingaben prüfen": Exit Sub
-    
+
     If Me.CommandButtonCreate.Caption = "Update" Then
         ' Ersetzen / Updaten
         If PlankopfFactory.ReplaceInDatabase(FormToPlankopf) Then Unload Me
@@ -163,7 +158,7 @@ End Sub
 Private Sub CommandButtonBeschriftungAktualisieren_Click()
     ' Beschriftungen und Plannummer neu erstellen
     If Not validateUserForm(True) Then: Me.TextBoxBeschriftungDateiname.value = vbNullString: Me.TextBoxBeschriftungPlannummer.value = vbNullString: Me.TextBoxPlanüberschrift.value = vbNullString: Exit Sub
-    
+
     Set pPlankopf = FormToPlankopf
     Me.TextBoxBeschriftungPlannummer.value = pPlankopf.Plannummer
     Me.TextBoxBeschriftungDateiname.value = pPlankopf.PDFFileName
@@ -172,7 +167,7 @@ Private Sub CommandButtonBeschriftungAktualisieren_Click()
     Me.LabelDWGFileName.Caption = pPlankopf.DWGFileName
     Me.LabelXMLFileName.Caption = pPlankopf.XMLFileName
     Me.LabelFolderName.Caption = pPlankopf.FolderName
-    
+
     Me.Caption = Me.TextBoxBeschriftungPlannummer
 
 End Sub
@@ -201,8 +196,8 @@ End Sub
 Private Sub CommandButtonIndexLöschen_Click()
     ' Ausgewählten Index löschen
     Dim ID                   As String
-    Dim li As ListItem
-    
+    Dim li                   As ListItem
+
     For Each li In Me.ListViewIndex.ListItems
         If li.Checked Then
             ID = li.ListSubItems(1)
@@ -234,17 +229,17 @@ Private Sub EditDWG_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, B
     ' DWG-Datei im TinLine öffnen
     TinLine.setTinProject pProjekt.ProjektOrdnerCAD
     Select Case Me.MultiPageTyp.value
-    Case 1                                       'Plan
-        Select Case Me.ComboBoxEPHGewerk
-        Case "Elektro"
-            TinLine.setBibliothek EP
-        Case "Türfachplanung"
-            TinLine.setBibliothek TF
-        Case "Brandschutzplanung"
-            TinLine.setBibliothek BS
-        End Select
-    Case 2                                       'Prinzip
-        TinLine.setBibliothek PR
+        Case 1                                   'Plan
+            Select Case Me.ComboBoxEPHGewerk
+                Case "Elektro"
+                    TinLine.setBibliothek EP
+                Case "Türfachplanung"
+                    TinLine.setBibliothek TF
+                Case "Brandschutzplanung"
+                    TinLine.setBibliothek BS
+            End Select
+        Case 2                                   'Prinzip
+            TinLine.setBibliothek PR
     End Select
 
     CreateObject("Shell.Application").Open (FormToPlankopf.dwgFile)
@@ -259,25 +254,25 @@ Private Sub MultiPageTyp_Change()
     ' Anpassungen wenn der Plantyp geändert wird
     ' TODO Remove Geschoss "Gesamt" from Plan and Schema Beschriftungen
     Select Case Me.MultiPageTyp.value
-    Case 0                                       'PLA
-        Me.ComboBoxGebäude.Enabled = True
-        Me.ComboBoxGebäudeTeil.Enabled = True
-        Me.ComboBoxGeschoss.Enabled = True
-    Case 1                                       'SCH
-        Me.ComboBoxGebäude.Enabled = True
-        Me.ComboBoxGebäudeTeil.Enabled = True
-        Me.ComboBoxGeschoss.Enabled = True
-    Case 2                                       'PRI
-        Me.ComboBoxGebäude.value = "Gesamt"
-        Me.ComboBoxGebäudeTeil.value = "Gesamt"
-        Me.ComboBoxGeschoss.value = "Gesamt"
-        Me.ComboBoxGebäude.Enabled = False
-        Me.ComboBoxGebäudeTeil.Enabled = False
-        Me.ComboBoxGeschoss.Enabled = False
-    Case 3                                       'ANS
-        Me.ComboBoxGebäude.Enabled = True
-        Me.ComboBoxGebäudeTeil.Enabled = True
-        Me.ComboBoxGeschoss.Enabled = True
+        Case 0                                   'PLA
+            Me.ComboBoxGebäude.Enabled = True
+            Me.ComboBoxGebäudeTeil.Enabled = True
+            Me.ComboBoxGeschoss.Enabled = True
+        Case 1                                   'SCH
+            Me.ComboBoxGebäude.Enabled = True
+            Me.ComboBoxGebäudeTeil.Enabled = True
+            Me.ComboBoxGeschoss.Enabled = True
+        Case 2                                   'PRI
+            Me.ComboBoxGebäude.value = "Gesamt"
+            Me.ComboBoxGebäudeTeil.value = "Gesamt"
+            Me.ComboBoxGeschoss.value = "Gesamt"
+            Me.ComboBoxGebäude.Enabled = False
+            Me.ComboBoxGebäudeTeil.Enabled = False
+            Me.ComboBoxGeschoss.Enabled = False
+        Case 3                                   'ANS
+            Me.ComboBoxGebäude.Enabled = True
+            Me.ComboBoxGebäudeTeil.Enabled = True
+            Me.ComboBoxGeschoss.Enabled = True
     End Select
 
     If Me.ComboBoxGebäude.ListCount = 1 Then
@@ -369,7 +364,7 @@ Private Sub UserForm_Initialize()
     Me.ComboBoxLayoutFormat.Clear
     arr() = getList("PLA_Format")
     Me.ComboBoxLayoutFormat.List = arr()
-    
+
     ' Details
     Me.ComboBoxDESCHANS.Clear
     arr() = getList("DET_Ansichten")
@@ -382,12 +377,12 @@ Private Sub UserForm_Initialize()
 
     Me.TextBoxPlanInfoDatumGezeichnet.value = Format$(Now, "DD.MM.YYYY")
     Me.TextBoxPlanInfoKürzelGezeichnet.value = getUserName
-    
+
     Me.TextBoxIndexGez = getUserName
     Me.TextBoxIndexGezDatum = Format$(Now, "DD.MM.YYYY")
 
     writelog LogInfo, "UserFormPlankopf > Inizialise complete"
-    
+
     Application.Cursor = xlDefault
 End Sub
 
@@ -443,19 +438,19 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
 
 
     Select Case pPlankopf.PLANTYP
-    Case "PLA"
-        Me.MultiPageTyp.value = 0
-        Me.ComboBoxEPHGewerk.value = pPlankopf.Gewerk
-        Me.ComboBoxEPUGewerk.value = pPlankopf.UnterGewerk
-        Me.ComboBoxEPArt.value = pPlankopf.Planart
-    Case "SCH"
-        Me.MultiPageTyp.value = 1
-        Me.ComboBoxESHGewerk.value = pPlankopf.Gewerk
-        Me.ComboBoxESUGewerk.value = pPlankopf.UnterGewerk
-    Case "PRI"
-        Me.MultiPageTyp.value = 2
-        Me.ComboBoxPRHGewerk.value = pPlankopf.Gewerk
-        Me.ComboBoxPRUGewerk.value = pPlankopf.UnterGewerk
+        Case "PLA"
+            Me.MultiPageTyp.value = 0
+            Me.ComboBoxEPHGewerk.value = pPlankopf.Gewerk
+            Me.ComboBoxEPUGewerk.value = pPlankopf.UnterGewerk
+            Me.ComboBoxEPArt.value = pPlankopf.Planart
+        Case "SCH"
+            Me.MultiPageTyp.value = 1
+            Me.ComboBoxESHGewerk.value = pPlankopf.Gewerk
+            Me.ComboBoxESUGewerk.value = pPlankopf.UnterGewerk
+        Case "PRI"
+            Me.MultiPageTyp.value = 2
+            Me.ComboBoxPRHGewerk.value = pPlankopf.Gewerk
+            Me.ComboBoxPRUGewerk.value = pPlankopf.UnterGewerk
     End Select
 
     ' füllt die Eingabefelder gemäss geladenem Objekt aus
@@ -529,31 +524,31 @@ Private Function FormToPlankopf() As IPlankopf
     Dim Gewerk               As String
     Dim UnterGewerk          As String
     Dim ID                   As String
-    Dim Ansicht As String
+    Dim Ansicht              As String
 
     If Me.BesID.Caption = "ID" Then ID = getNewID(IDPlankopf)
 
     Select Case Me.MultiPageTyp.value
-    Case 0
-        PLANTYP = "PLA"
-        Gewerk = Me.ComboBoxEPHGewerk.value
-        UnterGewerk = Me.ComboBoxEPUGewerk.value
-    Case 1
-        PLANTYP = "SCH"
-        Gewerk = Me.ComboBoxESHGewerk.value
-        UnterGewerk = Me.ComboBoxESUGewerk.value
-    Case 2
-        PLANTYP = "PRI"
-        Gewerk = Me.ComboBoxPRHGewerk.value
-        UnterGewerk = Me.ComboBoxPRUGewerk.value
-    Case 3
-        PLANTYP = "DET"
-        Gewerk = Me.ComboBoxDEHGewerk.value
-        Ansicht = Me.ComboBoxDESCHANS.value
-    Case Else
-        PLANTYP = "PLA"
-        Gewerk = Me.ComboBoxEPHGewerk.value
-        UnterGewerk = Me.ComboBoxEPUGewerk.value
+        Case 0
+            PLANTYP = "PLA"
+            Gewerk = Me.ComboBoxEPHGewerk.value
+            UnterGewerk = Me.ComboBoxEPUGewerk.value
+        Case 1
+            PLANTYP = "SCH"
+            Gewerk = Me.ComboBoxESHGewerk.value
+            UnterGewerk = Me.ComboBoxESUGewerk.value
+        Case 2
+            PLANTYP = "PRI"
+            Gewerk = Me.ComboBoxPRHGewerk.value
+            UnterGewerk = Me.ComboBoxPRUGewerk.value
+        Case 3
+            PLANTYP = "DET"
+            Gewerk = Me.ComboBoxDEHGewerk.value
+            Ansicht = Me.ComboBoxDESCHANS.value
+        Case Else
+            PLANTYP = "PLA"
+            Gewerk = Me.ComboBoxEPHGewerk.value
+            UnterGewerk = Me.ComboBoxEPUGewerk.value
     End Select
 
     If pProjekt Is Nothing Then Set pProjekt = Globals.Projekt
@@ -581,7 +576,7 @@ Private Function FormToPlankopf() As IPlankopf
                          AnlageNummer:=Me.TBAnlageteil.value, _
                          UnterProjekt:=Me.ComboBoxUnterprojekt.value, _
                          Ansicht:=Ansicht _
-                                        )
+                                   )
 
 End Function
 
@@ -637,7 +632,7 @@ Private Sub ComboBoxEPHGewerk_Change()
 
         Me.ComboBoxEPUGewerk.Clear               ' löscht die aktuelle Liste der ComboBox
 
-        For row = 6 To lastrow                  ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
+        For row = 6 To lastrow                   ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
             If ws.Cells(row, col).value <> vbNullString Then
                 Me.ComboBoxEPUGewerk.AddItem ws.Cells(row, col).value
             End If
@@ -651,7 +646,7 @@ Private Sub ComboBoxEPHGewerk_Change()
 
         Me.ComboBoxEPArt.Clear                   ' löscht die aktuelle Liste der ComboBox
 
-        For row = 6 To lastrow                  ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
+        For row = 6 To lastrow                   ' loopt durch alle Reihen und fügt diese der Liste hinzu wenn diese nicht leer sind
             If ws.Cells(row, col).value <> vbNullString Then
                 Me.ComboBoxEPArt.AddItem ws.Cells(row, col).value
             End If
@@ -724,25 +719,25 @@ Private Sub ComboBoxESUGewerk_Change()
     If Me.ComboBoxESUGewerk.value = "-- Bitte wählen --" Then Exit Sub
     If Me.ComboBoxESUGewerk.value = vbNullString Then Exit Sub
     Select Case Me.ComboBoxESHGewerk.value
-    Case "Elektro"
-        If Not IsError(Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.value, ws.range("5:5"), 0)) Then
-1           col = Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.value, ws.range("5:5"), 0)
-            lastrow = Application.WorksheetFunction.CountA(ws.Cells(6, col).EntireColumn) + 6
+        Case "Elektro"
+            If Not IsError(Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.value, ws.range("5:5"), 0)) Then
+1               col = Application.Match("Anlagetyp " & Me.ComboBoxESUGewerk.value, ws.range("5:5"), 0)
+                lastrow = Application.WorksheetFunction.CountA(ws.Cells(6, col).EntireColumn) + 6
+                Me.ComboBoxESAnlageTyp.Clear
+                For row = 6 To lastrow
+                    If ws.Cells(row, col).value <> vbNullString Then
+                        Me.ComboBoxESAnlageTyp.AddItem ws.Cells(row, col).value
+                    End If
+                Next row
+                Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
+            Else
+                Me.ComboBoxESAnlageTyp.Clear
+                Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
+            End If
+        Case vbNullString
+        Case Else
             Me.ComboBoxESAnlageTyp.Clear
-            For row = 6 To lastrow
-                If ws.Cells(row, col).value <> vbNullString Then
-                    Me.ComboBoxESAnlageTyp.AddItem ws.Cells(row, col).value
-                End If
-            Next row
             Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
-        Else
-            Me.ComboBoxESAnlageTyp.Clear
-            Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
-        End If
-    Case vbNullString
-    Case Else
-        Me.ComboBoxESAnlageTyp.Clear
-        Me.ComboBoxESAnlageTyp.value = "-- Bitte wählen --"
     End Select
 
 End Sub
@@ -822,7 +817,7 @@ Private Sub ComboBoxGebäude_Change()
         Me.ComboBoxGeschoss.Clear
 
         Me.ComboBoxGeschoss.Enabled = True
-        Set rng = ws.range(Globals.shGebäude.Cells(5, col), ws.Cells(lastrow, col + 1))
+        Set rng = ws.range(Globals.shGebäude.Cells(8, col), ws.Cells(lastrow, col + 1))
         arr() = rng.Resize(rng.rows.Count, 1).Offset(1, 0)
         tmparr() = RemoveBlanksFromStringArray(arr())
         Me.ComboBoxGeschoss.List = tmparr()
@@ -848,5 +843,7 @@ Private Sub ComboBoxGebäudeTeil_Change()
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
-Call ResetTaskbar
+    Call ResetTaskbar
 End Sub
+
+

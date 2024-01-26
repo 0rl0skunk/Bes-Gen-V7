@@ -18,30 +18,30 @@ Public Function GetPlanartNamedRange(ByVal Planart As String, ByVal Hauptgewerk 
     Dim result               As String
 
     Select Case Hauptgewerk
-    Case "Elektro"
-        result = "ELE_Planart"
-    Case "Gewerbliche Kälte"
-        result = "GWK_Planart"
-    Case "Koordination"
-        result = "KOO_Planart"
-    Case "Heizung Kälte"
-        result = "HKA_Planart"
-    Case "Kälte"
-        result = "KAE_Planart"
-    Case "Lüftung"
-        result = "LUE_Planart"
-    Case "Gebäudeautomation"
-        result = "GAM_Planart"
-    Case "Sanitär"
-        result = "SAN_Planart"
-    Case "Sprinkler"
-        result = "SPR_Planart"
-    Case "HLKS/GA Allgemein"
-        result = "XXX_Planart"
-    Case "Türfachplanung"
-        result = "TUE_Planart"
-    Case "Brandschutzplanung"
-        result = "BRA_Planart"
+        Case "Elektro"
+            result = "ELE_Planart"
+        Case "Gewerbliche Kälte"
+            result = "GWK_Planart"
+        Case "Koordination"
+            result = "KOO_Planart"
+        Case "Heizung Kälte"
+            result = "HKA_Planart"
+        Case "Kälte"
+            result = "KAE_Planart"
+        Case "Lüftung"
+            result = "LUE_Planart"
+        Case "Gebäudeautomation"
+            result = "GAM_Planart"
+        Case "Sanitär"
+            result = "SAN_Planart"
+        Case "Sprinkler"
+            result = "SPR_Planart"
+        Case "HLKS/GA Allgemein"
+            result = "XXX_Planart"
+        Case "Türfachplanung"
+            result = "TUE_Planart"
+        Case "Brandschutzplanung"
+            result = "BRA_Planart"
     End Select
 
     GetPlanartNamedRange = result
@@ -52,114 +52,114 @@ Public Function GetUnterGewerkKF(UnterGewerk As String, ByVal Hauptgewerk As Str
     ' Gibt die Kurzform des Untergewerke zurück
     Dim result               As String
     Select Case Hauptgewerk
-    Case "Elektro"
-        Select Case Planart
-        Case "Plan"
-            result = "ELE" & "_PLA"
-        Case "Schema"
-            result = "ELE" & "_SCH"
-        Case "Prinzip"
-            result = "ELE" & "_PRI"
-        End Select
-    Case "Gewerbliche Kälte"
-        Select Case Planart
-        Case "Plan"
-            result = "GWK" & "_PLA"
-        Case "Schema"
-            result = "GWK" & "_SCH"
-        Case "Prinzip"
-            result = "GWK" & "_PRI"
-        End Select
-    Case "Koordination"
-        Select Case Planart
-        Case "Plan"
-            result = "KOO" & "_PLA"
-        Case "Schema"
-            result = "KOO" & "_SCH"
-        Case "Prinzip"
-            result = "KOO" & "_PRI"
-        End Select
-    Case "Heizung Kälte"
-        Select Case Planart
-        Case "Plan"
-            result = "HKA" & "_PLA"
-        Case "Schema"
-            result = "HKA" & "_SCH"
-        Case "Prinzip"
-            result = "HKA" & "_PRI"
-        End Select
-    Case "Kälte"
-        Select Case Planart
-        Case "Plan"
-            result = "KAE" & "_PLA"
-        Case "Schema"
-            result = "KAE" & "_SCH"
-        Case "Prinzip"
-            result = "KAE" & "_PRI"
-        End Select
-    Case "Lüftung"
-        Select Case Planart
-        Case "Plan"
-            result = "LUE" & "_PLA"
-        Case "Schema"
-            result = "LUE" & "_SCH"
-        Case "Prinzip"
-            result = "LUE" & "_PRI"
-        End Select
-    Case "Gebäudeautomation"
-        Select Case Planart
-        Case "Plan"
-            result = "GAM" & "_PLA"
-        Case "Schema"
-            result = "GAM" & "_SCH"
-        Case "Prinzip"
-            result = "GAM" & "_PRI"
-        End Select
-    Case "Sanitär"
-        Select Case Planart
-        Case "Plan"
-            result = "SAN" & "_PLA"
-        Case "Schema"
-            result = "SAN" & "_SCH"
-        Case "Prinzip"
-            result = "SAN" & "_PRI"
-        End Select
-    Case "Sprinkler"
-        Select Case Planart
-        Case "Plan"
-            result = "SPR" & "_PLA"
-        Case "Schema"
-            result = "SPR" & "_SCH"
-        Case "Prinzip"
-            result = "SPR" & "_PRI"
-        End Select
-    Case "HLKS/GA Allgemein"
-        Select Case Planart
-        Case "Plan"
-            result = "XXX" & "_PLA"
-        Case "Schema"
-            result = "XXX" & "_SCH"
-        Case "Prinzip"
-            result = "XXX" & "_PRI"
-        End Select
-    Case "Türfachplanung"
-        Select Case Planart
-        Case "Plan"
-            result = "TUE" & "_PLA"
-        Case "Schema"
-            result = "TUE" & "_SCH"
-        Case "Prinzip"
-            result = "TUE" & "_PRI"
-        End Select
-    Case "Brandschutzplanung"
-        Select Case Planart
-        Case "Plan"
-            result = "BRA" & "_PLA"
-        Case "Schema"
-            result = "BRA" & "_SCH"
-        Case "Prinzip"
-            result = "BRA" & "_PRI"
-        End Select
+        Case "Elektro"
+            Select Case Planart
+                Case "Plan"
+                    result = "ELE" & "_PLA"
+                Case "Schema"
+                    result = "ELE" & "_SCH"
+                Case "Prinzip"
+                    result = "ELE" & "_PRI"
+            End Select
+        Case "Gewerbliche Kälte"
+            Select Case Planart
+                Case "Plan"
+                    result = "GWK" & "_PLA"
+                Case "Schema"
+                    result = "GWK" & "_SCH"
+                Case "Prinzip"
+                    result = "GWK" & "_PRI"
+            End Select
+        Case "Koordination"
+            Select Case Planart
+                Case "Plan"
+                    result = "KOO" & "_PLA"
+                Case "Schema"
+                    result = "KOO" & "_SCH"
+                Case "Prinzip"
+                    result = "KOO" & "_PRI"
+            End Select
+        Case "Heizung Kälte"
+            Select Case Planart
+                Case "Plan"
+                    result = "HKA" & "_PLA"
+                Case "Schema"
+                    result = "HKA" & "_SCH"
+                Case "Prinzip"
+                    result = "HKA" & "_PRI"
+            End Select
+        Case "Kälte"
+            Select Case Planart
+                Case "Plan"
+                    result = "KAE" & "_PLA"
+                Case "Schema"
+                    result = "KAE" & "_SCH"
+                Case "Prinzip"
+                    result = "KAE" & "_PRI"
+            End Select
+        Case "Lüftung"
+            Select Case Planart
+                Case "Plan"
+                    result = "LUE" & "_PLA"
+                Case "Schema"
+                    result = "LUE" & "_SCH"
+                Case "Prinzip"
+                    result = "LUE" & "_PRI"
+            End Select
+        Case "Gebäudeautomation"
+            Select Case Planart
+                Case "Plan"
+                    result = "GAM" & "_PLA"
+                Case "Schema"
+                    result = "GAM" & "_SCH"
+                Case "Prinzip"
+                    result = "GAM" & "_PRI"
+            End Select
+        Case "Sanitär"
+            Select Case Planart
+                Case "Plan"
+                    result = "SAN" & "_PLA"
+                Case "Schema"
+                    result = "SAN" & "_SCH"
+                Case "Prinzip"
+                    result = "SAN" & "_PRI"
+            End Select
+        Case "Sprinkler"
+            Select Case Planart
+                Case "Plan"
+                    result = "SPR" & "_PLA"
+                Case "Schema"
+                    result = "SPR" & "_SCH"
+                Case "Prinzip"
+                    result = "SPR" & "_PRI"
+            End Select
+        Case "HLKS/GA Allgemein"
+            Select Case Planart
+                Case "Plan"
+                    result = "XXX" & "_PLA"
+                Case "Schema"
+                    result = "XXX" & "_SCH"
+                Case "Prinzip"
+                    result = "XXX" & "_PRI"
+            End Select
+        Case "Türfachplanung"
+            Select Case Planart
+                Case "Plan"
+                    result = "TUE" & "_PLA"
+                Case "Schema"
+                    result = "TUE" & "_SCH"
+                Case "Prinzip"
+                    result = "TUE" & "_PRI"
+            End Select
+        Case "Brandschutzplanung"
+            Select Case Planart
+                Case "Plan"
+                    result = "BRA" & "_PLA"
+                Case "Schema"
+                    result = "BRA" & "_SCH"
+                Case "Prinzip"
+                    result = "BRA" & "_PRI"
+            End Select
     End Select
 
     GetUnterGewerkKF = WLookup(UnterGewerk, shPData.range(result), 2)
@@ -275,22 +275,22 @@ Public Function getNewID(ByVal Typ As IDType) As String
     Dim IDcol                As Long
 
     Select Case Typ
-    Case 0                                       ' Plan
-        Length = 6
-        Set ws = Globals.shStoreData
-        Set Region = shStoreData.range("A1").CurrentRegion
-        IDcol = 1
-    Case 1                                       ' Index
-        Length = 4
-        Set ws = Globals.shIndex
-        Set Region = Globals.shIndex.range("A1").CurrentRegion
-        IDcol = 1
-    Case 2                                       ' Task
-    Case 3                                       ' Person
-        Length = 6
-        Set ws = Globals.shAdress
-        Set Region = Globals.shAdress.range("ADR_Adressen")
-        IDcol = 9
+        Case 0                                   ' Plan
+            Length = 6
+            Set ws = Globals.shStoreData
+            Set Region = shStoreData.range("A1").CurrentRegion
+            IDcol = 1
+        Case 1                                   ' Index
+            Length = 4
+            Set ws = Globals.shIndex
+            Set Region = Globals.shIndex.range("A1").CurrentRegion
+            IDcol = 1
+        Case 2                                   ' Task
+        Case 3                                   ' Person
+            Length = 6
+            Set ws = Globals.shAdress
+            Set Region = Globals.shAdress.range("ADR_Adressen")
+            IDcol = 9
     End Select
     Dim i                    As Long
 
@@ -321,30 +321,30 @@ Public Function getList(ByVal RangeName As String) As Variant()
     Dim tmprng               As range
     Globals.SetWBs
     Select Case RangeName
-    Case "PRO_Gebäude"
-        Set tmprng = Globals.shGebäude.range(RangeName)
-        arr() = tmprng.Resize(1, tmprng.Columns.Count)
-        tmparr() = RemoveBlanksFromStringArray(arr(), True)
-    Case "ADM_Firmen"
-        Set tmprng = Globals.shAdress.range(RangeName)
-        arr() = tmprng.Resize(tmprng.rows.Count, 1)
-        tmparr() = RemoveBlanksFromStringArray(arr())
-    Case "PRO_Unterprojekte"
-        Set tmprng = Globals.shPData.range(RangeName)
-        arr() = tmprng.Resize(tmprng.rows.Count, 1)
-        tmparr() = RemoveBlanksFromStringArray(arr())
-    Case "PRO_Gebäudeteil"
-        Set tmprng = Globals.shPData.range(RangeName)
-        arr() = tmprng.Resize(tmprng.rows.Count, 1)
-        tmparr() = RemoveBlanksFromStringArray(arr())
-    Case "DET_Ansichten"
-        Set tmprng = Globals.shAnsichten.range(RangeName)
-        arr() = tmprng.Resize(tmprng.rows.Count, 1)
-        tmparr() = RemoveBlanksFromStringArray(arr())
-    Case Else
-        Set tmprng = Globals.shPZM.range(RangeName)
-        arr() = tmprng.Resize(tmprng.rows.Count, 1)
-        tmparr() = RemoveBlanksFromStringArray(arr())
+        Case "PRO_Gebäude"
+            Set tmprng = Globals.shGebäude.range(RangeName)
+            arr() = tmprng.Resize(1, tmprng.Columns.Count)
+            tmparr() = RemoveBlanksFromStringArray(arr(), True)
+        Case "ADM_Firmen"
+            Set tmprng = Globals.shAdress.range(RangeName)
+            arr() = tmprng.Resize(tmprng.rows.Count, 1)
+            tmparr() = RemoveBlanksFromStringArray(arr())
+        Case "PRO_Unterprojekte"
+            Set tmprng = Globals.shPData.range(RangeName)
+            arr() = tmprng.Resize(tmprng.rows.Count, 1)
+            tmparr() = RemoveBlanksFromStringArray(arr())
+        Case "PRO_Gebäudeteil"
+            Set tmprng = Globals.shPData.range(RangeName)
+            arr() = tmprng.Resize(tmprng.rows.Count, 1)
+            tmparr() = RemoveBlanksFromStringArray(arr())
+        Case "DET_Ansichten"
+            Set tmprng = Globals.shAnsichten.range(RangeName)
+            arr() = tmprng.Resize(tmprng.rows.Count, 1)
+            tmparr() = RemoveBlanksFromStringArray(arr())
+        Case Else
+            Set tmprng = Globals.shPZM.range(RangeName)
+            arr() = tmprng.Resize(tmprng.rows.Count, 1)
+            tmparr() = RemoveBlanksFromStringArray(arr())
     End Select
 
     getList = tmparr()
@@ -378,15 +378,15 @@ Public Function getUserName() As String
 
     Dim arrUsername()        As String
     Dim UserName             As String
-    
+
     On Error GoTo ErrHandler
-    
+
     UserName = Application.UserName
-    
+
     arrUsername = Split(UserName, " ")
     getUserName = Left(arrUsername(1), 2) & Left(arrUsername(0), 2)
     Exit Function
-    
+
 ErrHandler:
     getUserName = UserName
 

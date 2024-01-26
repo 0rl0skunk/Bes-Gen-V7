@@ -6,8 +6,8 @@ Attribute VB_Name = "TestModule1"
 Option Explicit
 Option Private Module
 
-Private Assert As Object
-Private Fakes As Object
+Private Assert               As Object
+Private Fakes                As Object
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
@@ -32,3 +32,4 @@ End Sub
 Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
+

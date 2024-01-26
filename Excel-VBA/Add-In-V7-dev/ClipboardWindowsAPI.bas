@@ -40,17 +40,17 @@ Function CopyToClipBoard(MyString As String)
     'PURPOSE: API function to copy text to clipboard
     'SOURCE: www.msdn.microsoft.com/en-us/library/office/ff192913.aspx
 
-    #If VBA7 Then
-        Dim hGlobalMemory        As LongPtr
-        Dim lpGlobalMemory       As LongPtr
+#If VBA7 Then
+        Dim hGlobalMemory    As LongPtr
+        Dim lpGlobalMemory   As LongPtr
 
-        Dim hClipMemory          As LongPtr
-        Dim X                    As LongPtr
+        Dim hClipMemory      As LongPtr
+        Dim X                As LongPtr
 
-    #Else
-        Dim hGlobalMemory        As Long, lpGlobalMemory As Long
-        Dim hClipMemory          As Long, X As Long
-    #End If
+#Else
+        Dim hGlobalMemory    As Long, lpGlobalMemory As Long
+        Dim hClipMemory      As Long, X As Long
+#End If
 
     'Allocate moveable global memory
     hGlobalMemory = GlobalAlloc(GHND, Len(MyString) + 1)

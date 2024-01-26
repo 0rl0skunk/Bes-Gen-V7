@@ -7,8 +7,8 @@ Attribute VB_Description = "Logging Module."
 
 Option Explicit
 
-Private pLogFile          As String
-Private pLogFolder As String
+Private pLogFile             As String
+Private pLogFolder           As String
 
 Public Enum ErrorLevel
     LogError = 0
@@ -28,12 +28,12 @@ Public Property Get LogFile() As String
 End Property
 
 Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
-    
+
     pLogFolder = Environ("localappdata") & "\Bes-Gen-V7"
     pLogFile = pLogFolder & "\Bes-Gen_V7.log"
-    Dim fso As New FileSystemObject
+    Dim fso                  As New FileSystemObject
     If Not fso.FolderExists(pLogFolder) Then
-        MkDir pLogFolder
+        mkdir pLogFolder
     End If
     ' prepare date
     Dim l_StringDateTimeNow  As String
@@ -45,30 +45,30 @@ Public Sub writelog(ByVal Typ As ErrorLevel, ByVal a_stringLogThis As String)
     l_StringSource = "  ADD-IN  "
 
     Select Case Typ
-    Case 0
-        If LogDepth >= 0 Then
-            Typstr = "ERROR  "
-        Else
-            Exit Sub
-        End If
-    Case 1
-        If LogDepth >= 1 Then
-            Typstr = "WARNING"
-        Else
-            Exit Sub
-        End If
-    Case 2
-        If LogDepth >= 2 Then
-            Typstr = "INFO   "
-        Else
-            Exit Sub
-        End If
-    Case 3
-        If LogDepth >= 3 Then
-            Typstr = "TRACE  "
-        Else
-            Exit Sub
-        End If
+        Case 0
+            If LogDepth >= 0 Then
+                Typstr = "ERROR  "
+            Else
+                Exit Sub
+            End If
+        Case 1
+            If LogDepth >= 1 Then
+                Typstr = "WARNING"
+            Else
+                Exit Sub
+            End If
+        Case 2
+            If LogDepth >= 2 Then
+                Typstr = "INFO   "
+            Else
+                Exit Sub
+            End If
+        Case 3
+            If LogDepth >= 3 Then
+                Typstr = "TRACE  "
+            Else
+                Exit Sub
+            End If
     End Select
     l_StringDateTimeNow = Now
     l_StringToday = Format$(l_StringDateTimeNow, "YYYY-MM-DD hh:mm:ss")

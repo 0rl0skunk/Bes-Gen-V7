@@ -17,7 +17,6 @@ Option Explicit
 
 Public Property Get ID() As String
 End Property
-
 Public Property Let ID(ByVal NewValue As String)
 End Property
 
@@ -29,7 +28,6 @@ End Property
 
 Public Property Get TinLinePKNr() As String
 End Property
-
 Public Property Let TinLinePKNr(ByVal NewPKNr As String)
 End Property
 
@@ -125,7 +123,6 @@ End Property
 
 Public Property Get Indexes() As Collection
 End Property
-
 Public Property Set Indexes(ByVal NewIndexes As Collection)
 End Property
 
