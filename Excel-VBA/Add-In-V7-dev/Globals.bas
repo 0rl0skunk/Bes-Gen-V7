@@ -26,6 +26,8 @@ Public shProjekt             As Worksheet
 Public shPZM                 As Worksheet
 Public shAnsichten           As Worksheet
 
+Public MySheetHandler        As SheetChangeHandler
+
 Public CopyrightSTR          As String
 Private pProjekt             As IProjekt
 Private pPlanköpfe           As Collection

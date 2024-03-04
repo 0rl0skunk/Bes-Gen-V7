@@ -147,7 +147,7 @@ End Sub
 Sub onActionButton(control As IRibbonControl)
     writelog LogInfo, " CUSTOM UI | " & "Button " & control.ID & " pressed" & vbNewLine & "---------------------------"
     If Globals.shPData Is Nothing Then Globals.SetWBs
-    Dim folderpath           As String
+    Dim FolderPath           As String
     Dim frmPKadd             As New UserFormPlankopf
     Select Case control.ID
         Case "Objektdaten"
@@ -156,13 +156,13 @@ Sub onActionButton(control As IRibbonControl)
             Dim frmAdresse   As New UserFormPerson
             frmAdresse.Show 0
         Case "CADFolder"
-            folderpath = Globals.Projekt.ProjektOrdnerCAD
-            writelog LogInfo, "Opening CAD-Folder" & vbNewLine & folderpath
-            Shell "explorer.exe " & folderpath, vbNormalFocus
+            FolderPath = Globals.Projekt.ProjektOrdnerCAD
+            writelog LogInfo, "Opening CAD-Folder" & vbNewLine & FolderPath
+            Shell "explorer.exe " & FolderPath, vbNormalFocus
         Case "XREFFolder"
-            folderpath = Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
-            writelog LogInfo, "Opening CAD-Folder" & vbNewLine & folderpath
-            Shell "explorer.exe " & folderpath, vbNormalFocus
+            FolderPath = Globals.Projekt.ProjektOrdnerCAD & "\00_XREF"
+            writelog LogInfo, "Opening CAD-Folder" & vbNewLine & FolderPath
+            Shell "explorer.exe " & FolderPath, vbNormalFocus
         Case "SharePoint"
             Dim folderSP     As String: folderSP = Globals.Projekt.ProjektOrdnerSharePoint
             writelog LogInfo, " CUSTOM UI | " & "Opening SharePoint-Folder" & vbNewLine & folderSP
@@ -207,9 +207,9 @@ Sub onActionButton(control As IRibbonControl)
         Case "OneNote"
             ActiveWorkbook.FollowHyperlink Address:=OneNoteAppLink
         Case "PlotFolder"
-            folderpath = Environ("localappdata") & "\Bes-Gen-V7\Plot"
-            writelog LogInfo, "Opening Plot-Folder" & vbNewLine & folderpath
-            Shell "explorer.exe " & folderpath, vbNormalFocus
+            FolderPath = Environ("localappdata") & "\Bes-Gen-V7\Plot"
+            writelog LogInfo, "Opening Plot-Folder" & vbNewLine & FolderPath
+            Shell "explorer.exe " & FolderPath, vbNormalFocus
             ' Quick-Add
         Case "Plan"
             frmPKadd.setIcons Add

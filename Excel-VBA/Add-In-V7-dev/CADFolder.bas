@@ -16,12 +16,12 @@ Public Sub CreateTinLineProjectFolder(ByVal Pläne As Boolean, ByVal Brandschutz 
     Globals.Projekt True
 
     If Globals.shGebäude Is Nothing Then Globals.SetWBs
-    Globals.shProjekt.range("A1").value = False
-    Globals.shProjekt.range("A2").value = False
-    Globals.shProjekt.range("A3").value = False
-    Globals.shProjekt.range("A4").value = False
-    Globals.shProjekt.range("A5").value = False
-    Globals.shProjekt.range("A6").value = False
+    Globals.shProjekt.range("A1").value = False ' EP
+    Globals.shProjekt.range("A2").value = False ' PR
+    Globals.shProjekt.range("A3").value = False ' ES
+    Globals.shProjekt.range("A4").value = False ' TF
+    Globals.shProjekt.range("A5").value = False ' BS
+    Globals.shProjekt.range("A6").value = False ' DE
     If Not CreateFoldersTinLine Then Exit Sub
     If Pläne Then CreateFoldersEP
     If Prinzip Then CreateFoldersPR

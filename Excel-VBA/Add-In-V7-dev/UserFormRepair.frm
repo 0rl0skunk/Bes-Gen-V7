@@ -20,6 +20,8 @@ Attribute VB_Description = "Repariert das TinLine Projekt, wenn Fehler mit den P
 
 
 
+
+
 '@Folder("Repair")
 '@ModuleDescription "Repariert das TinLine Projekt, wenn Fehler mit den Planköpfen entstehen."
 
@@ -36,6 +38,7 @@ Private Sub CommandButtonRepair_Click()
     If Me.CheckBoxPLATF.value Then PlanBereinigen "05_TF", "Türfachplanung"
     If Me.CheckBoxPLABF.value Then PlanBereinigen "06_BS", "Brandschutzplanung"
     CADFolder.TinLineProjectXML
+    CADFolder.RenameFolders
     MsgBox "Das Projekt wurde bereinigt.", vbInformation, "Bereinigen abgaschlossen"
     Application.StatusBar = False
     Unload Me

@@ -598,7 +598,7 @@ Private Sub GetPlanüberschrift()
                 Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Ansicht, GebäudeKF, Geschoss, GebäudeTeilKF)
                 If Len(Planüberschrift) > Globals.maxlen Then
                     Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Ansicht, GebäudeKF, GeschossKF, GebäudeTeilKF)
-                    If Len(Planübersicht) > Globals.maxlen Then
+                    If Len(Planüberschrift) > Globals.maxlen Then
                         Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.AnsichtKF, GebäudeKF, GeschossKF, GebäudeTeilKF)
                     End If
                 End If
