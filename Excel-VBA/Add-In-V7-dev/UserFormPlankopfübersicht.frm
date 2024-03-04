@@ -17,6 +17,8 @@ Attribute VB_Description = "Übersicht aller erstellten Planköpfe im Projekt. Die
 
 
 
+
+
 '@Folder "Plankopf"
 '@ModuleDescription "Übersicht aller erstellten Planköpfe im Projekt. Die Planköpfe können hier drüber erstellt, angepasst und kopiert werden."
 
@@ -33,7 +35,7 @@ Private Sub CommandButtonAdd_Click()
     frm.Show 0
 
     ' nach dem schliessen die Planliste aktualisieren
-    LoadListViewPlan Me.ListViewPlankopf
+    'LoadListViewPlan Me.ListViewPlankopf
 
     SetFilters
 
@@ -49,7 +51,7 @@ Private Sub CommandButtonEdit_Click()
     frm.Show 0
 
     ' nach dem schliessen die Planliste aktualisieren
-    LoadListViewPlan Me.ListViewPlankopf
+    'LoadListViewPlan Me.ListViewPlankopf
 
     SetFilters
 
@@ -147,7 +149,7 @@ Private Sub CommandButtonCopy_Click()
     frm.Show 0
 
     ' nach dem schliessen die Planliste aktualisieren
-    LoadListViewPlan Me.ListViewPlankopf
+    'LoadListViewPlan Me.ListViewPlankopf
 
     SetFilters
 
@@ -179,7 +181,7 @@ Private Sub CommandButtonDelete_Click()
             PlankopfFactory.DeleteFromDatabase row
 
             ' nach dem schliessen die Planliste aktualisieren
-            LoadListViewPlan Me.ListViewPlankopf
+            'LoadListViewPlan Me.ListViewPlankopf
 
             SetFilters
 
@@ -239,24 +241,25 @@ Private Sub ListViewPlankopf_DblClick()
 End Sub
 
 Private Sub Reload_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-LoadListViewPlan Me.ListViewPlankopf
+    LoadListViewPlan Me.ListViewPlankopf
 End Sub
 
 Private Sub UserForm_Activate()
-LoadListViewPlan Me.ListViewPlankopf
+    LoadListViewPlan Me.ListViewPlankopf
 End Sub
 
 Private Sub UserForm_Initialize()
 
     Application.Cursor = xlWait
-    LoadListViewPlan Me.ListViewPlankopf
+    'LoadListViewPlan Me.ListViewPlankopf
     Filters = False
     ShowFilter
 
     Me.TitleLabel.Caption = "Plankopfübersicht"
     Me.LabelInstructions.Caption = "Planköpfe erstellen, bearbeiten und löschen"
 
-    If Me.ListViewPlankopf.ListItems.Count < 1 Then CommandButtonAdd_Click
+    'If Me.ListViewPlankopf.ListItems.Count < 1 Then CommandButtonAdd_Click
+    
     Application.Cursor = xlDefault
 
     Me.Caption = Globals.Projekt.Projektnummer & " | " & Globals.Projekt.ProjektBezeichnung

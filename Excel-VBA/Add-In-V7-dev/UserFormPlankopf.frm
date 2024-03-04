@@ -17,6 +17,8 @@ Attribute VB_Description = "Erstellen von Planköpfen für alle Gewerke. Automatis
 
 
 
+
+
 '@Folder "Plankopf"
 '@ModuleDescription "Erstellen von Planköpfen für alle Gewerke. Automatisches Einfügen der Planköpfe für Elektropläne Über das Modul PlankopfFactory"
 
@@ -451,6 +453,10 @@ Public Sub LoadClass(Plankopf As IPlankopf, ByVal Projekt As IProjekt, Optional 
             Me.MultiPageTyp.value = 2
             Me.ComboBoxPRHGewerk.value = pPlankopf.Gewerk
             Me.ComboBoxPRUGewerk.value = pPlankopf.UnterGewerk
+        Case "DET"
+            Me.MultiPageTyp.value = 3
+            Me.ComboBoxDEHGewerk.value = pPlankopf.Gewerk
+            Me.ComboBoxDESCHANS.value = pPlankopf.UnterGewerk
     End Select
 
     ' füllt die Eingabefelder gemäss geladenem Objekt aus
@@ -818,7 +824,11 @@ Private Sub ComboBoxGebäude_Change()
 
         Me.ComboBoxGeschoss.Enabled = True
         Set rng = ws.range(Globals.shGebäude.Cells(8, col), ws.Cells(lastrow, col + 1))
-        arr() = rng.Resize(rng.rows.Count, 1).Offset(1, 0)
+        If Me.MultiPageTyp.value = 0 Or Me.MultiPageTyp.value = 1 Then
+            arr() = rng.Resize(rng.rows.Count, 1).Offset(1, 0)
+        Else
+            arr() = rng.Resize(rng.rows.Count, 1)
+        End If
         tmparr() = RemoveBlanksFromStringArray(arr())
         Me.ComboBoxGeschoss.List = tmparr()
         Me.ComboBoxGeschoss.value = "-- Bitte wählen --"

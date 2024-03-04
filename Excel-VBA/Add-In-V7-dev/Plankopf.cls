@@ -71,6 +71,10 @@ Private This                 As TPlankopf
 Private Inputs               As TPlankopf
 Private pProjekt             As IProjekt
 
+Private Property Get IPlankopf_Ansicht() As String
+    IPlankopf_Ansicht = This.Ansicht
+End Property
+
 Private Property Get IPlankopf_Gewerk() As String
     IPlankopf_Gewerk = This.Gewerk
 End Property
@@ -80,7 +84,11 @@ Private Property Get IPlankopf_GebäudeAdresse() As IAdresse
 End Property
 
 Private Property Get IPlankopf_UnterGewerk() As String
-    IPlankopf_UnterGewerk = This.UnterGewerk
+    If This.PLANTYP = "DET" Then
+        IPlankopf_UnterGewerk = This.Ansicht
+    Else
+        IPlankopf_UnterGewerk = This.UnterGewerk
+    End If
 End Property
 
 Private Property Get IPlankopf_UnterProjekt() As String
@@ -289,6 +297,13 @@ Public Function Filldata( _
         .AnlageTyp = AnlageTyp
         .UnterProjekt = UnterProjekt
         .Ansicht = Ansicht
+        
+        If .PLANTYP = "DET" Then
+            If Not .UnterGewerk = vbNullString Then
+            .Ansicht = UnterGewerk
+            End If
+        End If
+        
     End With
     Set pProjekt = Projekt
     'On Error GoTo NotValid
@@ -578,7 +593,16 @@ Private Sub GetPlanüberschrift()
             ' Überschrift für Schemas
             Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Gewerk, This.AnlageTyp, Gebäude, Geschoss, Gebäudeteil, "Anlagenummer:", This.AnlageNummer)
         Case "DET"
-            Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Gewerk, This.Ansicht, Gebäude, Geschoss, Gebäudeteil)
+            Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Ansicht, Gebäude, Geschoss, Gebäudeteil)
+            If Len(Planüberschrift) > Globals.maxlen Then
+                Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Ansicht, GebäudeKF, Geschoss, GebäudeTeilKF)
+                If Len(Planüberschrift) > Globals.maxlen Then
+                    Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.Ansicht, GebäudeKF, GeschossKF, GebäudeTeilKF)
+                    If Len(Planübersicht) > Globals.maxlen Then
+                        Planüberschrift = Application.WorksheetFunction.TextJoin(" ", True, This.AnsichtKF, GebäudeKF, GeschossKF, GebäudeTeilKF)
+                    End If
+                End If
+            End If
     End Select
 
     ' wurde die Planüberschrift bearbeitet oder nicht?

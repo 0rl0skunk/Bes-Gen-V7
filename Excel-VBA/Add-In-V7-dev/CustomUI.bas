@@ -60,8 +60,26 @@ Sub isVisibleGroup(control As IRibbonControl, ByRef returnedVal As Variant)
                 Case Else
                     returnedVal = False
             End Select
+        ElseIf Globals.shPData.range("ADM_ProjektPfadCAD").value = "HLKS" Then
+            ' Projekt erstellt HLKS ---
+            Select Case control.ID
+                Case "customGroupPanels"
+                    returnedVal = True
+                Case "customGroupBuildings"
+                    returnedVal = False
+                Case "customGroupExplorer"
+                    returnedVal = False
+                Case "customGroupHelp"
+                    returnedVal = True
+                Case "customGroupCreateProject"
+                    returnedVal = False
+                Case "customGroupNoBesGen"
+                    returnedVal = False
+                Case "customGroupQuickAdd"
+                    returnedVal = True
+            End Select
         Else
-            ' Projekt erstellt ---
+         ' Projekt erstellt Elektro ---
             Select Case control.ID
                 Case "customGroupPanels"
                     returnedVal = True
@@ -181,6 +199,8 @@ Sub onActionButton(control As IRibbonControl)
         Case "CADElektro"
             Dim frmCreateElektro As New UserFormProjektErstellen
             frmCreateElektro.Show 0
+        Case "HLKSElektro"
+            Globals.shPData.range("ADM_ProjektPfadCAD").value = "HLKS"
         Case "Upgrade"
             Dim frmUpgrade   As New UserFormUpgrade
             frmUpgrade.Show 0

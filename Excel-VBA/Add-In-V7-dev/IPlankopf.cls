@@ -15,6 +15,9 @@ Attribute VB_Description = "Interface für 'Plankopf.cls'."
 
 Option Explicit
 
+Public Property Get Ansicht() As String
+End Property
+
 Public Property Get ID() As String
 End Property
 Public Property Let ID(ByVal NewValue As String)

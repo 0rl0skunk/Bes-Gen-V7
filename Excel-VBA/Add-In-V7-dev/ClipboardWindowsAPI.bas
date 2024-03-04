@@ -78,7 +78,7 @@ Function CopyToClipBoard(MyString As String)
 
     'Copy the data to the Clipboard.
     hClipMemory = SetClipboardData(CF_TEXT, hGlobalMemory)
-
+Exit Function
 OutOfHere2:
     If CloseClipboard() = 0 Then
         MsgBox "Could not close Clipboard."

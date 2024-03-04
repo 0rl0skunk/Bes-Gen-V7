@@ -161,7 +161,7 @@ Public Function AddToDatabase(ByVal Plankopf As IPlankopf) As Boolean
             writelog LogWarning, "Das Projekt wurde ohne Elektropläne erstellt." & vbNewLine & "Wenn die Pläne im TinLine erstellt werden, bitte den QS-Verantwortlichen kontaktieren"
         End If
     End If
-    
+    ' rearange if-statements to not get error message
     ' Elektro Detail
     If Plankopf.Gewerk = "Elektro" Then
         If Globals.shProjekt.range("A6").value And Plankopf.PLANTYP = "DET" Then
