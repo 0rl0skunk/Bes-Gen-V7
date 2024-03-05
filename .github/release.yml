@@ -7,12 +7,22 @@ changelog:
   categories:
     - title: Breaking Changes 🛠
       labels:
-        - Semver-Major
         - breaking-change
     - title: Exciting New Features 🎉
       labels:
-        - Semver-Minor
         - enhancement
+    - title: Bugs 🐞
+      labels:
+        - bug
+    - title: Squashed Bugs 🐞
+      labels:
+        - bug-fix
+    - title: Documentation 📖
+      labels:
+        - "documentation"
+    - title: Asked questions ❓
+      labels:
+        - "questions"
     - title: Other Changes
       labels:
         - "*"
